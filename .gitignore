@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Node
+node_modules/
+dist/
+
+# Variables de entorno y secretos
+.env
+.env.*
+
+# Editor y sistema
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Archivos locales de Claude Code
+.claude/settings.local.json
