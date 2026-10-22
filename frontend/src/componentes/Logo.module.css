@@ -1,0 +1,13 @@
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nombre {
+  color: var(--superficie);
+  font-family: var(--fuente-titulos);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1;
+}

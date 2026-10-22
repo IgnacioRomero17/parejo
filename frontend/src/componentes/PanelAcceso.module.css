@@ -1,0 +1,79 @@
+.contenedor {
+  display: grid;
+  grid-template-columns: minmax(0, 520px) minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 48px;
+  padding: 52px 56px 56px;
+  background: var(--marino);
+}
+
+.presentacion {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cancha {
+  width: 100%;
+  max-width: 290px;
+  height: auto;
+  margin-bottom: 12px;
+}
+
+.piso {
+  fill: var(--azul);
+}
+
+.linea {
+  fill: none;
+  stroke: var(--texto-sobre-oscuro);
+  stroke-opacity: 0.5;
+  stroke-width: 2;
+}
+
+.red {
+  fill: none;
+  stroke: var(--superficie);
+  stroke-width: 3;
+  stroke-dasharray: 4 5;
+}
+
+.jugador {
+  fill: var(--lima);
+}
+
+.titulo {
+  color: var(--superficie);
+  font-family: var(--fuente-titulos);
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.1;
+}
+
+.texto {
+  max-width: 400px;
+  color: var(--texto-sobre-oscuro);
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+.principal {
+  display: grid;
+  place-items: center;
+  padding: 56px 40px;
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  max-width: 460px;
+}

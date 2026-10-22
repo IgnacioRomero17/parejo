@@ -1,8 +1,14 @@
+import { BrowserRouter } from "react-router-dom";
+import SesionProveedor from "./contexto/SesionContexto.jsx";
+import Rutas from "./rutas.jsx";
+
 function App() {
   return (
-    <main>
-      <h1>parejo</h1>
-    </main>
+    <BrowserRouter>
+      <SesionProveedor>
+        <Rutas />
+      </SesionProveedor>
+    </BrowserRouter>
   );
 }
 

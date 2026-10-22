@@ -1,0 +1,130 @@
+.pagina {
+  min-height: 100vh;
+  background: var(--marino);
+  color: var(--superficie);
+}
+
+.encabezado,
+.contenido {
+  width: 100%;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.ingresar {
+  color: var(--texto-sobre-oscuro);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.ingresar:hover {
+  color: var(--superficie);
+}
+
+.contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 88px;
+  padding-top: 72px;
+  padding-bottom: 40px;
+}
+
+.portada {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  align-items: center;
+  gap: 40px;
+}
+
+.presentacion {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.rotulo {
+  padding: 5px 12px;
+  border-radius: var(--radio-pildora);
+  background: color-mix(in srgb, var(--lima) 16%, transparent);
+  color: var(--lima);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.titulo {
+  max-width: 560px;
+  font-size: 56px;
+  line-height: 1.08;
+}
+
+.texto {
+  max-width: 500px;
+  color: var(--texto-sobre-oscuro);
+  font-size: 18px;
+  line-height: 1.55;
+}
+
+.acciones {
+  display: flex;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.ilustracion {
+  justify-self: center;
+  width: 100%;
+  max-width: 320px;
+  height: auto;
+  border-radius: 24%;
+  box-shadow: 0 0 120px 24px color-mix(in srgb, var(--azul) 45%, transparent);
+}
+
+.pasos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.paso {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 22px;
+  border: 1px solid
+    color-mix(in srgb, var(--texto-sobre-oscuro) 18%, transparent);
+  border-radius: var(--radio-tarjeta);
+  background: color-mix(in srgb, var(--superficie) 4%, transparent);
+}
+
+.iconoPaso {
+  display: inline-grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  margin-bottom: 8px;
+  border-radius: var(--radio-control);
+  background: var(--azul);
+  color: var(--lima);
+}
+
+.tituloPaso {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.textoPaso {
+  color: var(--texto-sobre-oscuro);
+  font-size: 14px;
+  line-height: 1.5;
+}

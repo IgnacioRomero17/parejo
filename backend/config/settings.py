@@ -92,8 +92,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 AUTH_USER_MODEL = "usuarios.Usuario"
 
-# El validador propio de contraseñas se agrega con HU-001.
-AUTH_PASSWORD_VALIDATORS = []
+AUTH_PASSWORD_VALIDATORS = [
+    {"NAME": "apps.usuarios.validadores.ValidadorPoliticaContrasena"},
+]
 
 LANGUAGE_CODE = "es-ar"
 TIME_ZONE = "America/Argentina/Cordoba"
@@ -118,4 +119,5 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ],
     "COERCE_DECIMAL_TO_STRING": False,
+    "EXCEPTION_HANDLER": "apps.comun.errores.manejar_excepcion",
 }

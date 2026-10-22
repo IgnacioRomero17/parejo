@@ -1,0 +1,42 @@
+:root {
+  /* Marca */
+  --azul: #1f5eff; /* acción principal, enlaces, selección */
+  --lima: #cdf23f; /* acento: estados positivos, marcas activas */
+  --marino: #0e1628; /* barra superior, paneles oscuros, avisos */
+
+  /* Superficies y texto */
+  --fondo: #f4f6fa;
+  --superficie: #ffffff;
+  --texto: #0f172a;
+  --texto-secundario: #5e6e85;
+  --texto-sobre-oscuro: #c3ccd9;
+  --linea: #e4e8ee; /* separadores y bordes de tarjeta */
+  --borde-campo: #d5dbe4; /* bordes de campos y controles */
+  --error: #dc2626;
+  --error-fondo: #fee2e2;
+  --deshabilitado: #e5e9f0; /* fondo de Boton deshabilitado (componente Boton de la regla) */
+
+  /* Etiquetas: fondo / texto */
+  --etq-azul: #e3e9ff;
+  --etq-azul-texto: #2340b8;
+  --etq-verde: #dcfce7;
+  --etq-verde-texto: #166534;
+  --etq-rojo: #fee2e2;
+  --etq-rojo-texto: #b91c1c;
+  --etq-amarillo: #fef3c7;
+  --etq-amarillo-texto: #92400e;
+  --etq-gris: #eef1f5;
+  --etq-gris-texto: #475569;
+  --etq-lima: #cdf23f;
+  --etq-lima-texto: #1a2e05;
+
+  /* Forma */
+  --radio-tarjeta: 16px;
+  --radio-control: 10px;
+  --radio-pildora: 999px;
+  --sombra-aviso: 0 8px 24px rgba(15, 23, 42, 0.25);
+
+  /* Tipografía */
+  --fuente-texto: "Inter", system-ui, sans-serif;
+  --fuente-titulos: "Space Grotesk", "Inter", sans-serif;
+}
