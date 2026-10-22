@@ -1,0 +1,146 @@
+[
+  {
+    "model": "localidades.localidad",
+    "pk": 1,
+    "fields": {
+      "nombre": "Río Ceballos",
+      "latitud": "-31.166700",
+      "longitud": "-64.316700"
+    }
+  },
+  {
+    "model": "localidades.localidad",
+    "pk": 2,
+    "fields": {
+      "nombre": "Salsipuedes",
+      "latitud": "-31.137222",
+      "longitud": "-64.295833"
+    }
+  },
+  {
+    "model": "localidades.localidad",
+    "pk": 3,
+    "fields": {
+      "nombre": "Unquillo",
+      "latitud": "-31.233300",
+      "longitud": "-64.316700"
+    }
+  },
+  {
+    "model": "localidades.localidad",
+    "pk": 4,
+    "fields": {
+      "nombre": "Mendiolaza",
+      "latitud": "-31.265000",
+      "longitud": "-64.303100"
+    }
+  },
+  {
+    "model": "localidades.localidad",
+    "pk": 5,
+    "fields": {
+      "nombre": "Villa Allende",
+      "latitud": "-31.294400",
+      "longitud": "-64.295300"
+    }
+  },
+  {
+    "model": "localidades.localidad",
+    "pk": 6,
+    "fields": {
+      "nombre": "Saldán",
+      "latitud": "-31.316900",
+      "longitud": "-64.308600"
+    }
+  },
+  {
+    "model": "localidades.localidad",
+    "pk": 7,
+    "fields": {
+      "nombre": "La Calera",
+      "latitud": "-31.343900",
+      "longitud": "-64.335300"
+    }
+  },
+  {
+    "model": "localidades.localidad",
+    "pk": 8,
+    "fields": {
+      "nombre": "Colonia Caroya",
+      "latitud": "-31.021300",
+      "longitud": "-64.061300"
+    }
+  },
+  {
+    "model": "localidades.localidad",
+    "pk": 9,
+    "fields": {
+      "nombre": "Jesús María",
+      "latitud": "-30.981700",
+      "longitud": "-64.094200"
+    }
+  },
+  {
+    "model": "localidades.localidad",
+    "pk": 10,
+    "fields": {
+      "nombre": "Villa Carlos Paz",
+      "latitud": "-31.415901",
+      "longitud": "-64.489469"
+    }
+  },
+  {
+    "model": "localidades.localidad",
+    "pk": 11,
+    "fields": {
+      "nombre": "Malagueño",
+      "latitud": "-31.463900",
+      "longitud": "-64.357500"
+    }
+  },
+  {
+    "model": "localidades.localidad",
+    "pk": 12,
+    "fields": {
+      "nombre": "Córdoba – Nueva Córdoba",
+      "latitud": "-31.426111",
+      "longitud": "-64.185806"
+    }
+  },
+  {
+    "model": "localidades.localidad",
+    "pk": 13,
+    "fields": {
+      "nombre": "Córdoba – Centro",
+      "latitud": "-31.416700",
+      "longitud": "-64.183300"
+    }
+  },
+  {
+    "model": "localidades.localidad",
+    "pk": 14,
+    "fields": {
+      "nombre": "Córdoba – Alta Córdoba",
+      "latitud": "-31.389200",
+      "longitud": "-64.184200"
+    }
+  },
+  {
+    "model": "localidades.localidad",
+    "pk": 15,
+    "fields": {
+      "nombre": "Córdoba – Cerro de las Rosas",
+      "latitud": "-31.368000",
+      "longitud": "-64.233000"
+    }
+  },
+  {
+    "model": "localidades.localidad",
+    "pk": 16,
+    "fields": {
+      "nombre": "Córdoba – Argüello",
+      "latitud": "-31.346944",
+      "longitud": "-64.253333"
+    }
+  }
+]

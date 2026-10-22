@@ -12,7 +12,7 @@ Autor: Julio Ignacio Romero Molina. Zona del prototipo: Río Ceballos y alrededo
 
 ## Stack
 - **Frontend:** React + JavaScript (sin TypeScript), con Vite.
-- **Backend:** Python, Django 5.2 o superior, Django REST Framework. La API es el único canal entre frontend y backend.
+- **Backend:** Python, Django 6.1, Django REST Framework. La API es el único canal entre frontend y backend.
 - **Base de datos:** PostgreSQL (sin PostGIS).
 - **Correo:** SMTP, solo para recuperar la contraseña (backend de consola en desarrollo).
 - Zona horaria `America/Argentina/Cordoba`. Dominio, código e interfaz en **español**.

@@ -7,7 +7,7 @@ paths:
 
 ## Versión y herramientas
 - Node.js LTS, proyecto creado con la plantilla `react` de Vite (JavaScript, sin TypeScript).
-- ESLint de la plantilla de Vite y Prettier. El código se entrega sin advertencias.
+- oxlint de la plantilla de Vite y Prettier. El código se entrega sin advertencias.
 - Dependencias permitidas: `react`, `react-dom`, `react-router-dom`, `lucide-react` (íconos), `@fontsource/inter` y `@fontsource/space-grotesk`. Las de testing, en su regla. Ninguna otra sin consultar (sin axios, Redux, librerías de formularios, de componentes ni de estilos).
 
 ## Estructura de `frontend/src/`

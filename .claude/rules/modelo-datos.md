@@ -46,7 +46,7 @@ paths:
 - No fusionar (`squash`) ni borrar migraciones sin consultar.
 
 ## Datos iniciales
-- `apps/localidades/fixtures/localidades.json` con el catálogo de `modelo-clases.md`. Las coordenadas son provisionales hasta que el autor las confirme.
+- `apps/localidades/fixtures/localidades.json` con el catálogo de `modelo-clases.md`.
 - Los datasets de demostración y de evaluación no son fixtures de las apps: ver la regla de evaluación.
 
 ## Admin

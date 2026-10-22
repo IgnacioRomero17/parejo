@@ -156,7 +156,7 @@ classDiagram
 
 ## Catálogo de localidades (fixture)
 
-Coordenadas **aproximadas, a verificar** por el autor antes de cargarlas.
+Coordenadas verificadas por el autor.
 
 | Nombre | Latitud | Longitud |
 |---|---|---|
