@@ -41,6 +41,12 @@
   line-height: 1.45;
 }
 
+.ayuda {
+  color: var(--texto-secundario);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
 .icono {
   flex-shrink: 0;
   margin-top: 2px;

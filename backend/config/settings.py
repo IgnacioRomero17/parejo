@@ -103,13 +103,22 @@ USE_TZ = True
 
 STATIC_URL = "static/"
 
-MAILERS = {
-    "default": {
-        "BACKEND": os.environ.get(
-            "EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend"
-        ),
-    },
-}
+BACKEND_CORREO = os.environ.get("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
+CORREO_POR_DEFECTO = {"BACKEND": BACKEND_CORREO}
+# Solo el backend SMTP acepta estas opciones; el de consola las rechaza.
+if BACKEND_CORREO == "django.core.mail.backends.smtp.EmailBackend":
+    CORREO_POR_DEFECTO["OPTIONS"] = {
+        "host": variable_obligatoria("EMAIL_HOST"),
+        "port": int(os.environ.get("EMAIL_PORT", "587")),
+        "username": os.environ.get("EMAIL_HOST_USER", ""),
+        "password": os.environ.get("EMAIL_HOST_PASSWORD", ""),
+        "use_tls": os.environ.get("EMAIL_USE_TLS", "True").lower() == "true",
+    }
+MAILERS = {"default": CORREO_POR_DEFECTO}
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "parejo <no-responder@localhost>")
+
+# Base de los enlaces que se envían por correo: la ruta del frontend, no la de Django.
+URL_FRONTEND = os.environ.get("URL_FRONTEND", "http://localhost:5173").rstrip("/")
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [

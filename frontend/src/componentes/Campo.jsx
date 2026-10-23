@@ -12,8 +12,14 @@ function Campo({
   maxLength,
   requerido = false,
   accionEtiqueta,
+  ayuda,
 }) {
   const idError = `${id}-error`;
+  const idAyuda = `${id}-ayuda`;
+  // Con error, el mensaje ocupa el lugar de la ayuda.
+  let idDescripcion;
+  if (error) idDescripcion = idError;
+  else if (ayuda) idDescripcion = idAyuda;
   const etiquetaCampo = (
     <label htmlFor={id} className={estilos.etiqueta}>
       {etiqueta}
@@ -40,7 +46,7 @@ function Campo({
         maxLength={maxLength}
         required={requerido}
         aria-invalid={error ? "true" : undefined}
-        aria-describedby={error ? idError : undefined}
+        aria-describedby={idDescripcion}
         className={
           error ? `${estilos.control} ${estilos.conError}` : estilos.control
         }
@@ -54,6 +60,11 @@ function Campo({
             className={estilos.icono}
           />
           <span>{error}</span>
+        </p>
+      )}
+      {!error && ayuda && (
+        <p id={idAyuda} className={estilos.ayuda}>
+          {ayuda}
         </p>
       )}
     </div>

@@ -13,6 +13,22 @@ export function ingresar({ email, contrasena }) {
   return pedir("POST", "auth/ingresar", { email, contrasena });
 }
 
+export function solicitarRecuperacion({ email }) {
+  return pedir("POST", "auth/recuperar", { email });
+}
+
+// Devuelve { email } si el enlace sirve; con un enlace inválido o usado responde 400.
+export function validarEnlaceRecuperacion(uid, token) {
+  return pedir(
+    "GET",
+    `auth/recuperar/${encodeURIComponent(uid)}/${encodeURIComponent(token)}`,
+  );
+}
+
+export function confirmarRecuperacion({ uid, token, contrasena }) {
+  return pedir("POST", "auth/recuperar/confirmar", { uid, token, contrasena });
+}
+
 export function registrarse({ nombre, apellido, email, contrasena }) {
   return pedir("POST", "auth/registro", {
     nombre,

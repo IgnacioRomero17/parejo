@@ -1,0 +1,35 @@
+.icono {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 4px;
+  border-radius: 12px;
+  background: var(--etq-azul);
+  color: var(--azul);
+}
+
+.informacion {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-control);
+  background: var(--superficie);
+  color: var(--texto-secundario);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.iconoInformacion {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.otroCorreo {
+  align-self: center;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}

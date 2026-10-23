@@ -1,0 +1,25 @@
+.encabezado {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.rotulo {
+  margin-bottom: 8px;
+  color: var(--texto-secundario);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.texto {
+  color: var(--texto-secundario);
+  font-size: 16px;
+}
+
+.texto strong {
+  color: var(--texto);
+  font-weight: 700;
+}

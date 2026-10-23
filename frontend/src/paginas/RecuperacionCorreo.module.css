@@ -1,0 +1,12 @@
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.volver {
+  align-self: center;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+}

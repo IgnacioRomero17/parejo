@@ -8,7 +8,10 @@ from rest_framework.views import APIView
 
 from apps.usuarios import servicios
 from apps.usuarios.serializers import (
+    ConfirmarRecuperacionSerializer,
+    CuentaRecuperacionSerializer,
     IngresoSerializer,
+    RecuperacionSerializer,
     RegistroSerializer,
     UsuarioActualSerializer,
 )
@@ -56,3 +59,34 @@ class SalirVista(APIView):
 class UsuarioActualVista(APIView):
     def get(self, request):
         return Response(UsuarioActualSerializer(request.user).data)
+
+
+@method_decorator(csrf_protect, name="dispatch")
+class RecuperacionVista(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = RecuperacionSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        servicios.solicitar_recuperacion(**serializer.validated_data)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class EnlaceRecuperacionVista(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, uid, token):
+        usuario = servicios.usuario_por_enlace(uid, token)
+        return Response(CuentaRecuperacionSerializer(usuario).data)
+
+
+@method_decorator(csrf_protect, name="dispatch")
+class ConfirmarRecuperacionVista(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        serializer = ConfirmarRecuperacionSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        usuario = servicios.restablecer_contrasena(**serializer.validated_data)
+        login(request, usuario)
+        return Response(UsuarioActualSerializer(usuario).data)

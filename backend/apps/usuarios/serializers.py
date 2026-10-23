@@ -62,6 +62,24 @@ class IngresoSerializer(serializers.Serializer):
     )
 
 
+class RecuperacionSerializer(serializers.Serializer):
+    # CharField por el mismo motivo que en el ingreso: un correo mal formado tampoco está
+    # registrado y recibe "La cuenta no existe" (HU-003, criterio 2).
+    email = serializers.CharField(error_messages=MENSAJES_CAMPO_OBLIGATORIO)
+
+
+class ConfirmarRecuperacionSerializer(serializers.Serializer):
+    uid = serializers.CharField(error_messages=MENSAJES_CAMPO_OBLIGATORIO)
+    token = serializers.CharField(error_messages=MENSAJES_CAMPO_OBLIGATORIO)
+    contrasena = serializers.CharField(
+        write_only=True, trim_whitespace=False, error_messages=MENSAJES_CAMPO_OBLIGATORIO
+    )
+
+
+class CuentaRecuperacionSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+
+
 class UsuarioActualSerializer(serializers.Serializer):
     id = serializers.IntegerField(source="id_usuario")
     nombre = serializers.CharField()
