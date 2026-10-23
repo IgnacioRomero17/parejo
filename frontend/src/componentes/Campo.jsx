@@ -11,14 +11,25 @@ function Campo({
   autoComplete,
   maxLength,
   requerido = false,
+  accionEtiqueta,
 }) {
   const idError = `${id}-error`;
+  const etiquetaCampo = (
+    <label htmlFor={id} className={estilos.etiqueta}>
+      {etiqueta}
+    </label>
+  );
 
   return (
     <div className={estilos.campo}>
-      <label htmlFor={id} className={estilos.etiqueta}>
-        {etiqueta}
-      </label>
+      {accionEtiqueta ? (
+        <div className={estilos.cabecera}>
+          {etiquetaCampo}
+          {accionEtiqueta}
+        </div>
+      ) : (
+        etiquetaCampo
+      )}
       <input
         id={id}
         name={id}

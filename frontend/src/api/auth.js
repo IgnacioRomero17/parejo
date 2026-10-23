@@ -9,6 +9,10 @@ export function obtenerUsuarioActual() {
   return pedir("GET", "auth/yo", undefined, { reaccionar: false });
 }
 
+export function ingresar({ email, contrasena }) {
+  return pedir("POST", "auth/ingresar", { email, contrasena });
+}
+
 export function registrarse({ nombre, apellido, email, contrasena }) {
   return pedir("POST", "auth/registro", {
     nombre,

@@ -53,6 +53,15 @@ class RegistroSerializer(serializers.Serializer):
         return valor
 
 
+class IngresoSerializer(serializers.Serializer):
+    # CharField y no EmailField: un correo mal formado tampoco está registrado y recibe el
+    # mensaje de credenciales inválidas, no un error de formato (HU-002, criterio 3).
+    email = serializers.CharField(error_messages=MENSAJES_CAMPO_OBLIGATORIO)
+    contrasena = serializers.CharField(
+        write_only=True, trim_whitespace=False, error_messages=MENSAJES_CAMPO_OBLIGATORIO
+    )
+
+
 class UsuarioActualSerializer(serializers.Serializer):
     id = serializers.IntegerField(source="id_usuario")
     nombre = serializers.CharField()

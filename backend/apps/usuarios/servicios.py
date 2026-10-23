@@ -1,3 +1,4 @@
+from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError, transaction
@@ -6,6 +7,7 @@ from apps.comun.errores import ErrorNegocio
 from apps.usuarios.models import Usuario
 
 MENSAJE_CORREO_REGISTRADO = "Este correo ya está registrado."
+MENSAJE_CREDENCIALES_INVALIDAS = "Las credenciales ingresadas no son válidas."
 
 
 def normalizar_correo(email: str) -> str:
@@ -51,6 +53,20 @@ def registrar_usuario(nombre: str, apellido: str, email: str, contrasena: str) -
     except IntegrityError as error:
         # Otro registro con el mismo correo pudo entrar entre la verificación y el alta.
         raise ErrorNegocio(MENSAJE_CORREO_REGISTRADO, campo="email") from error
+
+
+def autenticar_usuario(email: str, contrasena: str) -> Usuario:
+    """Verifica las credenciales de ingreso (HU-002).
+
+    Recibe el correo (en cualquier combinación de mayúsculas) y la contraseña. Devuelve el
+    usuario si coinciden y la cuenta está activa. Lanza ErrorNegocio general con el mismo
+    mensaje si la contraseña es incorrecta o el correo no está registrado, para no revelar
+    qué correos existen.
+    """
+    usuario = authenticate(email=normalizar_correo(email), password=contrasena)
+    if usuario is None:
+        raise ErrorNegocio(MENSAJE_CREDENCIALES_INVALIDAS)
+    return usuario
 
 
 def paso_onboarding_pendiente(usuario: Usuario) -> str | None:
