@@ -1,0 +1,22 @@
+/* Superpuesto al contenido, como indica la regla de estilo. */
+.aviso {
+  position: fixed;
+  top: 84px;
+  right: 40px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  border-radius: var(--radio-control);
+  background: var(--marino);
+  box-shadow: var(--sombra-aviso);
+  color: var(--superficie);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.icono {
+  flex-shrink: 0;
+  color: var(--lima);
+}

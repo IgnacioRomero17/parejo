@@ -1,5 +1,6 @@
-import { CircleAlert } from "lucide-react";
+import { idDescripcion } from "../utilidades/campos.js";
 import estilos from "./Campo.module.css";
+import MensajeCampo from "./MensajeCampo.jsx";
 
 function Campo({
   id,
@@ -10,16 +11,14 @@ function Campo({
   error,
   autoComplete,
   maxLength,
+  min,
+  max,
+  inputMode,
   requerido = false,
+  soloLectura = false,
   accionEtiqueta,
   ayuda,
 }) {
-  const idError = `${id}-error`;
-  const idAyuda = `${id}-ayuda`;
-  // Con error, el mensaje ocupa el lugar de la ayuda.
-  let idDescripcion;
-  if (error) idDescripcion = idError;
-  else if (ayuda) idDescripcion = idAyuda;
   const etiquetaCampo = (
     <label htmlFor={id} className={estilos.etiqueta}>
       {etiqueta}
@@ -41,32 +40,21 @@ function Campo({
         name={id}
         type={tipo}
         value={valor}
-        onChange={(evento) => onCambiar(evento.target.value)}
+        onChange={(evento) => onCambiar?.(evento.target.value)}
         autoComplete={autoComplete}
         maxLength={maxLength}
+        min={min}
+        max={max}
+        inputMode={inputMode}
         required={requerido}
+        readOnly={soloLectura}
         aria-invalid={error ? "true" : undefined}
-        aria-describedby={idDescripcion}
+        aria-describedby={idDescripcion(id, error, ayuda)}
         className={
           error ? `${estilos.control} ${estilos.conError}` : estilos.control
         }
       />
-      {error && (
-        <p id={idError} className={estilos.error}>
-          <CircleAlert
-            size={14}
-            strokeWidth={2}
-            aria-hidden="true"
-            className={estilos.icono}
-          />
-          <span>{error}</span>
-        </p>
-      )}
-      {!error && ayuda && (
-        <p id={idAyuda} className={estilos.ayuda}>
-          {ayuda}
-        </p>
-      )}
+      <MensajeCampo id={id} error={error} ayuda={ayuda} />
     </div>
   );
 }

@@ -1,0 +1,28 @@
+.tarjeta {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 0;
+  padding: 28px;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  background: var(--superficie);
+}
+
+.encabezado {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--linea);
+}
+
+.titulo {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.texto {
+  color: var(--texto-secundario);
+  font-size: 13.5px;
+}

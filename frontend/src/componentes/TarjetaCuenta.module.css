@@ -1,0 +1,16 @@
+.fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.titulo {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.texto {
+  color: var(--texto-secundario);
+  font-size: 13.5px;
+}

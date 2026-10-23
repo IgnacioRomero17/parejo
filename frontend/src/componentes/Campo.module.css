@@ -28,26 +28,11 @@
   font-size: 16px;
 }
 
+/* Atributo y no :read-only, que también aplica a los <select> que componen esta clase. */
+.control[readonly] {
+  background: var(--fondo);
+}
+
 .conError {
   border: 1.5px solid var(--error);
-}
-
-.error {
-  display: flex;
-  align-items: flex-start;
-  gap: 6px;
-  color: var(--error);
-  font-size: 13px;
-  line-height: 1.45;
-}
-
-.ayuda {
-  color: var(--texto-secundario);
-  font-size: 13px;
-  line-height: 1.45;
-}
-
-.icono {
-  flex-shrink: 0;
-  margin-top: 2px;
 }

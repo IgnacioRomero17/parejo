@@ -1,0 +1,21 @@
+.encabezado {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.datos {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.nombre {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.email {
+  color: var(--texto-secundario);
+  font-size: 13.5px;
+}

@@ -153,11 +153,32 @@ def restablecer_contrasena(uid: str, token: str, contrasena: str) -> Usuario:
     return usuario
 
 
+def actualizar_perfil(
+    usuario: Usuario,
+    datos_personales: dict | None = None,
+    perfil_deportivo: dict | None = None,
+) -> Usuario:
+    """Guarda las secciones del perfil que el jugador modificó (HU-004).
+
+    Recibe el usuario y, por sección, los datos ya validados en formato: `datos_personales`
+    (nombre y apellido) y `perfil_deportivo` (edad, género, localidad, frecuencia de juego y
+    nivel estimado, todos juntos). Una sección que no llega no se toca. Las secciones se
+    guardan juntas en un solo cambio, así que se guarda todo o nada. Devuelve el usuario.
+    """
+    cambios = {**(datos_personales or {}), **(perfil_deportivo or {})}
+    if not cambios:
+        return usuario
+    for campo, valor in cambios.items():
+        setattr(usuario, campo, valor)
+    usuario.save(update_fields=list(cambios))
+    return usuario
+
+
 def paso_onboarding_pendiente(usuario: Usuario) -> str | None:
     """Devuelve el paso de onboarding que le falta al usuario, o None si no le falta ninguno.
 
-    Por ahora solo existe el paso "perfil" (nivel y localidad); "disponibilidad" se suma
-    con la preferencia de HU-005.
+    El paso "perfil" (HU-004) queda hecho cuando el perfil está completo (nivel y localidad).
+    El paso "disponibilidad" se suma con la preferencia de HU-005, que todavía no existe.
     """
     if not usuario.perfil_completo:
         return "perfil"

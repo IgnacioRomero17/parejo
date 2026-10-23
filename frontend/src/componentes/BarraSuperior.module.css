@@ -1,0 +1,43 @@
+.barra {
+  background: var(--marino);
+}
+
+.contenido {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  max-width: 1280px;
+  height: 64px;
+  margin: 0 auto;
+  padding: 0 40px;
+}
+
+.logo {
+  display: inline-flex;
+  text-decoration: none;
+}
+
+.enlaces {
+  display: flex;
+  gap: 8px;
+  height: 64px;
+}
+
+.enlace {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 100%;
+  padding: 3px 16px 0;
+  border-bottom: 3px solid transparent;
+  color: var(--texto-sobre-oscuro);
+  font-size: 15px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.activo {
+  border-bottom-color: var(--lima);
+  color: var(--superficie);
+}

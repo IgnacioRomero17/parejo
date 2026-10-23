@@ -5,6 +5,7 @@ from apps.usuarios.vistas import (
     CsrfVista,
     EnlaceRecuperacionVista,
     IngresoVista,
+    PerfilVista,
     RecuperacionVista,
     RegistroVista,
     SalirVista,
@@ -28,4 +29,5 @@ urlpatterns = [
         EnlaceRecuperacionVista.as_view(),
         name="auth-recuperar-enlace",
     ),
+    path("perfil", PerfilVista.as_view(), name="perfil"),
 ]

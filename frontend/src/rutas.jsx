@@ -1,14 +1,19 @@
 import { Route, Routes } from "react-router-dom";
+import RutaConOnboarding from "./componentes/RutaConOnboarding.jsx";
+import RutaPrivada from "./componentes/RutaPrivada.jsx";
 import RutaPublica from "./componentes/RutaPublica.jsx";
 import Bienvenida from "./paginas/Bienvenida.jsx";
 import Ingreso from "./paginas/Ingreso.jsx";
+import OnboardingPerfil from "./paginas/OnboardingPerfil.jsx";
+import Perfil from "./paginas/Perfil.jsx";
 import RecuperacionCorreo from "./paginas/RecuperacionCorreo.jsx";
 import RecuperacionEnviado from "./paginas/RecuperacionEnviado.jsx";
 import RecuperacionNueva from "./paginas/RecuperacionNueva.jsx";
 import Registro from "./paginas/Registro.jsx";
 
 // Las rutas de las demás pantallas se agregan con su HU (ver docs/interfaces/README.md).
-// Las pantallas internas van dentro de RutaPrivada.
+// Las pantallas internas van dentro de RutaPrivada; las que piden el onboarding completo,
+// además, dentro de RutaConOnboarding.
 function Rutas() {
   return (
     <Routes>
@@ -21,6 +26,12 @@ function Rutas() {
       <Route path="/recuperar" element={<RecuperacionCorreo />} />
       <Route path="/recuperar/enviado" element={<RecuperacionEnviado />} />
       <Route path="/recuperar/:uid/:token" element={<RecuperacionNueva />} />
+      <Route element={<RutaPrivada />}>
+        <Route path="/onboarding/perfil" element={<OnboardingPerfil />} />
+        <Route element={<RutaConOnboarding />}>
+          <Route path="/perfil" element={<Perfil />} />
+        </Route>
+      </Route>
     </Routes>
   );
 }

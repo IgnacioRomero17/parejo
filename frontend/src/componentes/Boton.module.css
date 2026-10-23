@@ -25,6 +25,13 @@
   color: var(--texto);
 }
 
+/* Secundario sobre fondo marino (barra de cambios sin guardar). */
+.sobreOscuro {
+  background: transparent;
+  border-color: var(--texto-secundario);
+  color: var(--superficie);
+}
+
 .boton:disabled {
   background: var(--deshabilitado);
   border-color: transparent;

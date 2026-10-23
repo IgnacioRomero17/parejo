@@ -1,0 +1,34 @@
+/* sticky y no fixed: queda al pie de la pantalla sin salir del flujo del contenido. */
+.barra {
+  position: sticky;
+  bottom: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px 16px 28px;
+  border-radius: var(--radio-tarjeta);
+  background: var(--marino);
+  box-shadow: var(--sombra-aviso);
+}
+
+.texto {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--superficie);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.punto {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--lima);
+}
+
+.acciones {
+  display: flex;
+  gap: 12px;
+}

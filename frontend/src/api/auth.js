@@ -13,6 +13,10 @@ export function ingresar({ email, contrasena }) {
   return pedir("POST", "auth/ingresar", { email, contrasena });
 }
 
+export function salir() {
+  return pedir("POST", "auth/salir");
+}
+
 export function solicitarRecuperacion({ email }) {
   return pedir("POST", "auth/recuperar", { email });
 }

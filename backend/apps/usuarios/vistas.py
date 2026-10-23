@@ -8,9 +8,11 @@ from rest_framework.views import APIView
 
 from apps.usuarios import servicios
 from apps.usuarios.serializers import (
+    ActualizarPerfilSerializer,
     ConfirmarRecuperacionSerializer,
     CuentaRecuperacionSerializer,
     IngresoSerializer,
+    PerfilSerializer,
     RecuperacionSerializer,
     RegistroSerializer,
     UsuarioActualSerializer,
@@ -90,3 +92,14 @@ class ConfirmarRecuperacionVista(APIView):
         usuario = servicios.restablecer_contrasena(**serializer.validated_data)
         login(request, usuario)
         return Response(UsuarioActualSerializer(usuario).data)
+
+
+class PerfilVista(APIView):
+    def get(self, request):
+        return Response(PerfilSerializer(request.user).data)
+
+    def patch(self, request):
+        serializer = ActualizarPerfilSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        usuario = servicios.actualizar_perfil(request.user, **serializer.validated_data)
+        return Response(PerfilSerializer(usuario).data)

@@ -1,0 +1,33 @@
+.campo {
+  composes: campo from "./Campo.module.css";
+}
+
+.etiqueta {
+  composes: etiqueta from "./Campo.module.css";
+}
+
+.contenedor {
+  display: grid;
+  align-items: center;
+}
+
+/* La flecha va en la misma celda del grid que el select, alineada a la derecha. */
+.control {
+  composes: control from "./Campo.module.css";
+  grid-area: 1 / 1;
+  padding-right: 42px;
+  appearance: none;
+  cursor: pointer;
+}
+
+.conError {
+  composes: conError from "./Campo.module.css";
+}
+
+.flecha {
+  grid-area: 1 / 1;
+  justify-self: end;
+  margin-right: 14px;
+  color: var(--texto);
+  pointer-events: none;
+}
