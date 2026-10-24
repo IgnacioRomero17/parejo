@@ -127,14 +127,12 @@ describe("textos y niveles", () => {
     expect(textoCamposPendientes(5)).toBe("5 campos pendientes");
   });
 
-  it("elige la palabra según el género del perfil", () => {
-    expect(segunGenero("FEMENINO", "registrada", "registrado")).toBe(
-      "registrada",
-    );
-    for (const genero of ["MASCULINO", "NO_DECLARA", null]) {
-      expect(segunGenero(genero, "registrada", "registrado")).toBe(
-        "registrado",
-      );
+  it("elige el texto según el género del perfil", () => {
+    const formas = ["registrada", "registrado", "neutra"];
+    expect(segunGenero("FEMENINO", ...formas)).toBe("registrada");
+    expect(segunGenero("MASCULINO", ...formas)).toBe("registrado");
+    for (const genero of ["NO_DECLARA", null]) {
+      expect(segunGenero(genero, ...formas)).toBe("neutra");
     }
   });
 

@@ -185,12 +185,12 @@ describe("CrearEncuentro (HU-006)", () => {
   });
 
   it.each([
-    ["MASCULINO", "Organizador", "registrado"],
-    ["NO_DECLARA", "Organizador", "registrado"],
-    ["FEMENINO", "Organizadora", "registrada"],
+    ["MASCULINO", "Organizador", "quedás registrado como participante 1"],
+    ["FEMENINO", "Organizadora", "quedás registrada como participante 1"],
+    ["NO_DECLARA", "Organizás", "ocupás el lugar 1"],
   ])(
     "con género %s dice %s y %s, según el perfil",
-    async (genero, rol, registro) => {
+    async (genero, rol, lugarPropio) => {
       obtenerPerfil.mockResolvedValue(perfil(genero));
       renderizar();
       await esperarFormulario();
@@ -198,7 +198,7 @@ describe("CrearEncuentro (HU-006)", () => {
       expect(screen.getByText(rol)).toBeTruthy();
       expect(
         screen.getByText(
-          `Al crear el encuentro quedás ${registro} como participante 1. Faltan 3 lugares, que se completan con invitaciones.`,
+          `Al crear el encuentro ${lugarPropio}. Faltan 3 lugares, que se completan con invitaciones.`,
         ),
       ).toBeTruthy();
     },

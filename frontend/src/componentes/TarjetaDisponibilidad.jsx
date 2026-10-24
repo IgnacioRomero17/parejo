@@ -12,7 +12,12 @@ function TarjetaDisponibilidad({ valores, errores, genero, onCambiar }) {
   return (
     <Tarjeta
       titulo="Disponibilidad y preferencias"
-      texto={`Define en qué encuentros aparecés como ${segunGenero(genero, "jugadora", "jugador")} compatible.`}
+      texto={segunGenero(
+        genero,
+        "Define en qué encuentros aparecés como jugadora compatible.",
+        "Define en qué encuentros aparecés como jugador compatible.",
+        "Define con qué encuentros sos compatible.",
+      )}
     >
       <CamposFranjas
         franjas={valores.franjas}

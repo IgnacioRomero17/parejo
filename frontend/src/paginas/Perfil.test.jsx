@@ -318,10 +318,10 @@ describe("Perfil · disponibilidad y preferencias (HU-005)", () => {
   });
 
   it.each([
-    ["MASCULINO", "jugador"],
-    ["NO_DECLARA", "jugador"],
-    ["FEMENINO", "jugadora"],
-  ])("con género %s se refiere al usuario como %s", async (genero, palabra) => {
+    ["MASCULINO", "Define en qué encuentros aparecés como jugador compatible."],
+    ["FEMENINO", "Define en qué encuentros aparecés como jugadora compatible."],
+    ["NO_DECLARA", "Define con qué encuentros sos compatible."],
+  ])("con género %s dice: %s", async (genero, texto) => {
     obtenerPerfil.mockResolvedValue({
       ...PERFIL,
       perfil_deportivo: { ...PERFIL.perfil_deportivo, genero },
@@ -329,11 +329,7 @@ describe("Perfil · disponibilidad y preferencias (HU-005)", () => {
     renderizar();
     await esperarPerfil();
 
-    expect(
-      within(seccionDisponibilidad()).getByText(
-        `Define en qué encuentros aparecés como ${palabra} compatible.`,
-      ),
-    ).toBeTruthy();
+    expect(within(seccionDisponibilidad()).getByText(texto)).toBeTruthy();
   });
 
   it("C2: al activar el interruptor y guardar envía solo esa sección y queda Disponible", async () => {

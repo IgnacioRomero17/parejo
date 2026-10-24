@@ -14,6 +14,12 @@ const LUGARES_POR_INVITAR = Array.from(
 // Los textos sobre el jugador usan el `genero` de su perfil.
 function TarjetaLugares({ nombre, apellido, genero }) {
   const idTitulo = useId();
+  const lugarPropio = segunGenero(
+    genero,
+    "quedás registrada como participante 1",
+    "quedás registrado como participante 1",
+    "ocupás el lugar 1",
+  );
 
   return (
     <aside className={estilos.tarjeta} aria-labelledby={idTitulo}>
@@ -30,7 +36,7 @@ function TarjetaLugares({ nombre, apellido, genero }) {
             Vos · {nombre} {apellido}
           </span>
           <span className={estilos.rol}>
-            {segunGenero(genero, "Organizadora", "Organizador")}
+            {segunGenero(genero, "Organizadora", "Organizador", "Organizás")}
           </span>
         </li>
         {LUGARES_POR_INVITAR.map((numero) => (
@@ -46,9 +52,8 @@ function TarjetaLugares({ nombre, apellido, genero }) {
           aria-hidden="true"
           className={estilos.icono}
         />
-        Al crear el encuentro quedás{" "}
-        {segunGenero(genero, "registrada", "registrado")} como participante 1.
-        Faltan 3 lugares, que se completan con invitaciones.
+        Al crear el encuentro {lugarPropio}. Faltan 3 lugares, que se completan
+        con invitaciones.
       </p>
     </aside>
   );
