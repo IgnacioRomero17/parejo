@@ -24,7 +24,7 @@ paths:
 - Números: coma decimal ("4,5", "1,00"); "N de 4"; minutos como "90 minutos" en títulos y "90 min" en datos compactos.
 - Fechas: "Sábado 3 de octubre · 18:00" en títulos, "Sáb 3 oct 2026" en encabezados y listas; horas en 24 h ("18:00").
 - Plurales correctos según la cantidad: "1 lugar libre" / "2 lugares libres", "1 invitación pendiente" / "3 invitaciones pendientes".
-- Todo texto que se refiera al usuario o a otra persona concreta con una palabra con género (organizador/organizadora, registrado/registrada, invitado/invitada) usa el género de su perfil. Con “Prefiero no decirlo” se usa la forma masculina genérica.
+- Género: todo texto que se refiera a una persona concreta usa el género de su perfil ("la organizadora", "quedás registrada"). Con "Prefiero no decirlo", o en textos generales, se usa una forma neutra, reformulando la frase si hace falta ("Esperando que se inicie la formación de parejas").
 
 ## Glosario (usar siempre estos términos)
 | Usar | No usar |
