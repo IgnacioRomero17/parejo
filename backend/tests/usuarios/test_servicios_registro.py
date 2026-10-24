@@ -8,7 +8,7 @@ from apps.comun.errores import ErrorNegocio
 from apps.usuarios.models import Usuario
 from apps.usuarios.servicios import paso_onboarding_pendiente, registrar_usuario
 from apps.usuarios.validadores import MENSAJE_POLITICA_CONTRASENA
-from tests.fabricas import crear_localidad, crear_usuario
+from tests.fabricas import crear_localidad, crear_preferencia, crear_usuario
 
 pytestmark = pytest.mark.django_db
 
@@ -90,7 +90,8 @@ def test_hu001_registro_crea_jugador_con_perfil_incompleto():
     assert paso_onboarding_pendiente(usuario) == "perfil"
 
 
-def test_onboarding_sin_paso_pendiente_con_perfil_completo():
+def test_onboarding_sin_paso_pendiente_con_perfil_y_preferencia():
     usuario = crear_usuario(localidad=crear_localidad(), nivel_estimado=Decimal("3.5"))
+    crear_preferencia(usuario)
 
     assert paso_onboarding_pendiente(usuario) is None

@@ -1,0 +1,49 @@
+.franjas {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.fila {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1.6fr) minmax(0, 1fr) auto minmax(0, 1fr)
+    minmax(64px, auto);
+  gap: 12px;
+  align-items: start;
+}
+
+/* El separador y "Quitar" se alinean con los controles, que miden 42px de alto. */
+.separador,
+.quitar {
+  display: flex;
+  align-items: center;
+  height: 42px;
+}
+
+/* En la primera fila los controles bajan por el rótulo visible: 21px de texto + 8px. */
+.conRotulos .separador,
+.conRotulos .quitar {
+  margin-top: 29px;
+}
+
+.separador {
+  color: var(--texto-secundario);
+  font-size: 15px;
+}
+
+.quitar {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--azul);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}

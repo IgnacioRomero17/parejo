@@ -1,0 +1,13 @@
+.pagina {
+  composes: pagina from "./Perfil.module.css";
+}
+
+.encabezado {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.texto {
+  composes: texto from "./Perfil.module.css";
+}

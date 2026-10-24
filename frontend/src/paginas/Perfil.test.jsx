@@ -39,7 +39,15 @@ const PERFIL = {
     frecuencia_juego: "2_3_SEMANA",
     nivel_estimado: 4.5,
   },
-  disponibilidad: { disponible_para_invitaciones: false },
+  disponibilidad: {
+    franjas: [
+      { dia_semana: 3, hora_inicio: "19:00", hora_fin: "22:00" },
+      { dia_semana: 6, hora_inicio: "17:00", hora_fin: "21:00" },
+    ],
+    tipo_encuentro: "COMPETITIVO",
+    lado_preferido: "DRIVE",
+    disponible_para_invitaciones: false,
+  },
 };
 const LOCALIDADES = [
   { id: 7, nombre: "Río Ceballos" },
@@ -270,5 +278,214 @@ describe("Perfil (HU-004)", () => {
 
     expect(await screen.findByText("Bienvenida")).toBeTruthy();
     expect(salir).toHaveBeenCalled();
+  });
+});
+
+function seccionDisponibilidad() {
+  return screen.getByRole("region", { name: "Disponibilidad y preferencias" });
+}
+
+function valoresDe(seccion, etiqueta) {
+  return within(seccion)
+    .getAllByLabelText(etiqueta)
+    .map((control) => control.value);
+}
+
+describe("Perfil · disponibilidad y preferencias (HU-005)", () => {
+  beforeEach(() => {
+    obtenerPerfil.mockReset().mockResolvedValue(PERFIL);
+    listarLocalidades.mockReset().mockResolvedValue(LOCALIDADES);
+    actualizarPerfil.mockReset();
+    obtenerUsuarioActual.mockReset().mockResolvedValue(USUARIO);
+  });
+
+  it("muestra las franjas, las preferencias y el interruptor guardados", async () => {
+    renderizar();
+    await esperarPerfil();
+    const seccion = seccionDisponibilidad();
+
+    expect(valoresDe(seccion, "Día")).toEqual(["3", "6"]);
+    expect(valoresDe(seccion, "Desde")).toEqual(["19:00", "17:00"]);
+    expect(valoresDe(seccion, "Hasta")).toEqual(["22:00", "21:00"]);
+    expect(within(seccion).getByLabelText("Competitivo").checked).toBe(true);
+    expect(within(seccion).getByLabelText("Drive").checked).toBe(true);
+    expect(within(seccion).getByRole("switch").checked).toBe(false);
+    expect(
+      within(seccion).getByText(
+        "Si lo desactivás, el sistema deja de recomendarte a otros organizadores.",
+      ),
+    ).toBeTruthy();
+  });
+
+  it("C2: al activar el interruptor y guardar envía solo esa sección y queda Disponible", async () => {
+    actualizarPerfil.mockResolvedValue({
+      ...PERFIL,
+      disponibilidad: {
+        ...PERFIL.disponibilidad,
+        disponible_para_invitaciones: true,
+      },
+    });
+    renderizar();
+    await esperarPerfil();
+
+    fireEvent.click(within(seccionDisponibilidad()).getByRole("switch"));
+    expect(barraCambios()).toBeTruthy();
+    fireEvent.click(screen.getByRole("button", { name: "Guardar cambios" }));
+
+    expect(
+      await screen.findByText("Cambios guardados correctamente."),
+    ).toBeTruthy();
+    expect(actualizarPerfil).toHaveBeenCalledWith({
+      disponibilidad: {
+        ...PERFIL.disponibilidad,
+        disponible_para_invitaciones: true,
+      },
+    });
+    expect(screen.getByText("Disponible")).toBeTruthy();
+    expect(barraCambios()).toBeNull();
+  });
+
+  it("C4: modifica una franja y muestra el resultado unido que devuelve el backend", async () => {
+    actualizarPerfil.mockResolvedValue({
+      ...PERFIL,
+      disponibilidad: {
+        ...PERFIL.disponibilidad,
+        franjas: [{ dia_semana: 6, hora_inicio: "17:00", hora_fin: "22:00" }],
+      },
+    });
+    renderizar();
+    await esperarPerfil();
+    const seccion = seccionDisponibilidad();
+
+    fireEvent.change(within(seccion).getAllByLabelText("Día")[0], {
+      target: { value: "6" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Guardar cambios" }));
+
+    await screen.findByText("Cambios guardados correctamente.");
+    expect(actualizarPerfil.mock.calls[0][0].disponibilidad.franjas).toEqual([
+      { dia_semana: 6, hora_inicio: "19:00", hora_fin: "22:00" },
+      { dia_semana: 6, hora_inicio: "17:00", hora_fin: "21:00" },
+    ]);
+    expect(valoresDe(seccion, "Día")).toEqual(["6"]);
+    expect(valoresDe(seccion, "Hasta")).toEqual(["22:00"]);
+  });
+
+  it("muestra el error del backend en la fila que corresponde", async () => {
+    actualizarPerfil.mockRejectedValue(
+      new ErrorApi({
+        estado: 400,
+        errores: {
+          disponibilidad: {
+            franjas: {
+              1: { hora_fin: ["La franja debe durar al menos 60 minutos."] },
+            },
+          },
+        },
+      }),
+    );
+    renderizar();
+    await esperarPerfil();
+    const seccion = seccionDisponibilidad();
+
+    fireEvent.change(within(seccion).getAllByLabelText("Hasta")[1], {
+      target: { value: "17:30" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Guardar cambios" }));
+
+    expect(
+      await screen.findByText("La franja debe durar al menos 60 minutos."),
+    ).toBeTruthy();
+    const hasta = within(seccion).getAllByLabelText("Hasta");
+    expect(hasta[0].getAttribute("aria-invalid")).toBeNull();
+    expect(hasta[1].getAttribute("aria-invalid")).toBe("true");
+  });
+
+  it("P6: al quitar la última franja estando disponible muestra el error del interruptor", async () => {
+    obtenerPerfil.mockResolvedValue({
+      ...PERFIL,
+      disponibilidad: {
+        ...PERFIL.disponibilidad,
+        franjas: [PERFIL.disponibilidad.franjas[0]],
+        disponible_para_invitaciones: true,
+      },
+    });
+    actualizarPerfil.mockRejectedValue(
+      new ErrorApi({
+        estado: 400,
+        errores: {
+          disponibilidad: {
+            disponible_para_invitaciones: [
+              "Para recibir invitaciones necesitás cargar al menos una franja.",
+            ],
+          },
+        },
+      }),
+    );
+    renderizar();
+    await esperarPerfil();
+    const seccion = seccionDisponibilidad();
+
+    fireEvent.click(
+      within(seccion).getByRole("button", { name: "Quitar franja 1" }),
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Guardar cambios" }));
+
+    expect(
+      await screen.findByText(
+        "Para recibir invitaciones necesitás cargar al menos una franja.",
+      ),
+    ).toBeTruthy();
+    expect(actualizarPerfil.mock.calls[0][0].disponibilidad.franjas).toEqual(
+      [],
+    );
+    expect(
+      within(seccion).getByRole("switch").getAttribute("aria-invalid"),
+    ).toBe("true");
+  });
+
+  it("Agregar franja suma una fila y Descartar vuelve a las guardadas", async () => {
+    renderizar();
+    await esperarPerfil();
+    const seccion = seccionDisponibilidad();
+
+    fireEvent.click(
+      within(seccion).getByRole("button", { name: "Agregar franja" }),
+    );
+    expect(valoresDe(seccion, "Día")).toEqual(["3", "6", ""]);
+    fireEvent.click(
+      within(seccion).getByRole("button", { name: "Quitar franja 1" }),
+    );
+    expect(valoresDe(seccion, "Día")).toEqual(["6", ""]);
+    expect(barraCambios()).toBeTruthy();
+
+    fireEvent.click(screen.getByRole("button", { name: "Descartar" }));
+
+    expect(valoresDe(seccion, "Día")).toEqual(["3", "6"]);
+    expect(barraCambios()).toBeNull();
+  });
+
+  it("una franja a medio completar impide guardar y se marca", async () => {
+    renderizar();
+    await esperarPerfil();
+    const seccion = seccionDisponibilidad();
+
+    fireEvent.click(
+      within(seccion).getByRole("button", { name: "Agregar franja" }),
+    );
+    fireEvent.change(within(seccion).getAllByLabelText("Día")[2], {
+      target: { value: "1" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Guardar cambios" }));
+
+    expect(actualizarPerfil).not.toHaveBeenCalled();
+    expect(
+      within(seccion)
+        .getAllByLabelText("Desde")[2]
+        .getAttribute("aria-invalid"),
+    ).toBe("true");
+    expect(
+      within(seccion).getAllByText("Completá este campo para poder guardar."),
+    ).toHaveLength(2);
   });
 });

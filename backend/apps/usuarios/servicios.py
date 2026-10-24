@@ -1,3 +1,5 @@
+from datetime import time
+
 from django.conf import settings
 from django.contrib.auth import authenticate
 from django.contrib.auth.password_validation import validate_password
@@ -10,7 +12,7 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 from apps.comun.errores import ErrorNegocio
-from apps.usuarios.models import Usuario
+from apps.usuarios.models import Disponibilidad, Preferencia, Usuario
 
 MENSAJE_CORREO_REGISTRADO = "Este correo ya está registrado."
 MENSAJE_CREDENCIALES_INVALIDAS = "Las credenciales ingresadas no son válidas."
@@ -18,6 +20,14 @@ MENSAJE_CUENTA_INEXISTENTE = "La cuenta no existe. Revisá el correo ingresado."
 MENSAJE_ENLACE_INVALIDO = "El enlace no es válido."
 ASUNTO_RECUPERACION = "Restablecé tu contraseña de parejo"
 ID_MAXIMO = 2_147_483_647  # máximo de la columna integer de id_usuario
+MENSAJE_HORA_INVALIDA = "Elegí un horario entre las 08:00 y las 23:30, en pasos de 30 minutos."
+MENSAJE_FIN_ANTES_DE_INICIO = "La hora de fin debe ser posterior a la de inicio."
+MENSAJE_FRANJA_CORTA = "La franja debe durar al menos 60 minutos."
+MENSAJE_DISPONIBLE_SIN_FRANJAS = "Para recibir invitaciones necesitás cargar al menos una franja."
+# Horario en que se juegan los encuentros: una franja fuera de él no cubriría ninguno.
+HORA_MINIMA_FRANJA = time(8)
+HORA_MAXIMA_FRANJA = time(23, 30)
+DURACION_MINIMA_FRANJA = 60  # minutos: el encuentro más corto
 
 
 def normalizar_correo(email: str) -> str:
@@ -153,33 +163,129 @@ def restablecer_contrasena(uid: str, token: str, contrasena: str) -> Usuario:
     return usuario
 
 
+def _hora_valida(hora: time) -> bool:
+    return (
+        hora.minute in (0, 30)
+        and hora.second == 0
+        and hora.microsecond == 0
+        and HORA_MINIMA_FRANJA <= hora <= HORA_MAXIMA_FRANJA
+    )
+
+
+def _minutos(hora: time) -> int:
+    return hora.hour * 60 + hora.minute
+
+
+def validar_franja(hora_inicio: time, hora_fin: time) -> None:
+    """Verifica una franja de disponibilidad (HU-005).
+
+    Recibe sus horas de inicio y de fin. Cada hora va en pasos de 30 minutos, entre las 08:00 y
+    las 23:30; el fin es posterior al inicio y la franja dura al menos 60 minutos. Lanza
+    ErrorNegocio en el campo `hora_inicio` o `hora_fin` con la primera regla que no se cumple.
+    """
+    if not _hora_valida(hora_inicio):
+        raise ErrorNegocio(MENSAJE_HORA_INVALIDA, campo="hora_inicio")
+    if not _hora_valida(hora_fin):
+        raise ErrorNegocio(MENSAJE_HORA_INVALIDA, campo="hora_fin")
+    if hora_fin <= hora_inicio:
+        raise ErrorNegocio(MENSAJE_FIN_ANTES_DE_INICIO, campo="hora_fin")
+    if _minutos(hora_fin) - _minutos(hora_inicio) < DURACION_MINIMA_FRANJA:
+        raise ErrorNegocio(MENSAJE_FRANJA_CORTA, campo="hora_fin")
+
+
+def validar_disponible_con_franjas(franjas: list[dict], disponible: bool) -> None:
+    """Verifica que un jugador disponible para recibir invitaciones tenga franjas (HU-005).
+
+    Recibe las franjas que quedarían guardadas y el valor del interruptor. Lanza ErrorNegocio
+    en el campo `disponible_para_invitaciones` si está disponible y no hay ninguna franja.
+    """
+    if disponible and not franjas:
+        raise ErrorNegocio(MENSAJE_DISPONIBLE_SIN_FRANJAS, campo="disponible_para_invitaciones")
+
+
+def unir_franjas(franjas: list[dict]) -> list[dict]:
+    """Une las franjas del mismo día que se superponen o se tocan (HU-005).
+
+    Recibe franjas `{dia_semana, hora_inicio, hora_fin}` en cualquier orden. Devuelve franjas
+    nuevas, ordenadas por día y hora de inicio: 17:00–19:00 y 18:30–21:00 quedan 17:00–21:00,
+    igual que 17:00–19:00 y 19:00–21:00. El motor exige que una sola franja cubra el encuentro.
+    """
+    unidas: list[dict] = []
+    orden = sorted(franjas, key=lambda f: (f["dia_semana"], f["hora_inicio"], f["hora_fin"]))
+    for franja in orden:
+        anterior = unidas[-1] if unidas else None
+        if (
+            anterior
+            and anterior["dia_semana"] == franja["dia_semana"]
+            and franja["hora_inicio"] <= anterior["hora_fin"]
+        ):
+            anterior["hora_fin"] = max(anterior["hora_fin"], franja["hora_fin"])
+        else:
+            unidas.append(dict(franja))
+    return unidas
+
+
+def _guardar_preferencia_y_franjas(usuario: Usuario, disponibilidad: dict) -> None:
+    preferencia, _ = Preferencia.objects.update_or_create(
+        usuario=usuario,
+        defaults={
+            "tipo_encuentro": disponibilidad["tipo_encuentro"],
+            "lado_preferido": disponibilidad["lado_preferido"],
+        },
+    )
+    # Deja la relación del objeto al día para la respuesta, que la lee del mismo usuario.
+    usuario.preferencia = preferencia
+    # Se guardan las franjas completas de la pantalla: reemplazan a las anteriores.
+    Disponibilidad.objects.filter(usuario=usuario).delete()
+    Disponibilidad.objects.bulk_create(
+        Disponibilidad(usuario=usuario, **franja)
+        for franja in unir_franjas(disponibilidad["franjas"])
+    )
+
+
 def actualizar_perfil(
     usuario: Usuario,
     datos_personales: dict | None = None,
     perfil_deportivo: dict | None = None,
+    disponibilidad: dict | None = None,
 ) -> Usuario:
-    """Guarda las secciones del perfil que el jugador modificó (HU-004).
+    """Guarda las secciones del perfil que el jugador modificó (HU-004 y HU-005).
 
     Recibe el usuario y, por sección, los datos ya validados en formato: `datos_personales`
-    (nombre y apellido) y `perfil_deportivo` (edad, género, localidad, frecuencia de juego y
-    nivel estimado, todos juntos). Una sección que no llega no se toca. Las secciones se
-    guardan juntas en un solo cambio, así que se guarda todo o nada. Devuelve el usuario.
+    (nombre y apellido), `perfil_deportivo` (edad, género, localidad, frecuencia de juego y
+    nivel estimado) y `disponibilidad` (franjas, tipo de encuentro, lado preferido y
+    disponible para invitaciones). Cada sección llega completa y una que no llega no se toca.
+    Las franjas se guardan ya unidas. Todo se guarda en una transacción: todo o nada.
+    Devuelve el usuario. Lanza ErrorNegocio si una franja no es válida o si el jugador queda
+    disponible sin franjas.
     """
     cambios = {**(datos_personales or {}), **(perfil_deportivo or {})}
+    if disponibilidad is not None:
+        for franja in disponibilidad["franjas"]:
+            validar_franja(franja["hora_inicio"], franja["hora_fin"])
+        disponible = disponibilidad["disponible_para_invitaciones"]
+        validar_disponible_con_franjas(disponibilidad["franjas"], disponible)
+        cambios["disponible_para_invitaciones"] = disponible
     if not cambios:
         return usuario
-    for campo, valor in cambios.items():
-        setattr(usuario, campo, valor)
-    usuario.save(update_fields=list(cambios))
+    with transaction.atomic():
+        for campo, valor in cambios.items():
+            setattr(usuario, campo, valor)
+        usuario.save(update_fields=list(cambios))
+        if disponibilidad is not None:
+            _guardar_preferencia_y_franjas(usuario, disponibilidad)
     return usuario
 
 
 def paso_onboarding_pendiente(usuario: Usuario) -> str | None:
     """Devuelve el paso de onboarding que le falta al usuario, o None si no le falta ninguno.
 
-    El paso "perfil" (HU-004) queda hecho cuando el perfil está completo (nivel y localidad).
-    El paso "disponibilidad" se suma con la preferencia de HU-005, que todavía no existe.
+    El paso "perfil" (HU-004) queda hecho cuando el perfil está completo (nivel y localidad);
+    el paso "disponibilidad" (HU-005), cuando el jugador guardó sus preferencias.
     """
     if not usuario.perfil_completo:
         return "perfil"
+    # Consulta y no `usuario.preferencia`: la relación queda en caché y no vería un alta nueva.
+    if not Preferencia.objects.filter(usuario=usuario).exists():
+        return "disponibilidad"
     return None

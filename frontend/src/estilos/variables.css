@@ -35,6 +35,7 @@
   --radio-control: 10px;
   --radio-pildora: 999px;
   --sombra-aviso: 0 8px 24px rgba(15, 23, 42, 0.25);
+  --sombra-opcion: 0 1px 3px rgba(15, 23, 42, 0.12); /* opción elegida de SelectorSegmentado */
 
   /* Tipografía */
   --fuente-texto: "Inter", system-ui, sans-serif;

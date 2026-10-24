@@ -1,0 +1,24 @@
+.pagina {
+  composes: pagina from "./OnboardingPerfil.module.css";
+}
+
+.encabezado {
+  composes: encabezado from "./OnboardingPerfil.module.css";
+}
+
+.texto {
+  composes: texto from "./OnboardingPerfil.module.css";
+}
+
+.formulario {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.acciones {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}

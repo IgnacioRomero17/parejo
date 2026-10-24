@@ -84,10 +84,10 @@ def test_hu004_sin_secciones_no_cambia_nada():
     assert Usuario.objects.get(pk=usuario.pk).nivel_estimado == Decimal("4.0")
 
 
-def test_hu004_p8_con_el_perfil_guardado_no_queda_paso_pendiente():
+def test_hu004_p8_con_el_perfil_guardado_queda_pendiente_la_disponibilidad():
     usuario = crear_usuario()
     assert paso_onboarding_pendiente(usuario) == "perfil"
 
     actualizar_perfil(usuario, perfil_deportivo=perfil_deportivo(crear_localidad()))
 
-    assert paso_onboarding_pendiente(usuario) is None
+    assert paso_onboarding_pendiente(usuario) == "disponibilidad"

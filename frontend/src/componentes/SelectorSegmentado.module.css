@@ -1,0 +1,66 @@
+.grupo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.leyenda {
+  padding: 0;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.opciones {
+  display: grid;
+  /* Partes iguales (1fr), así la opción elegida mide siempre lo mismo. El mínimo de 1fr es el
+     contenido de la opción (texto sin cortar + margen interno): nunca se recorta. */
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  gap: 4px;
+  padding: 4px;
+  border: 1px solid transparent;
+  border-radius: var(--radio-control);
+  background: var(--etq-gris);
+}
+
+.conError {
+  border: 1.5px solid var(--error);
+}
+
+.opcion {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  padding: 0 16px;
+  border-radius: 8px;
+  color: var(--texto-secundario);
+  font-size: 15px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+/* El radio sigue en el flujo y con foco: solo se oculta su dibujo. */
+.radio {
+  width: 0;
+  height: 0;
+  margin: 0;
+  appearance: none;
+}
+
+.opcion:has(.radio:checked) {
+  background: var(--superficie);
+  box-shadow: var(--sombra-opcion);
+  color: var(--texto);
+  font-weight: 700;
+}
+
+.opcion:has(.radio:focus-visible) {
+  outline: 2px solid var(--azul);
+  outline-offset: 2px;
+}

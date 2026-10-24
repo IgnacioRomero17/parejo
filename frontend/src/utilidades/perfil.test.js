@@ -7,7 +7,9 @@ import {
   perfilDeportivoDeFormulario,
   seccionesModificadas,
   textoCamposPendientes,
+  validarSecciones,
 } from "./perfil.js";
+import { MENSAJE_CAMPO_VACIO } from "./validaciones.js";
 
 const PERFIL = {
   datos_personales: {
@@ -22,7 +24,12 @@ const PERFIL = {
     frecuencia_juego: "2_3_SEMANA",
     nivel_estimado: 4.5,
   },
-  disponibilidad: { disponible_para_invitaciones: true },
+  disponibilidad: {
+    franjas: [{ dia_semana: 6, hora_inicio: "17:00", hora_fin: "21:00" }],
+    tipo_encuentro: "COMPETITIVO",
+    lado_preferido: "DRIVE",
+    disponible_para_invitaciones: true,
+  },
 };
 
 describe("perfil deportivo en el formulario", () => {
@@ -77,6 +84,38 @@ describe("secciones de la pantalla 17", () => {
 
     expect(cuerpoActualizacion(valores, ["perfil_deportivo"])).toEqual({
       perfil_deportivo: PERFIL.perfil_deportivo,
+    });
+  });
+
+  it("HU-005: la disponibilidad se envía con el formato de la API", () => {
+    const valores = formularioPerfil(PERFIL);
+
+    expect(cuerpoActualizacion(valores, ["disponibilidad"])).toEqual({
+      disponibilidad: PERFIL.disponibilidad,
+    });
+  });
+
+  it("HU-005: las claves de las franjas no cuentan como cambio", () => {
+    // Dos lecturas del mismo perfil dan claves distintas a las mismas franjas.
+    expect(
+      seccionesModificadas(formularioPerfil(PERFIL), formularioPerfil(PERFIL)),
+    ).toEqual([]);
+  });
+
+  it("HU-005: valida cada sección con sus reglas", () => {
+    const valores = formularioPerfil(PERFIL);
+    valores.perfil_deportivo.genero = "";
+    valores.disponibilidad.lado_preferido = "";
+
+    expect(
+      validarSecciones(valores, [
+        "datos_personales",
+        "perfil_deportivo",
+        "disponibilidad",
+      ]),
+    ).toEqual({
+      perfil_deportivo: { genero: [MENSAJE_CAMPO_VACIO] },
+      disponibilidad: { lado_preferido: [MENSAJE_CAMPO_VACIO] },
     });
   });
 });

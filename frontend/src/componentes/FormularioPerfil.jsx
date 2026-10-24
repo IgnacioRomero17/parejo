@@ -5,10 +5,10 @@ import estilos from "./FormularioPerfil.module.css";
 import Tarjeta from "./Tarjeta.jsx";
 import TarjetaCuenta from "./TarjetaCuenta.jsx";
 import TarjetaDatosPersonales from "./TarjetaDatosPersonales.jsx";
+import TarjetaDisponibilidad from "./TarjetaDisponibilidad.jsx";
 
 // Secciones de la pantalla 17 con un solo guardado. `valores` y `errores` van agrupados por
 // sección; `onCambiar(seccion)` devuelve el callback `(campo, valor)` de esa sección.
-// La sección "Disponibilidad y preferencias" se suma con la HU-005.
 function FormularioPerfil({
   valores,
   errores,
@@ -48,6 +48,11 @@ function FormularioPerfil({
           </Tarjeta>
         </div>
         <div className={estilos.columna}>
+          <TarjetaDisponibilidad
+            valores={valores.disponibilidad}
+            errores={errores.disponibilidad}
+            onCambiar={onCambiar("disponibilidad")}
+          />
           <TarjetaCuenta onCerrarSesion={onCerrarSesion} />
         </div>
       </div>

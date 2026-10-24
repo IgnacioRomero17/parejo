@@ -19,6 +19,10 @@ function renderizar(usuario) {
               path="/onboarding/perfil"
               element={<p>Onboarding perfil</p>}
             />
+            <Route
+              path="/onboarding/disponibilidad"
+              element={<p>Onboarding disponibilidad</p>}
+            />
           </Route>
           <Route path="/ingresar" element={<p>Inicio de sesión</p>} />
         </Routes>
@@ -32,6 +36,13 @@ describe("RutaConOnboarding (HU-004)", () => {
     renderizar({ id: 1, onboarding: "perfil" });
 
     expect(screen.getByText("Onboarding perfil")).toBeTruthy();
+    expect(screen.queryByText("Mi perfil")).toBeNull();
+  });
+
+  it("HU-005: con la disponibilidad pendiente lleva al paso 2 del onboarding", () => {
+    renderizar({ id: 1, onboarding: "disponibilidad" });
+
+    expect(screen.getByText("Onboarding disponibilidad")).toBeTruthy();
     expect(screen.queryByText("Mi perfil")).toBeNull();
   });
 

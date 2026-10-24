@@ -1,9 +1,10 @@
+from datetime import timedelta
 from decimal import Decimal
 
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
 from django.db.models.functions import Lower, Mod, Now
-from django.db.models.lookups import Exact
+from django.db.models.lookups import Exact, GreaterThanOrEqual
 from django.utils import timezone
 
 from apps.localidades.models import Localidad
@@ -20,6 +21,28 @@ class FrecuenciaJuego(models.TextChoices):
     UNA_SEMANA = "1_SEMANA", "1 vez por semana"
     DOS_TRES_SEMANA = "2_3_SEMANA", "2 o 3 veces por semana"
     CUATRO_MAS_SEMANA = "4_MAS_SEMANA", "4 o más veces por semana"
+
+
+class TipoEncuentro(models.TextChoices):
+    RECREATIVO = "RECREATIVO", "Recreativo"
+    COMPETITIVO = "COMPETITIVO", "Competitivo"
+    INDIFERENTE = "INDIFERENTE", "Indiferente"
+
+
+class LadoPreferido(models.TextChoices):
+    DRIVE = "DRIVE", "Drive"
+    REVES = "REVES", "Revés"
+    INDIFERENTE = "INDIFERENTE", "Indiferente"
+
+
+class DiaSemana(models.IntegerChoices):
+    LUNES = 1, "Lunes"
+    MARTES = 2, "Martes"
+    MIERCOLES = 3, "Miércoles"
+    JUEVES = 4, "Jueves"
+    VIERNES = 5, "Viernes"
+    SABADO = 6, "Sábado"
+    DOMINGO = 7, "Domingo"
 
 
 class UsuarioManager(BaseUserManager):
@@ -105,3 +128,80 @@ class Usuario(AbstractBaseUser, PermissionsMixin):
     @property
     def perfil_completo(self):
         return self.nivel_estimado is not None and self.localidad_id is not None
+
+
+class Preferencia(models.Model):
+    id_preferencia = models.AutoField(primary_key=True)
+    usuario = models.OneToOneField(
+        Usuario,
+        on_delete=models.CASCADE,
+        db_column="id_usuario",
+        related_name="preferencia",
+    )
+    tipo_encuentro = models.CharField(max_length=12, choices=TipoEncuentro.choices)
+    lado_preferido = models.CharField(max_length=12, choices=LadoPreferido.choices)
+
+    class Meta:
+        db_table = "preferencia"
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(tipo_encuentro__in=TipoEncuentro.values),
+                name="preferencia_tipo_encuentro_valido",
+            ),
+            models.CheckConstraint(
+                condition=models.Q(lado_preferido__in=LadoPreferido.values),
+                name="preferencia_lado_preferido_valido",
+            ),
+        ]
+
+
+class Disponibilidad(models.Model):
+    id_disponibilidad = models.AutoField(primary_key=True)
+    usuario = models.ForeignKey(
+        Usuario,
+        on_delete=models.CASCADE,
+        db_column="id_usuario",
+        related_name="disponibilidades",
+    )
+    dia_semana = models.SmallIntegerField(choices=DiaSemana.choices)
+    hora_inicio = models.TimeField()
+    hora_fin = models.TimeField()
+
+    class Meta:
+        db_table = "disponibilidad"
+        ordering = ["dia_semana", "hora_inicio"]
+        indexes = [
+            models.Index(fields=["usuario", "dia_semana"], name="disponibilidad_usuario_dia"),
+        ]
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(dia_semana__gte=1, dia_semana__lte=7),
+                name="disponibilidad_dia_semana_valido",
+            ),
+            models.CheckConstraint(
+                condition=models.Q(hora_fin__gt=models.F("hora_inicio")),
+                name="disponibilidad_orden",
+            ),
+            models.CheckConstraint(
+                condition=GreaterThanOrEqual(
+                    models.ExpressionWrapper(
+                        models.F("hora_fin") - models.F("hora_inicio"),
+                        output_field=models.DurationField(),
+                    ),
+                    timedelta(minutes=60),
+                ),
+                name="disponibilidad_minimo",
+            ),
+            models.CheckConstraint(
+                condition=models.Q(
+                    hora_inicio__second=0,
+                    hora_fin__second=0,
+                    hora_inicio__minute__in=(0, 30),
+                    hora_fin__minute__in=(0, 30),
+                ),
+                name="disponibilidad_paso_30",
+            ),
+        ]
+
+    def __str__(self):
+        return f"{self.get_dia_semana_display()} {self.hora_inicio:%H:%M}–{self.hora_fin:%H:%M}"

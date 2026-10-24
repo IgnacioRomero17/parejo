@@ -4,7 +4,7 @@ import pytest
 from django.conf import settings
 from rest_framework.test import APIClient
 
-from tests.fabricas import crear_localidad, crear_usuario
+from tests.fabricas import crear_localidad, crear_preferencia, crear_usuario
 
 pytestmark = pytest.mark.django_db
 
@@ -67,13 +67,28 @@ def test_hu002_p1_informa_el_paso_de_onboarding_pendiente(cliente, usuario):
     assert respuesta.json()["onboarding"] == "perfil"
 
 
-def test_hu002_p1_sin_paso_pendiente_con_perfil_completo(cliente):
+def test_hu002_p1_con_el_perfil_completo_informa_el_paso_disponibilidad(cliente):
     crear_usuario(
         email="tomas.rios@example.com",
         password="clave1234",
         localidad=crear_localidad(),
         nivel_estimado=Decimal("3.5"),
     )
+
+    respuesta = cliente.post(URL_INGRESAR, datos_ingreso(), format="json")
+
+    assert respuesta.status_code == 200
+    assert respuesta.json()["onboarding"] == "disponibilidad"
+
+
+def test_hu002_p1_sin_paso_pendiente_con_el_onboarding_completo(cliente):
+    usuario = crear_usuario(
+        email="tomas.rios@example.com",
+        password="clave1234",
+        localidad=crear_localidad(),
+        nivel_estimado=Decimal("3.5"),
+    )
+    crear_preferencia(usuario)
 
     respuesta = cliente.post(URL_INGRESAR, datos_ingreso(), format="json")
 

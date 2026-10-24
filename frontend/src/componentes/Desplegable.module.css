@@ -6,6 +6,16 @@
   composes: etiqueta from "./Campo.module.css";
 }
 
+/* Oculta a la vista pero accesible: queda fuera del flujo para no sumar alto a la fila. */
+.etiquetaOculta {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
 .contenedor {
   display: grid;
   align-items: center;

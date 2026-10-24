@@ -1,3 +1,10 @@
+import {
+  disponibilidadDeFormulario,
+  formularioDisponibilidad,
+  validarDisponibilidad,
+} from "./disponibilidad.js";
+import { validarCamposRequeridos } from "./validaciones.js";
+
 export const GENEROS = [
   { valor: "MASCULINO", etiqueta: "Masculino" },
   { valor: "FEMENINO", etiqueta: "Femenino" },
@@ -42,8 +49,12 @@ export function perfilDeportivoDeFormulario(valores) {
   };
 }
 
-// Secciones editables de la pantalla 17 (la HU-005 suma "disponibilidad").
-export const SECCIONES_PERFIL = ["datos_personales", "perfil_deportivo"];
+// Secciones editables de la pantalla 17.
+export const SECCIONES_PERFIL = [
+  "datos_personales",
+  "perfil_deportivo",
+  "disponibilidad",
+];
 
 // Valores del formulario de la pantalla 17 a partir de la respuesta de `GET perfil`.
 export function formularioPerfil(perfil) {
@@ -53,14 +64,37 @@ export function formularioPerfil(perfil) {
       apellido: perfil.datos_personales.apellido,
     },
     perfil_deportivo: formularioPerfilDeportivo(perfil.perfil_deportivo),
+    disponibilidad: formularioDisponibilidad(perfil.disponibilidad),
   };
+}
+
+// Sin la clave de cada franja, que es propia del formulario y no un dato del jugador.
+function comparable(valoresSeccion) {
+  return JSON.stringify(valoresSeccion, (campo, valor) =>
+    campo === "clave" ? undefined : valor,
+  );
 }
 
 export function seccionesModificadas(valores, guardados) {
   return SECCIONES_PERFIL.filter(
     (seccion) =>
-      JSON.stringify(valores[seccion]) !== JSON.stringify(guardados[seccion]),
+      comparable(valores[seccion]) !== comparable(guardados[seccion]),
   );
+}
+
+// Errores de los campos vacíos de las secciones indicadas, agrupados por sección.
+export function validarSecciones(valores, secciones) {
+  const errores = {};
+  for (const seccion of secciones) {
+    const erroresSeccion =
+      seccion === "disponibilidad"
+        ? validarDisponibilidad(valores.disponibilidad)
+        : validarCamposRequeridos(valores[seccion]);
+    if (Object.keys(erroresSeccion).length > 0) {
+      errores[seccion] = erroresSeccion;
+    }
+  }
+  return errores;
 }
 
 // Cuerpo de `PATCH perfil` con solo las secciones indicadas.
@@ -73,6 +107,9 @@ export function cuerpoActualizacion(valores, secciones) {
     cuerpo.perfil_deportivo = perfilDeportivoDeFormulario(
       valores.perfil_deportivo,
     );
+  }
+  if (secciones.includes("disponibilidad")) {
+    cuerpo.disponibilidad = disponibilidadDeFormulario(valores.disponibilidad);
   }
   return cuerpo;
 }

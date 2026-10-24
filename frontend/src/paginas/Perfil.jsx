@@ -1,4 +1,4 @@
-import { startTransition, useCallback, useState } from "react";
+import { startTransition, useCallback, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   obtenerUsuarioActual,
@@ -16,11 +16,15 @@ import { useCargarDatos } from "../hooks/useCargarDatos.js";
 import { useSesion } from "../hooks/useSesion.js";
 import { useTituloPagina } from "../hooks/useTituloPagina.js";
 import {
+  clavesEnviadas,
+  erroresDeDisponibilidad,
+} from "../utilidades/disponibilidad.js";
+import {
   cuerpoActualizacion,
   formularioPerfil,
   seccionesModificadas,
+  validarSecciones,
 } from "../utilidades/perfil.js";
-import { validarCamposRequeridos } from "../utilidades/validaciones.js";
 import estilos from "./Perfil.module.css";
 
 function cargarDatos() {
@@ -43,7 +47,11 @@ function Perfil() {
 
   const [perfilCargado, localidades] = carga.datos ?? [];
   const perfil = perfilGuardado ?? perfilCargado;
-  const guardados = perfil ? formularioPerfil(perfil) : null;
+  // Memorizado: cada llamada da claves nuevas a las franjas, que tienen que seguir estables.
+  const guardados = useMemo(
+    () => (perfil ? formularioPerfil(perfil) : null),
+    [perfil],
+  );
   const valores = cambios ?? guardados;
   const modificadas = valores ? seccionesModificadas(valores, guardados) : [];
 
@@ -64,18 +72,13 @@ function Perfil() {
   async function manejarGuardado(evento) {
     evento.preventDefault();
     setErrorGeneral("");
-    const erroresLocales = {};
-    for (const seccion of modificadas) {
-      const erroresSeccion = validarCamposRequeridos(valores[seccion]);
-      if (Object.keys(erroresSeccion).length > 0) {
-        erroresLocales[seccion] = erroresSeccion;
-      }
-    }
+    const erroresLocales = validarSecciones(valores, modificadas);
     setErrores(erroresLocales);
     if (modificadas.length === 0 || Object.keys(erroresLocales).length > 0) {
       return;
     }
 
+    const claves = clavesEnviadas(valores.disponibilidad);
     setEnviando(true);
     try {
       setPerfilGuardado(
@@ -86,7 +89,18 @@ function Perfil() {
       // Los cambios ya se guardaron: si falla, la sesión se actualiza al recargar.
       obtenerUsuarioActual().then(establecerUsuario, () => {});
     } catch (error) {
-      setErrores(error.errores ?? {});
+      const errores = error.errores ?? {};
+      setErrores(
+        errores.disponibilidad
+          ? {
+              ...errores,
+              disponibilidad: erroresDeDisponibilidad(
+                errores.disponibilidad,
+                claves,
+              ),
+            }
+          : errores,
+      );
       setErrorGeneral(error.detalle ?? "");
     } finally {
       setEnviando(false);

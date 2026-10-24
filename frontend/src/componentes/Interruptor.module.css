@@ -1,0 +1,56 @@
+.interruptor {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.textos {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.titulo {
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.texto {
+  color: var(--texto-secundario);
+  font-size: 13.5px;
+}
+
+.control {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  width: 46px;
+  height: 26px;
+  margin: 0;
+  padding: 3px;
+  border-radius: var(--radio-pildora);
+  background: var(--borde-campo);
+  appearance: none;
+  cursor: pointer;
+}
+
+.control::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--superficie);
+}
+
+.control:checked {
+  justify-content: flex-end;
+  background: var(--azul);
+}

@@ -63,7 +63,12 @@ def test_hu004_get_devuelve_el_perfil_vacio_en_el_primer_ingreso(cliente, usuari
             "email": "tomas.rios@example.com",
         },
         "perfil_deportivo": dict.fromkeys(CAMPOS_PERFIL_DEPORTIVO),
-        "disponibilidad": {"disponible_para_invitaciones": False},
+        "disponibilidad": {
+            "franjas": [],
+            "tipo_encuentro": None,
+            "lado_preferido": None,
+            "disponible_para_invitaciones": False,
+        },
     }
 
 
@@ -82,7 +87,7 @@ def test_hu004_p8_auth_yo_deja_de_pedir_el_paso_perfil_al_guardarlo(cliente, loc
 
     guardar_perfil_deportivo(cliente, perfil_deportivo(localidad))
 
-    assert cliente.get(URL_YO).json()["onboarding"] is None
+    assert cliente.get(URL_YO).json()["onboarding"] == "disponibilidad"
 
 
 @pytest.mark.parametrize("datos", [{}, dict.fromkeys(CAMPOS_PERFIL_DEPORTIVO)])
@@ -241,16 +246,6 @@ def test_hu004_el_correo_no_se_modifica(cliente, usuario):
     assert respuesta.status_code == 200
     usuario.refresh_from_db()
     assert usuario.email == "tomas.rios@example.com"
-
-
-def test_hu004_la_disponibilidad_no_se_modifica_desde_esta_hu(cliente, usuario):
-    respuesta = cliente.patch(
-        URL_PERFIL, {"disponibilidad": {"disponible_para_invitaciones": True}}, format="json"
-    )
-
-    assert respuesta.status_code == 200
-    usuario.refresh_from_db()
-    assert usuario.disponible_para_invitaciones is False
 
 
 def test_hu004_cada_jugador_solo_ve_y_modifica_su_perfil(cliente, usuario, localidad):

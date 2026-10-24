@@ -5,7 +5,7 @@ from rest_framework import serializers
 from apps.comun.errores import ErrorNegocio
 from apps.localidades import servicios as servicios_localidades
 from apps.usuarios import servicios
-from apps.usuarios.models import FrecuenciaJuego, Genero
+from apps.usuarios.models import DiaSemana, FrecuenciaJuego, Genero, LadoPreferido, TipoEncuentro
 
 MENSAJE_CAMPO_VACIO = "Completá este campo para poder guardar."
 MENSAJE_CORREO_INVALIDO = "Ingresá un correo válido."
@@ -27,6 +27,12 @@ MENSAJES_EDAD = {
     ),
 }
 MENSAJES_OPCION = {**MENSAJES_CAMPO_OBLIGATORIO, "invalid_choice": MENSAJE_OPCION_INVALIDA}
+MENSAJES_HORA = {**MENSAJES_CAMPO_OBLIGATORIO, "invalid": servicios.MENSAJE_HORA_INVALIDA}
+# Solo llegan desde fuera de la pantalla: una lista o un valor con un tipo que no corresponde.
+MENSAJES_DATO_MAL_FORMADO = {
+    **MENSAJES_CAMPO_OBLIGATORIO,
+    **dict.fromkeys(("invalid", "not_a_list"), MENSAJE_OPCION_INVALIDA),
+}
 MENSAJES_NIVEL = {
     **MENSAJES_CAMPO_OBLIGATORIO,
     **dict.fromkeys(
@@ -160,9 +166,65 @@ class PerfilDeportivoSerializer(serializers.Serializer):
         return valor
 
 
+def _error_de_campo(error: ErrorNegocio) -> serializers.ValidationError:
+    return serializers.ValidationError({error.campo: [error.mensaje]})
+
+
+class FranjaSerializer(serializers.Serializer):
+    dia_semana = serializers.ChoiceField(choices=DiaSemana.choices, error_messages=MENSAJES_OPCION)
+    hora_inicio = serializers.TimeField(
+        format="%H:%M", input_formats=["%H:%M"], error_messages=MENSAJES_HORA
+    )
+    hora_fin = serializers.TimeField(
+        format="%H:%M", input_formats=["%H:%M"], error_messages=MENSAJES_HORA
+    )
+
+    # El servicio vuelve a verificar la franja; acá se adelanta para marcar cada fila.
+    def validate(self, datos):
+        try:
+            servicios.validar_franja(datos["hora_inicio"], datos["hora_fin"])
+        except ErrorNegocio as error:
+            raise _error_de_campo(error) from error
+        return datos
+
+
 class DisponibilidadSerializer(serializers.Serializer):
-    # La HU-005 suma las franjas, las preferencias y su edición.
-    disponible_para_invitaciones = serializers.BooleanField(read_only=True)
+    """Entrada de la sección "Disponibilidad y preferencias", siempre completa (HU-005)."""
+
+    franjas = FranjaSerializer(many=True, error_messages=MENSAJES_DATO_MAL_FORMADO)
+    tipo_encuentro = serializers.ChoiceField(
+        choices=TipoEncuentro.choices, error_messages=MENSAJES_OPCION
+    )
+    lado_preferido = serializers.ChoiceField(
+        choices=LadoPreferido.choices, error_messages=MENSAJES_OPCION
+    )
+    disponible_para_invitaciones = serializers.BooleanField(
+        error_messages=MENSAJES_DATO_MAL_FORMADO
+    )
+
+    def validate(self, datos):
+        try:
+            servicios.validar_disponible_con_franjas(
+                datos["franjas"], datos["disponible_para_invitaciones"]
+            )
+        except ErrorNegocio as error:
+            raise _error_de_campo(error) from error
+        return datos
+
+
+class CampoPreferencia(serializers.ReadOnlyField):
+    """Un dato de la preferencia del usuario; null mientras no la guardó en el onboarding."""
+
+    def get_attribute(self, usuario):
+        preferencia = getattr(usuario, "preferencia", None)
+        return getattr(preferencia, self.source, None)
+
+
+class DisponibilidadGuardadaSerializer(serializers.Serializer):
+    franjas = FranjaSerializer(many=True, source="disponibilidades")
+    tipo_encuentro = CampoPreferencia()
+    lado_preferido = CampoPreferencia()
+    disponible_para_invitaciones = serializers.BooleanField()
 
 
 class PerfilSerializer(serializers.Serializer):
@@ -170,7 +232,7 @@ class PerfilSerializer(serializers.Serializer):
 
     datos_personales = DatosPersonalesSerializer(source="*")
     perfil_deportivo = PerfilDeportivoSerializer(source="*")
-    disponibilidad = DisponibilidadSerializer(source="*")
+    disponibilidad = DisponibilidadGuardadaSerializer(source="*")
 
 
 class ActualizarPerfilSerializer(serializers.Serializer):
@@ -178,3 +240,4 @@ class ActualizarPerfilSerializer(serializers.Serializer):
 
     datos_personales = DatosPersonalesSerializer(required=False)
     perfil_deportivo = PerfilDeportivoSerializer(required=False)
+    disponibilidad = DisponibilidadSerializer(required=False)

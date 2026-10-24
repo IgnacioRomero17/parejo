@@ -36,7 +36,12 @@ const PERFIL_VACIO = {
     frecuencia_juego: null,
     nivel_estimado: null,
   },
-  disponibilidad: { disponible_para_invitaciones: false },
+  disponibilidad: {
+    franjas: [],
+    tipo_encuentro: null,
+    lado_preferido: null,
+    disponible_para_invitaciones: false,
+  },
 };
 const LOCALIDADES = [
   { id: 7, nombre: "Río Ceballos" },

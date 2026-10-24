@@ -4,7 +4,9 @@ import RutaPrivada from "./componentes/RutaPrivada.jsx";
 import RutaPublica from "./componentes/RutaPublica.jsx";
 import Bienvenida from "./paginas/Bienvenida.jsx";
 import Ingreso from "./paginas/Ingreso.jsx";
+import OnboardingDisponibilidad from "./paginas/OnboardingDisponibilidad.jsx";
 import OnboardingPerfil from "./paginas/OnboardingPerfil.jsx";
+import PanelPrincipal from "./paginas/PanelPrincipal.jsx";
 import Perfil from "./paginas/Perfil.jsx";
 import RecuperacionCorreo from "./paginas/RecuperacionCorreo.jsx";
 import RecuperacionEnviado from "./paginas/RecuperacionEnviado.jsx";
@@ -28,7 +30,14 @@ function Rutas() {
       <Route path="/recuperar/:uid/:token" element={<RecuperacionNueva />} />
       <Route element={<RutaPrivada />}>
         <Route path="/onboarding/perfil" element={<OnboardingPerfil />} />
+        <Route element={<RutaConOnboarding permitirPaso="disponibilidad" />}>
+          <Route
+            path="/onboarding/disponibilidad"
+            element={<OnboardingDisponibilidad />}
+          />
+        </Route>
         <Route element={<RutaConOnboarding />}>
+          <Route path="/inicio" element={<PanelPrincipal />} />
           <Route path="/perfil" element={<Perfil />} />
         </Route>
       </Route>
