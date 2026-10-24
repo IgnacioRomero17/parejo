@@ -26,6 +26,7 @@ Valores iniciales: localidad del usuario precargada; el resto vacío.
 - "1 de 4 · al crear el encuentro".
 - Lugar 1: "Vos · {nombre}" con "Organizador". Lugares 2 a 4: "Lugar N · por invitar".
 - Nota: "Al crear el encuentro quedás registrado como participante 1. Faltan 3 lugares, que se completan con invitaciones."
+- Con "Prefiero no decirlo": la etiqueta del lugar 1 es "Organizás" y la nota dice "Al crear el encuentro ocupás el lugar 1. Faltan 3 lugares, que se completan con invitaciones."
 
 ## Acciones
 | Elemento | Resultado |

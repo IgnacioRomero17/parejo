@@ -16,6 +16,7 @@ Texto: "Tu nivel y tu localidad se usan para calcular la compatibilidad; tu lado
 
 ### Disponibilidad y preferencias
 Texto: "Define en qué encuentros aparecés como jugador compatible." Mismas franjas, preferencias e interruptor que la pantalla 07b. Texto del interruptor: "Si lo desactivás, el sistema deja de recomendarte a otros organizadores."
+- Según el género del perfil: con Femenino, "Define en qué encuentros aparecés como jugadora compatible."; con "Prefiero no decirlo", "Define con qué encuentros sos compatible."
 
 ### Cuenta
 - "Cerrar sesión" — "Salís de tu cuenta en este dispositivo. Tus datos se conservan." Botón "Cerrar sesión" → cierra la sesión y lleva a `/`.
