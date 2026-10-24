@@ -1,0 +1,76 @@
+/* Mismo aspecto que Tarjeta, pero como <aside> con el rótulo por título. */
+.tarjeta {
+  composes: tarjeta from "./Tarjeta.module.css";
+}
+
+.rotulo {
+  composes: rotulo from "./ProgresoOnboarding.module.css";
+}
+
+.cantidad {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  color: var(--texto-secundario);
+  font-size: 14px;
+}
+
+.numero {
+  color: var(--texto);
+  font-family: var(--fuente-titulos);
+  font-size: 36px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.lugares {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lugar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 56px;
+  padding: 0 16px;
+  border-radius: var(--radio-control);
+  font-size: 15px;
+}
+
+.organizador {
+  border: 1.5px solid var(--azul);
+}
+
+.nombre {
+  flex: 1;
+  min-width: 0;
+  font-weight: 700;
+}
+
+.rol {
+  color: var(--texto-secundario);
+  font-size: 14px;
+}
+
+.libre {
+  border: 1.5px dashed var(--borde-campo);
+  color: var(--texto-secundario);
+}
+
+.nota {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 20px;
+  border-radius: var(--radio-control);
+  background: var(--etq-azul);
+  color: var(--etq-azul-texto);
+  font-size: 14px;
+}
+
+.icono {
+  flex-shrink: 0;
+  margin-top: 2px;
+}

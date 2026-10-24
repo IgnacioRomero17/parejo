@@ -6,6 +6,7 @@ import {
   formularioPerfilDeportivo,
   perfilDeportivoDeFormulario,
   seccionesModificadas,
+  segunGenero,
   textoCamposPendientes,
   validarSecciones,
 } from "./perfil.js";
@@ -124,6 +125,17 @@ describe("textos y niveles", () => {
   it("usa el plural correcto en el contador de pendientes", () => {
     expect(textoCamposPendientes(1)).toBe("1 campo pendiente");
     expect(textoCamposPendientes(5)).toBe("5 campos pendientes");
+  });
+
+  it("elige la palabra según el género del perfil", () => {
+    expect(segunGenero("FEMENINO", "registrada", "registrado")).toBe(
+      "registrada",
+    );
+    for (const genero of ["MASCULINO", "NO_DECLARA", null]) {
+      expect(segunGenero(genero, "registrada", "registrado")).toBe(
+        "registrado",
+      );
+    }
   });
 
   it("describe ningún nivel sin elegir, uno si es entero y dos con ,5", () => {

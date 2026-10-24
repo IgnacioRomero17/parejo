@@ -3,7 +3,9 @@ import RutaConOnboarding from "./componentes/RutaConOnboarding.jsx";
 import RutaPrivada from "./componentes/RutaPrivada.jsx";
 import RutaPublica from "./componentes/RutaPublica.jsx";
 import Bienvenida from "./paginas/Bienvenida.jsx";
+import CrearEncuentro from "./paginas/CrearEncuentro.jsx";
 import Ingreso from "./paginas/Ingreso.jsx";
+import JugadoresRecomendados from "./paginas/JugadoresRecomendados.jsx";
 import OnboardingDisponibilidad from "./paginas/OnboardingDisponibilidad.jsx";
 import OnboardingPerfil from "./paginas/OnboardingPerfil.jsx";
 import PanelPrincipal from "./paginas/PanelPrincipal.jsx";
@@ -38,6 +40,11 @@ function Rutas() {
         </Route>
         <Route element={<RutaConOnboarding />}>
           <Route path="/inicio" element={<PanelPrincipal />} />
+          <Route path="/encuentros/nuevo" element={<CrearEncuentro />} />
+          <Route
+            path="/encuentros/:id/recomendados"
+            element={<JugadoresRecomendados />}
+          />
           <Route path="/perfil" element={<Perfil />} />
         </Route>
       </Route>

@@ -317,6 +317,25 @@ describe("Perfil · disponibilidad y preferencias (HU-005)", () => {
     ).toBeTruthy();
   });
 
+  it.each([
+    ["MASCULINO", "jugador"],
+    ["NO_DECLARA", "jugador"],
+    ["FEMENINO", "jugadora"],
+  ])("con género %s se refiere al usuario como %s", async (genero, palabra) => {
+    obtenerPerfil.mockResolvedValue({
+      ...PERFIL,
+      perfil_deportivo: { ...PERFIL.perfil_deportivo, genero },
+    });
+    renderizar();
+    await esperarPerfil();
+
+    expect(
+      within(seccionDisponibilidad()).getByText(
+        `Define en qué encuentros aparecés como ${palabra} compatible.`,
+      ),
+    ).toBeTruthy();
+  });
+
   it("C2: al activar el interruptor y guardar envía solo esa sección y queda Disponible", async () => {
     actualizarPerfil.mockResolvedValue({
       ...PERFIL,

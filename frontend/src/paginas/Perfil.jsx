@@ -160,6 +160,7 @@ function Perfil() {
             errores={errores}
             errorGeneral={errorGeneral}
             email={perfil.datos_personales.email}
+            genero={perfil.perfil_deportivo.genero}
             localidades={localidades}
             hayCambios={modificadas.length > 0}
             enviando={enviando}

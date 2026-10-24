@@ -3,9 +3,11 @@
 }
 
 .encabezado {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  composes: encabezado from "./Perfil.module.css";
+}
+
+.titulo {
+  composes: titulo from "./Perfil.module.css";
 }
 
 .texto {

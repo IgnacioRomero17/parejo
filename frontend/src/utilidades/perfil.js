@@ -114,6 +114,12 @@ export function cuerpoActualizacion(valores, secciones) {
   return cuerpo;
 }
 
+// Palabra que se refiere al jugador según el género de su perfil: la femenina con
+// "Femenino"; la masculina con "Masculino", "Prefiero no decirlo" o sin dato.
+export function segunGenero(genero, femenina, masculina) {
+  return genero === "FEMENINO" ? femenina : masculina;
+}
+
 export function textoCamposPendientes(cantidad) {
   return cantidad === 1 ? "1 campo pendiente" : `${cantidad} campos pendientes`;
 }

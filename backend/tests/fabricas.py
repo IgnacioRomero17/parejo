@@ -1,6 +1,9 @@
-from datetime import time
+from datetime import date, time, timedelta
 from decimal import Decimal
 
+from django.utils import timezone
+
+from apps.encuentros.models import Encuentro, EstadoEncuentro, Participante
 from apps.localidades.models import Localidad
 from apps.usuarios.models import (
     DiaSemana,
@@ -66,3 +69,26 @@ def crear_usuario_con_onboarding(**campos) -> Usuario:
     usuario = crear_usuario_con_perfil(**campos)
     crear_preferencia(usuario)
     return usuario
+
+
+def proximo_sabado() -> date:
+    """El próximo sábado posterior a hoy (en la zona horaria del sistema)."""
+    hoy = timezone.localdate()
+    return hoy + timedelta(days=(5 - hoy.weekday()) % 7 or 7)
+
+
+def crear_encuentro(organizador: Usuario, **campos) -> Encuentro:
+    """Encuentro buscando participantes, con el organizador como participante 1."""
+    datos = {
+        "fecha": proximo_sabado(),
+        "hora_inicio": time(18),
+        "duracion_minutos": 90,
+        "localidad": organizador.localidad,
+        "ubicacion": "Av. San Martín 4500",
+        "tipo_encuentro": TipoEncuentro.COMPETITIVO,
+        "estado": EstadoEncuentro.BUSCANDO_PARTICIPANTES,
+    }
+    datos.update(campos)
+    encuentro = Encuentro.objects.create(organizador=organizador, **datos)
+    Participante.objects.create(encuentro=encuentro, usuario=organizador)
+    return encuentro

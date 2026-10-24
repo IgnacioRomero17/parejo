@@ -14,6 +14,7 @@ function FormularioPerfil({
   errores,
   errorGeneral,
   email,
+  genero,
   localidades,
   hayCambios,
   enviando,
@@ -51,6 +52,7 @@ function FormularioPerfil({
           <TarjetaDisponibilidad
             valores={valores.disponibilidad}
             errores={errores.disponibilidad}
+            genero={genero}
             onCambiar={onCambiar("disponibilidad")}
           />
           <TarjetaCuenta onCerrarSesion={onCerrarSesion} />

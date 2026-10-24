@@ -1,5 +1,5 @@
 from rest_framework import status
-from rest_framework.exceptions import NotAuthenticated, ValidationError
+from rest_framework.exceptions import NotAuthenticated, PermissionDenied, ValidationError
 from rest_framework.response import Response
 from rest_framework.views import exception_handler
 
@@ -17,6 +17,17 @@ class ErrorNegocio(Exception):
         self.mensaje = mensaje
         self.campo = campo
         self.estado = estado
+
+
+class OnboardingIncompleto(PermissionDenied):
+    """403 para un usuario al que le falta un paso del onboarding; `paso` le dice al frontend
+    adónde llevarlo ("perfil" o "disponibilidad")."""
+
+    default_detail = "Completá tu perfil para continuar."
+
+    def __init__(self, paso: str):
+        super().__init__()
+        self.paso = paso
 
 
 def manejar_excepcion(exc, contexto):
@@ -40,4 +51,6 @@ def manejar_excepcion(exc, contexto):
         respuesta.data = {"detalle": " ".join(str(mensaje) for mensaje in respuesta.data)}
     else:
         respuesta.data = {"detalle": str(getattr(exc, "detail", exc))}
+    if isinstance(exc, OnboardingIncompleto):
+        respuesta.data["onboarding"] = exc.paso
     return respuesta

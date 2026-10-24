@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "apps.localidades",
     "apps.usuarios",
+    "apps.encuentros",
 ]
 
 MIDDLEWARE = [

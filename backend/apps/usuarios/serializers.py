@@ -3,22 +3,21 @@ from decimal import Decimal
 from rest_framework import serializers
 
 from apps.comun.errores import ErrorNegocio
-from apps.localidades import servicios as servicios_localidades
+from apps.comun.horarios import MENSAJE_HORA_INVALIDA
+from apps.comun.mensajes import (
+    MENSAJE_LARGO_MAXIMO,
+    MENSAJE_OPCION_INVALIDA,
+    MENSAJES_CAMPO_OBLIGATORIO,
+    MENSAJES_OPCION,
+)
+from apps.localidades.serializers import CampoLocalidad
 from apps.usuarios import servicios
 from apps.usuarios.models import DiaSemana, FrecuenciaJuego, Genero, LadoPreferido, TipoEncuentro
 
-MENSAJE_CAMPO_VACIO = "Completá este campo para poder guardar."
 MENSAJE_CORREO_INVALIDO = "Ingresá un correo válido."
-MENSAJE_LARGO_MAXIMO = "Usá como máximo {max_length} caracteres."
 MENSAJE_EDAD_INVALIDA = "Ingresá una edad entre 18 y 99."
-MENSAJE_OPCION_INVALIDA = "Elegí una opción del listado."
 MENSAJE_NIVEL_INVALIDO = "Elegí un nivel entre 1,0 y 7,0, en pasos de 0,5."
 
-MENSAJES_CAMPO_OBLIGATORIO = {
-    "required": MENSAJE_CAMPO_VACIO,
-    "blank": MENSAJE_CAMPO_VACIO,
-    "null": MENSAJE_CAMPO_VACIO,
-}
 MENSAJES_NOMBRE = {**MENSAJES_CAMPO_OBLIGATORIO, "max_length": MENSAJE_LARGO_MAXIMO}
 MENSAJES_EDAD = {
     **MENSAJES_CAMPO_OBLIGATORIO,
@@ -26,8 +25,7 @@ MENSAJES_EDAD = {
         ("invalid", "min_value", "max_value", "max_string_length"), MENSAJE_EDAD_INVALIDA
     ),
 }
-MENSAJES_OPCION = {**MENSAJES_CAMPO_OBLIGATORIO, "invalid_choice": MENSAJE_OPCION_INVALIDA}
-MENSAJES_HORA = {**MENSAJES_CAMPO_OBLIGATORIO, "invalid": servicios.MENSAJE_HORA_INVALIDA}
+MENSAJES_HORA = {**MENSAJES_CAMPO_OBLIGATORIO, "invalid": MENSAJE_HORA_INVALIDA}
 # Solo llegan desde fuera de la pantalla: una lista o un valor con un tipo que no corresponde.
 MENSAJES_DATO_MAL_FORMADO = {
     **MENSAJES_CAMPO_OBLIGATORIO,
@@ -119,21 +117,6 @@ class UsuarioActualSerializer(serializers.Serializer):
 
     def get_onboarding(self, usuario):
         return servicios.paso_onboarding_pendiente(usuario)
-
-
-class CampoLocalidad(serializers.IntegerField):
-    """Recibe el id de una localidad del catálogo y entrega la Localidad; se muestra como id."""
-
-    def to_internal_value(self, data):
-        id_localidad = super().to_internal_value(data)
-        try:
-            return servicios_localidades.obtener_localidad(id_localidad)
-        except ErrorNegocio as error:
-            raise serializers.ValidationError(error.mensaje) from error
-
-    def get_attribute(self, usuario):
-        # El id alcanza para responder; leer `usuario.localidad` haría otra consulta.
-        return usuario.localidad_id
 
 
 class DatosPersonalesSerializer(serializers.Serializer):

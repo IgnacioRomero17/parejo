@@ -12,6 +12,7 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 
 from apps.comun.errores import ErrorNegocio
+from apps.comun.horarios import MENSAJE_HORA_INVALIDA, hora_valida, minutos
 from apps.usuarios.models import Disponibilidad, Preferencia, Usuario
 
 MENSAJE_CORREO_REGISTRADO = "Este correo ya está registrado."
@@ -20,13 +21,9 @@ MENSAJE_CUENTA_INEXISTENTE = "La cuenta no existe. Revisá el correo ingresado."
 MENSAJE_ENLACE_INVALIDO = "El enlace no es válido."
 ASUNTO_RECUPERACION = "Restablecé tu contraseña de parejo"
 ID_MAXIMO = 2_147_483_647  # máximo de la columna integer de id_usuario
-MENSAJE_HORA_INVALIDA = "Elegí un horario entre las 08:00 y las 23:30, en pasos de 30 minutos."
 MENSAJE_FIN_ANTES_DE_INICIO = "La hora de fin debe ser posterior a la de inicio."
 MENSAJE_FRANJA_CORTA = "La franja debe durar al menos 60 minutos."
 MENSAJE_DISPONIBLE_SIN_FRANJAS = "Para recibir invitaciones necesitás cargar al menos una franja."
-# Horario en que se juegan los encuentros: una franja fuera de él no cubriría ninguno.
-HORA_MINIMA_FRANJA = time(8)
-HORA_MAXIMA_FRANJA = time(23, 30)
 DURACION_MINIMA_FRANJA = 60  # minutos: el encuentro más corto
 
 
@@ -163,19 +160,6 @@ def restablecer_contrasena(uid: str, token: str, contrasena: str) -> Usuario:
     return usuario
 
 
-def _hora_valida(hora: time) -> bool:
-    return (
-        hora.minute in (0, 30)
-        and hora.second == 0
-        and hora.microsecond == 0
-        and HORA_MINIMA_FRANJA <= hora <= HORA_MAXIMA_FRANJA
-    )
-
-
-def _minutos(hora: time) -> int:
-    return hora.hour * 60 + hora.minute
-
-
 def validar_franja(hora_inicio: time, hora_fin: time) -> None:
     """Verifica una franja de disponibilidad (HU-005).
 
@@ -183,13 +167,13 @@ def validar_franja(hora_inicio: time, hora_fin: time) -> None:
     las 23:30; el fin es posterior al inicio y la franja dura al menos 60 minutos. Lanza
     ErrorNegocio en el campo `hora_inicio` o `hora_fin` con la primera regla que no se cumple.
     """
-    if not _hora_valida(hora_inicio):
+    if not hora_valida(hora_inicio):
         raise ErrorNegocio(MENSAJE_HORA_INVALIDA, campo="hora_inicio")
-    if not _hora_valida(hora_fin):
+    if not hora_valida(hora_fin):
         raise ErrorNegocio(MENSAJE_HORA_INVALIDA, campo="hora_fin")
     if hora_fin <= hora_inicio:
         raise ErrorNegocio(MENSAJE_FIN_ANTES_DE_INICIO, campo="hora_fin")
-    if _minutos(hora_fin) - _minutos(hora_inicio) < DURACION_MINIMA_FRANJA:
+    if minutos(hora_fin) - minutos(hora_inicio) < DURACION_MINIMA_FRANJA:
         raise ErrorNegocio(MENSAJE_FRANJA_CORTA, campo="hora_fin")
 
 

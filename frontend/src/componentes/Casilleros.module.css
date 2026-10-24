@@ -1,0 +1,40 @@
+.casilleros {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  white-space: nowrap;
+}
+
+.cuadros {
+  display: flex;
+  gap: 6px;
+}
+
+.cuadro {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+}
+
+.confirmado {
+  background: var(--azul);
+}
+
+.completo {
+  background: var(--lima);
+}
+
+.libre {
+  border: 1.5px dashed var(--borde-campo);
+}
+
+.cantidad {
+  font-family: var(--fuente-titulos);
+  font-size: 21px;
+  font-weight: 700;
+}
+
+.faltan {
+  color: var(--texto-secundario);
+  font-size: 13.5px;
+}
