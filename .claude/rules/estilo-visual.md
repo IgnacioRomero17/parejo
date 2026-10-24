@@ -68,7 +68,7 @@ Todos los colores, radios y sombras salen de estas variables. Ningún color escr
 |---|---|
 | `Boton` | alto 44px, padding 0 20px, radio 10px, 15px/700. Variantes: **primario** (fondo azul, texto blanco), **secundario** (fondo blanco, borde `--borde-campo`), **deshabilitado** (fondo #E5E9F0, texto `--texto-secundario`). Ícono opcional a la izquierda, 16px, separación 8px. |
 | `Campo` / `Desplegable` | alto 42px, radio 9px, borde 1px `--borde-campo`, padding 0 14px, 16px. Error: borde 1,5px `--error` + mensaje debajo (ícono de alerta 14px + texto 13px en `--error`). |
-| `SelectorSegmentado` | contenedor #EEF1F5, radio 10px, padding 4px; opción elegida en blanco con sombra suave y texto 700. |
+| `SelectorSegmentado` | contenedor #EEF1F5, radio 10px, padding 4px; opción elegida en blanco con sombra suave y texto 700. El selector segmentado de tres opciones va siempre a todo el ancho del formulario o la tarjeta, nunca en media columna. Las opciones tienen anchos iguales y nunca se corta el texto. |
 | `Interruptor` | 46 × 26px; encendido azul, apagado `--borde-campo`. |
 | `Etiqueta` | píldora, 11px/700, mayúsculas, interletrado 0,06em, padding 5px 10px, colores `--etq-*`. Estados: Buscando participantes = azul; Completo y Propuesta generada = lima; Pendiente = amarillo; Aceptada y Disponible = verde; Rechazada = rojo; resto = gris. |
 | `Tarjeta` | fondo blanco, borde 1px `--linea`, radio 16px, padding 20–28px. Sin sombra. |
