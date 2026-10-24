@@ -157,7 +157,7 @@ Pantallas: 08 Panel principal, 09 Crear encuentro.
 - Duración: 60, 90 o 120 minutos.
 - No se puede crear un encuentro con fecha y hora de inicio en el pasado.
 - La dirección o lugar es solo informativa; el cálculo de distancia usa la localidad.
-- El encuentro termina a las 23:30 como máximo (inicio + duración). Las franjas, en pasos de 30 minutos, también terminan como máximo a las 23:30.
+- El encuentro empieza a las 08:00 como mínimo y termina a las 23:30 como máximo (inicio + duración). Las franjas, en pasos de 30 minutos, van de 08:00 a 23:30.
 - El organizador queda registrado como primer participante confirmado (1 de 4).
 - Al crearse, el encuentro pasa a `BUSCANDO_PARTICIPANTES` y se muestran los jugadores recomendados.
 

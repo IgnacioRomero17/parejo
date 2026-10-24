@@ -44,7 +44,7 @@ Cada pantalla tiene una imagen (`.png`) y una descripción (`.md`) con el mismo 
 - Registro, inicio de sesión y recuperación: panel oscuro a la izquierda (logo, ilustración de cancha, título y texto) y formulario a la derecha.
 
 **Desplegables**
-- Todos los desplegables (localidad, género, frecuencia, duración, día) son `<select>` nativos con estilo propio. Las imágenes muestran una lupa en el campo de localidad: no se implementa búsqueda.
+- Todos los desplegables (localidad, género, frecuencia, duración, día y horas) son `<select>` nativos con estilo propio. Las horas van en pasos de 30 minutos, de 08:00 a 23:30. Las imágenes muestran una lupa en el campo de localidad: no se implementa búsqueda.
 
 **Mensajes**
 - Error de campo: borde rojo en el campo y mensaje debajo con ícono de alerta.

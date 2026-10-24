@@ -15,8 +15,8 @@ Objetivo: **buenas prácticas básicas**, no una certificación. Se cumplen escr
 ## Controles: siempre nativos, con estilo propio
 | Control | Elemento |
 |---|---|
-| Campos de texto, email, contraseña, número, fecha, hora | `<input>` del tipo correspondiente |
-| Desplegables (localidad, género, frecuencia, duración, día) | `<select>` |
+| Campos de texto, email, contraseña, número, fecha | `<input>` del tipo correspondiente |
+| Desplegables (localidad, género, frecuencia, duración, día, hora en pasos de 30 minutos, de 08:00 a 23:30) | `<select>` |
 | Selector de nivel | `<input type="range" min="1" max="7" step="0.5">` |
 | Selectores segmentados (tipo de encuentro, lado) | grupo de `<input type="radio">` dentro de `fieldset` con `legend` |
 | Interruptor "Disponible para recibir invitaciones" | `<input type="checkbox">` |
