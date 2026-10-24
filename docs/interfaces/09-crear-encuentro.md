@@ -10,7 +10,7 @@ Imagen: `09-crear-encuentro.png` · Ruta: `/encuentros/nuevo` · Acceso: sesión
 | Campo | Control | Validación / ayuda |
 |---|---|---|
 | Fecha | selector de fecha | hoy o posterior |
-| Hora de inicio | desplegable (`<select>` nativo) con horas en pasos de 30 minutos | pasos de 30 minutos; si la fecha es hoy, posterior a la hora actual |
+| Hora de inicio | desplegable (`<select>` nativo) con horas de 08:00 a 22:30 en pasos de 30 minutos (la última que permite terminar a las 23:30 con la duración mínima) | pasos de 30 minutos; si la fecha es hoy, posterior a la hora actual |
 | Duración | desplegable | 60, 90 o 120 minutos |
 | Localidad | desplegable (`<select>` nativo), localidades en orden alfabético | catálogo. Ayuda: "Localidad donde se jugará. El sistema la usa para calcular la distancia con cada jugador." |
 | Tipo de encuentro | selector segmentado | Recreativo · Competitivo · Indiferente |

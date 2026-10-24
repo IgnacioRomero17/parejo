@@ -155,7 +155,7 @@ Pantallas: 08 Panel principal, 09 Crear encuentro.
 - Condiciones requeridas: fecha, hora de inicio, duración, localidad (del catálogo), dirección o lugar y tipo de encuentro (Recreativo, Competitivo o Indiferente).
 - Hora de inicio en pasos de 30 minutos (:00 y :30).
 - Duración: 60, 90 o 120 minutos.
-- No se puede crear un encuentro con fecha y hora de inicio en el pasado.
+- No se puede crear un encuentro con fecha y hora de inicio en el pasado, ni con fecha posterior a los próximos 60 días.
 - La dirección o lugar es solo informativa; el cálculo de distancia usa la localidad.
 - El encuentro empieza a las 08:00 como mínimo y termina a las 23:30 como máximo (inicio + duración). Las franjas, en pasos de 30 minutos, van de 08:00 a 23:30.
 - El organizador queda registrado como primer participante confirmado (1 de 4).
