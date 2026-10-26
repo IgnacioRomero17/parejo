@@ -131,6 +131,17 @@ describe("JugadoresRecomendados", () => {
     expect(screen.queryByText(/No se encontraron suficientes/)).toBeNull();
   });
 
+  it("HU-008: el botón Seleccionar e invitar lleva al seguimiento del encuentro", async () => {
+    renderizar();
+    await esperarPantalla();
+
+    expect(
+      screen
+        .getByRole("link", { name: "Seleccionar e invitar" })
+        .getAttribute("href"),
+    ).toBe("/encuentros/15");
+  });
+
   it("no muestra el puntaje de compatibilidad", async () => {
     obtenerRecomendados.mockResolvedValue({
       ...SUFICIENTES,

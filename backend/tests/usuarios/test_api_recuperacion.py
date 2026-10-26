@@ -112,6 +112,7 @@ def test_hu003_p5_guardar_inicia_la_sesion(cliente, usuario):
         "apellido": "Ríos",
         "email": "tomas.rios@example.com",
         "onboarding": "perfil",
+        "invitaciones_pendientes": 0,
     }
     assert cliente.get(URL_YO).json()["id"] == usuario.id_usuario
 

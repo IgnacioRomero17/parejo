@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import RutaConOnboarding from "./componentes/RutaConOnboarding.jsx";
 import RutaPrivada from "./componentes/RutaPrivada.jsx";
 import RutaPublica from "./componentes/RutaPublica.jsx";
+import BandejaInvitaciones from "./paginas/BandejaInvitaciones.jsx";
 import Bienvenida from "./paginas/Bienvenida.jsx";
 import CrearEncuentro from "./paginas/CrearEncuentro.jsx";
 import Ingreso from "./paginas/Ingreso.jsx";
@@ -14,6 +15,7 @@ import RecuperacionCorreo from "./paginas/RecuperacionCorreo.jsx";
 import RecuperacionEnviado from "./paginas/RecuperacionEnviado.jsx";
 import RecuperacionNueva from "./paginas/RecuperacionNueva.jsx";
 import Registro from "./paginas/Registro.jsx";
+import SeguimientoEncuentro from "./paginas/SeguimientoEncuentro.jsx";
 
 // Las rutas de las demás pantallas se agregan con su HU (ver docs/interfaces/README.md).
 // Las pantallas internas van dentro de RutaPrivada; las que piden el onboarding completo,
@@ -45,6 +47,8 @@ function Rutas() {
             path="/encuentros/:id/recomendados"
             element={<JugadoresRecomendados />}
           />
+          <Route path="/encuentros/:id" element={<SeguimientoEncuentro />} />
+          <Route path="/invitaciones" element={<BandejaInvitaciones />} />
           <Route path="/perfil" element={<Perfil />} />
         </Route>
       </Route>

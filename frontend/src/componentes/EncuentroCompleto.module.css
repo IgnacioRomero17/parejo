@@ -1,0 +1,126 @@
+.titulo {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rotulo {
+  composes: rotulo from "./ProgresoOnboarding.module.css";
+}
+
+.columnas {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.principal {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  min-width: 0;
+}
+
+/* Bloque oscuro con los 4 confirmados. */
+.bloque {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 28px 32px;
+  border-radius: var(--radio-tarjeta);
+  background: var(--marino);
+  color: var(--superficie);
+}
+
+.cabecera {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.confirmados {
+  flex: 1;
+  font-family: var(--fuente-titulos);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.cuadros {
+  display: flex;
+  gap: 6px;
+}
+
+.cuadro {
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  background: var(--lima);
+}
+
+.jugadores {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.jugador {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 20px 12px;
+  border-radius: var(--radio-control);
+  background: var(--superficie);
+  color: var(--texto);
+  text-align: center;
+}
+
+.nombre {
+  margin-top: 8px;
+  font-weight: 700;
+}
+
+.nivel {
+  color: var(--texto-secundario);
+  font-size: 13.5px;
+}
+
+.datos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 28px;
+  color: var(--texto-sobre-oscuro);
+  font-size: 15px;
+}
+
+.formar {
+  composes: tarjeta from "./Tarjeta.module.css";
+  flex-direction: row;
+  align-items: center;
+  gap: 32px;
+}
+
+.subtitulo {
+  margin-bottom: 8px;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.texto {
+  color: var(--texto-secundario);
+  font-size: 15px;
+}
+
+.invitaciones {
+  composes: tarjeta from "./Tarjeta.module.css";
+}
+
+.invitacion {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 60px;
+  border-bottom: 1px solid var(--linea);
+}

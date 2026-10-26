@@ -26,3 +26,15 @@ class EsOrganizador(BasePermission):
         if not servicios.es_organizador(request.user, encuentro):
             raise NotFound(servicios.MENSAJE_ENCUENTRO_INEXISTENTE)
         return True
+
+
+class EsInvitado(BasePermission):
+    """Solo el jugador que recibió la invitación.
+
+    A cualquier otro, organizador incluido, se le responde 404, como si no existiera.
+    """
+
+    def has_object_permission(self, request, view, invitacion):
+        if not servicios.es_invitado(request.user, invitacion):
+            raise NotFound(servicios.MENSAJE_INVITACION_INEXISTENTE)
+        return True

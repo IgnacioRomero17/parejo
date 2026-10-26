@@ -45,6 +45,7 @@ def test_hu002_c1_ingresa_e_inicia_sesion(cliente, usuario):
         "apellido": "Ríos",
         "email": "tomas.rios@example.com",
         "onboarding": "perfil",
+        "invitaciones_pendientes": 0,
     }
 
     sesion = cliente.get(URL_YO)

@@ -1,13 +1,22 @@
 import { describe, expect, it } from "vitest";
 import {
+  avisoInvitacionesEnviadas,
   encuentroDeFormulario,
   fechaMaximaEncuentro,
   formularioEncuentro,
   HORAS_INICIO,
   hoyEnCordoba,
+  listarNombres,
+  rolOrganizador,
+  textoEsperandoParejas,
+  textoInvitacionesEnviadas,
   textoJugadores,
+  textoLimiteSeleccion,
   textoLugaresACompletar,
   textoLugaresLibres,
+  textoLugaresRestantes,
+  textoPendientes,
+  textoSeleccionados,
   validarEncuentro,
 } from "./encuentros.js";
 
@@ -21,6 +30,63 @@ describe("textos con cantidades", () => {
     expect(textoLugaresLibres(2)).toBe("2 lugares libres");
     expect(textoLugaresACompletar(1)).toBe("el lugar libre");
     expect(textoLugaresACompletar(3)).toBe("los 3 lugares libres");
+    expect(textoLugaresRestantes(1)).toBe("1 lugar restante");
+    expect(textoLugaresRestantes(2)).toBe("2 lugares restantes");
+    expect(textoInvitacionesEnviadas(1)).toBe("1 invitación enviada");
+    expect(textoInvitacionesEnviadas(3)).toBe("3 invitaciones enviadas");
+    expect(textoSeleccionados(0)).toBe("0 seleccionados");
+    expect(textoSeleccionados(1)).toBe("1 seleccionado");
+    expect(textoPendientes(1)).toBe("1 pendiente");
+    expect(textoPendientes(2)).toBe("2 pendientes");
+  });
+});
+
+describe("textos de invitaciones (HU-008)", () => {
+  it("avisa el envío en singular o plural", () => {
+    expect(avisoInvitacionesEnviadas(1)).toBe("Invitación enviada.");
+    expect(avisoInvitacionesEnviadas(2)).toBe("2 invitaciones enviadas.");
+  });
+
+  it("explica el límite de selección según los lugares libres", () => {
+    expect(textoLimiteSeleccion(1)).toBe(
+      "Como queda 1 lugar libre, podés seleccionar 1 jugador. Para elegir a otro, quitá la selección actual.",
+    );
+    expect(textoLimiteSeleccion(3)).toBe(
+      "Como quedan 3 lugares libres, podés seleccionar 3 jugadores. Para elegir a otro, quitá la selección actual.",
+    );
+  });
+
+  it("lista los nombres con comas y «y»", () => {
+    const ana = { nombre: "Ana", apellido: "Paz" };
+    const bruno = { nombre: "Bruno", apellido: "Castro" };
+    const federico = { nombre: "Federico", apellido: "Luna" };
+    expect(listarNombres([])).toBe("");
+    expect(listarNombres([ana])).toBe("Ana Paz");
+    expect(listarNombres([ana, bruno])).toBe("Ana Paz y Bruno Castro");
+    expect(listarNombres([ana, bruno, federico])).toBe(
+      "Ana Paz, Bruno Castro y Federico Luna",
+    );
+  });
+
+  it.each([
+    [
+      "FEMENINO",
+      "Organizadora",
+      "Esperando que la organizadora forme las parejas.",
+    ],
+    [
+      "MASCULINO",
+      "Organizador",
+      "Esperando que el organizador forme las parejas.",
+    ],
+    [
+      "NO_DECLARA",
+      "Organiza el encuentro",
+      "Esperando que se inicie la formación automática de parejas.",
+    ],
+  ])("con organizador %s usa «%s» y «%s»", (genero, rol, esperando) => {
+    expect(rolOrganizador(genero)).toBe(rol);
+    expect(textoEsperandoParejas(genero)).toBe(esperando);
   });
 });
 

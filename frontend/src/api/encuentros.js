@@ -6,8 +6,15 @@ export function crearEncuentro(condiciones) {
   return pedir("POST", "encuentros", condiciones);
 }
 
+// Devuelve el encuentro con `lugares_libres`, `participantes` y, solo para el organizador,
+// `invitaciones` (en orden de envío).
 export function obtenerEncuentro(id) {
   return pedir("GET", `encuentros/${id}`);
+}
+
+// Recibe los ids de los jugadores elegidos y devuelve las invitaciones creadas.
+export function enviarInvitaciones(id, usuarios) {
+  return pedir("POST", `encuentros/${id}/invitaciones`, { usuarios });
 }
 
 // Devuelve { lugares_libres, suficientes, recomendados }, en el orden del motor. Cada

@@ -81,7 +81,22 @@ def test_hu006_c3_el_encuentro_creado_se_puede_consultar(cliente, organizador):
     respuesta = cliente.get(f"{URL_ENCUENTROS}/{creado['id']}")
 
     assert respuesta.status_code == 200
-    assert respuesta.json() == creado
+    # Además de las condiciones, la versión completa de HU-008 suma lugares y participantes.
+    assert respuesta.json() == {
+        **creado,
+        "lugares_libres": 3,
+        "participantes": [
+            {
+                "id": organizador.pk,
+                "nombre": "Ana",
+                "apellido": "Pérez",
+                "localidad": {"id": organizador.localidad_id, "nombre": "Río Ceballos"},
+                "nivel": 4.0,
+                "lado": "DRIVE",
+            }
+        ],
+        "invitaciones": [],
+    }
 
 
 def test_hu006_p5_la_localidad_puede_ser_otra_que_la_del_organizador(cliente, organizador):

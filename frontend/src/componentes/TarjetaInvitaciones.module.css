@@ -1,0 +1,19 @@
+.tarjeta {
+  composes: tarjeta from "./Tarjeta.module.css";
+  align-items: flex-start;
+}
+
+.invitacion {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.nombre {
+  font-weight: 700;
+}
+
+.detalle {
+  color: var(--texto-secundario);
+  font-size: 14px;
+}

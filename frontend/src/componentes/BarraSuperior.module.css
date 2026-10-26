@@ -41,3 +41,28 @@
   border-bottom-color: var(--lima);
   color: var(--superficie);
 }
+
+.indicador {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 19px;
+  height: 19px;
+  padding: 0 5px;
+  border-radius: var(--radio-pildora);
+  background: var(--lima);
+  color: var(--marino);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+/* Oculto a la vista pero accesible para lectores de pantalla. */
+.oculto {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

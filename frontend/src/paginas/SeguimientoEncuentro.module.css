@@ -1,0 +1,19 @@
+.pagina {
+  composes: pagina from "./Perfil.module.css";
+  gap: 32px;
+}
+
+.titulo {
+  composes: titulo from "./Perfil.module.css";
+}
+
+.rotulo {
+  composes: rotulo from "../componentes/ProgresoOnboarding.module.css";
+}
+
+.columnas {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+  gap: 24px;
+  align-items: start;
+}

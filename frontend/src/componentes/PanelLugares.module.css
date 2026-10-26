@@ -1,0 +1,66 @@
+.panel {
+  composes: tarjeta from "./Tarjeta.module.css";
+}
+
+.encabezado {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.rotulo {
+  composes: rotulo from "./ProgresoOnboarding.module.css";
+}
+
+.cantidad {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  color: var(--texto-secundario);
+  font-size: 16px;
+}
+
+.numero {
+  color: var(--texto);
+  font-family: var(--fuente-titulos);
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.lugares {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.lugar {
+  display: flex;
+  min-height: 80px;
+  padding: 0 20px;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+}
+
+.pendiente {
+  border: 1.5px dashed var(--etq-amarillo-texto);
+  background: var(--etq-amarillo);
+}
+
+.elegido {
+  border: 1.5px dashed var(--azul);
+}
+
+.formar {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--linea);
+}
+
+.texto {
+  color: var(--texto-secundario);
+  font-size: 15px;
+}

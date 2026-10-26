@@ -42,6 +42,7 @@ def test_hu001_registro_crea_la_cuenta_e_inicia_sesion(cliente):
         "apellido": "Ríos",
         "email": "tomas.rios@example.com",
         "onboarding": "perfil",
+        "invitaciones_pendientes": 0,
     }
     assert "contrasena" not in respuesta.json()
 

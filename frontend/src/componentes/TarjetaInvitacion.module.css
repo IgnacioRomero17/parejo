@@ -1,0 +1,74 @@
+/* Tarjetas de la bandeja de invitaciones (pantalla 13). */
+.tarjeta {
+  composes: tarjeta from "./Tarjeta.module.css";
+}
+
+.pendiente {
+  border-color: var(--etq-amarillo-texto);
+}
+
+.contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.cabecera {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.identidad {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.titulo {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.detalle {
+  color: var(--texto-secundario);
+  font-size: 14px;
+}
+
+.datos {
+  display: grid;
+  grid-template-columns: repeat(6, auto);
+  justify-content: space-between;
+  gap: 16px 32px;
+  margin: 0;
+  padding: 20px 28px;
+  border-radius: var(--radio-control);
+  background: var(--fondo);
+}
+
+.rotulo {
+  composes: rotulo from "./ProgresoOnboarding.module.css";
+}
+
+.valor {
+  margin: 4px 0 0;
+  font-size: 17px;
+  font-weight: 500;
+}
+
+.acciones {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.estado {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border-radius: var(--radio-control);
+  background: var(--fondo);
+  font-size: 15px;
+}

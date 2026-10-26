@@ -10,6 +10,7 @@ from apps.comun.mensajes import (
     MENSAJES_CAMPO_OBLIGATORIO,
     MENSAJES_OPCION,
 )
+from apps.encuentros import servicios as servicios_encuentros
 from apps.localidades.serializers import CampoLocalidad
 from apps.usuarios import servicios
 from apps.usuarios.models import DiaSemana, FrecuenciaJuego, Genero, LadoPreferido, TipoEncuentro
@@ -114,9 +115,14 @@ class UsuarioActualSerializer(serializers.Serializer):
     apellido = serializers.CharField()
     email = serializers.EmailField()
     onboarding = serializers.SerializerMethodField()
+    invitaciones_pendientes = serializers.SerializerMethodField()
 
     def get_onboarding(self, usuario):
         return servicios.paso_onboarding_pendiente(usuario)
+
+    def get_invitaciones_pendientes(self, usuario):
+        # Para el indicador de la barra superior; se lee por el servicio de encuentros.
+        return servicios_encuentros.cantidad_invitaciones_pendientes(usuario)
 
 
 class DatosPersonalesSerializer(serializers.Serializer):

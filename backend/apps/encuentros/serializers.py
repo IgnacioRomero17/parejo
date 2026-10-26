@@ -13,6 +13,7 @@ from apps.localidades.serializers import CampoLocalidad, LocalidadSerializer
 from apps.usuarios.models import TipoEncuentro
 
 MENSAJE_FECHA_INVALIDA = "Elegí una fecha válida."
+MENSAJE_SIN_SELECCION = "Seleccioná al menos un jugador."
 
 
 class CrearEncuentroSerializer(serializers.Serializer):
@@ -83,3 +84,101 @@ class RecomendadosSerializer(serializers.Serializer):
     lugares_libres = serializers.IntegerField()
     suficientes = serializers.BooleanField()
     recomendados = JugadorRecomendadoSerializer(source="jugadores", many=True)
+
+
+class JugadorSerializer(serializers.Serializer):
+    """Un jugador como lo muestran las listas del encuentro: nombre, localidad y nivel."""
+
+    id = serializers.IntegerField(source="id_usuario")
+    nombre = serializers.CharField()
+    apellido = serializers.CharField()
+    localidad = LocalidadSerializer()
+    nivel = serializers.DecimalField(source="nivel_estimado", max_digits=2, decimal_places=1)
+
+
+class ParticipanteSerializer(JugadorSerializer):
+    lado = serializers.CharField(source="preferencia.lado_preferido")
+
+
+class InvitacionEnviadaSerializer(serializers.Serializer):
+    id = serializers.IntegerField(source="id_invitacion")
+    jugador = JugadorSerializer(source="usuario_invitado")
+    estado = serializers.CharField()
+    fecha_envio = serializers.DateTimeField()
+
+
+class DetalleEncuentroSerializer(serializers.Serializer):
+    """Respuesta de `GET encuentros/{id}`: el encuentro, sus lugares, sus participantes y, solo
+    para el organizador, las invitaciones enviadas."""
+
+    def to_representation(self, detalle):
+        datos = EncuentroSerializer(detalle.encuentro).data
+        datos["lugares_libres"] = detalle.lugares_libres
+        datos["participantes"] = ParticipanteSerializer(
+            [participante.usuario for participante in detalle.participantes], many=True
+        ).data
+        if detalle.invitaciones is not None:
+            datos["invitaciones"] = InvitacionEnviadaSerializer(
+                detalle.invitaciones, many=True
+            ).data
+        return datos
+
+
+class CampoIdsJugadores(serializers.ListField):
+    """Lista de ids de jugadores; un id inválido se informa con un solo mensaje para el campo,
+    no uno por posición, para respetar el formato `{"campo": ["mensaje"]}`."""
+
+    child = serializers.IntegerField(min_value=1)
+
+    def run_child_validation(self, data):
+        try:
+            return super().run_child_validation(data)
+        except serializers.ValidationError as error:
+            raise serializers.ValidationError(MENSAJE_OPCION_INVALIDA) from error
+
+
+class InvitarSerializer(serializers.Serializer):
+    """Entrada de `POST encuentros/{id}/invitaciones`: los ids de los jugadores elegidos."""
+
+    usuarios = CampoIdsJugadores(
+        allow_empty=False,
+        error_messages={
+            **MENSAJES_CAMPO_OBLIGATORIO,
+            "not_a_list": MENSAJE_OPCION_INVALIDA,
+            "empty": MENSAJE_SIN_SELECCION,
+        },
+    )
+
+    def validate_usuarios(self, valor):
+        if len(set(valor)) != len(valor):
+            raise serializers.ValidationError(MENSAJE_OPCION_INVALIDA)
+        return valor
+
+
+class OrganizadorSerializer(serializers.Serializer):
+    """El organizador de una invitación recibida; el género define cómo se lo nombra."""
+
+    id = serializers.IntegerField(source="id_usuario")
+    nombre = serializers.CharField()
+    apellido = serializers.CharField()
+    genero = serializers.CharField()
+
+
+class EncuentroInvitacionSerializer(EncuentroSerializer):
+    # Los confirmados vienen contados en la consulta de la bandeja (`confirmados`).
+    confirmados = serializers.IntegerField()
+
+
+class InvitacionRecibidaSerializer(serializers.Serializer):
+    id = serializers.IntegerField(source="id_invitacion")
+    estado = serializers.CharField()
+    fecha_envio = serializers.DateTimeField()
+    organizador = OrganizadorSerializer(source="encuentro.organizador")
+    encuentro = EncuentroInvitacionSerializer()
+
+
+class BandejaSerializer(serializers.Serializer):
+    """Respuesta de `GET invitaciones`."""
+
+    pendientes = InvitacionRecibidaSerializer(many=True)
+    respondidas = InvitacionRecibidaSerializer(many=True)

@@ -20,7 +20,7 @@ import estilos from "./JugadoresRecomendados.module.css";
 
 // Lo que va debajo del título según los lugares libres y los recomendados, en el orden de
 // docs/interfaces/10-recomendados.md. La lista se pide cada vez: el ranking no se guarda.
-function Recomendados({ recomendacion }) {
+function Recomendados({ idEncuentro, recomendacion }) {
   const { lugares_libres: lugaresLibres, recomendados } = recomendacion;
 
   if (lugaresLibres === 0) {
@@ -49,7 +49,7 @@ function Recomendados({ recomendacion }) {
           />
         ))}
       </ol>
-      <BarraInvitar lugaresLibres={lugaresLibres} />
+      <BarraInvitar idEncuentro={idEncuentro} lugaresLibres={lugaresLibres} />
     </>
   );
 }
@@ -86,7 +86,10 @@ function JugadoresRecomendados() {
                 Solo aparecen jugadores disponibles para recibir invitaciones.
               </p>
             </div>
-            <Recomendados recomendacion={recomendacion} />
+            <Recomendados
+              idEncuentro={encuentro.id}
+              recomendacion={recomendacion}
+            />
           </>
         )}
       </>

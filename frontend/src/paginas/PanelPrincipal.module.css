@@ -13,3 +13,23 @@
 .texto {
   composes: texto from "./Perfil.module.css";
 }
+
+/* Encuentros activos a la izquierda (HU-012); invitaciones y perfil a la derecha. */
+.columnas {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: 32px;
+  align-items: start;
+}
+
+.derecha {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  grid-column: 2;
+}
+
+.subtitulo {
+  font-size: 20px;
+  font-weight: 700;
+}

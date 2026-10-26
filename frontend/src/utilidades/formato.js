@@ -33,7 +33,40 @@ export function formatearFechaCompacta(fecha) {
     ]),
   );
   const dia = sinPunto(partes.weekday);
-  return `${dia.charAt(0).toUpperCase()}${dia.slice(1)} ${partes.day} ${sinPunto(partes.month)} ${partes.year}`;
+  // Siempre tres letras: Intl abrevia septiembre como "sept".
+  const mes = sinPunto(partes.month).slice(0, 3);
+  return `${dia.charAt(0).toUpperCase()}${dia.slice(1)} ${partes.day} ${mes} ${partes.year}`;
+}
+
+const FORMATO_HORA = new Intl.DateTimeFormat("es-AR", {
+  timeZone: "America/Argentina/Cordoba",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+});
+
+// Día en Córdoba de un instante, como "AAAA-MM-DD".
+function diaEnCordoba(instante) {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Argentina/Cordoba",
+  }).format(instante);
+}
+
+// Fecha y hora de envío de una invitación (ISO 8601 de la API): "hoy 18:42", "ayer 09:05" o
+// "Sáb 3 oct 2026 18:42", según el día en Córdoba.
+export function formatearEnvio(fechaHora, ahora = new Date()) {
+  const instante = new Date(fechaHora);
+  const dia = diaEnCordoba(instante);
+  const hora = FORMATO_HORA.format(instante);
+  // Mediodía de Córdoba de hoy menos 24 horas cae siempre en el día anterior (sin horario
+  // de verano en Argentina).
+  const mediodiaDeHoy = new Date(`${diaEnCordoba(ahora)}T12:00:00-03:00`);
+  const ayer = diaEnCordoba(
+    new Date(mediodiaDeHoy.getTime() - 24 * 60 * 60 * 1000),
+  );
+  if (dia === diaEnCordoba(ahora)) return `hoy ${hora}`;
+  if (dia === ayer) return `ayer ${hora}`;
+  return `${formatearFechaCompacta(dia)} ${hora}`;
 }
 
 // Día de la semana de la API (1 = lunes … 7 = domingo) abreviado: "sáb", "mié".

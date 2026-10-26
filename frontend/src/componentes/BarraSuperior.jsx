@@ -1,9 +1,9 @@
 import { CirclePlus, House, Mail, User } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
+import { useSesion } from "../hooks/useSesion.js";
 import estilos from "./BarraSuperior.module.css";
 import Logo from "./Logo.jsx";
 
-// El indicador de invitaciones pendientes se suma con la HU-008.
 const ENLACES = [
   { ruta: "/inicio", texto: "Inicio", icono: House },
   { ruta: "/encuentros/nuevo", texto: "Crear encuentro", icono: CirclePlus },
@@ -11,8 +11,31 @@ const ENLACES = [
   { ruta: "/perfil", texto: "Perfil", icono: User },
 ];
 
+function textoIndicador(cantidad) {
+  return cantidad === 1
+    ? "1 invitación pendiente"
+    : `${cantidad} invitaciones pendientes`;
+}
+
+// Círculo lima con la cantidad de invitaciones pendientes; con 0 no se muestra. El número es
+// visual; el lector de pantalla lee el texto completo.
+function Indicador({ cantidad }) {
+  if (!cantidad) return null;
+  return (
+    <>
+      <span className={estilos.indicador} aria-hidden="true">
+        {cantidad}
+      </span>
+      <span className={estilos.oculto}>, {textoIndicador(cantidad)}</span>
+    </>
+  );
+}
+
 // En el onboarding (`soloLogo`) la barra muestra solo el logo, sin enlaces.
 function BarraSuperior({ soloLogo = false }) {
+  const { usuario } = useSesion();
+  const pendientes = usuario?.invitaciones_pendientes ?? 0;
+
   return (
     <header className={estilos.barra}>
       <div className={estilos.contenido}>
@@ -38,6 +61,9 @@ function BarraSuperior({ soloLogo = false }) {
                   >
                     <Icono size={18} strokeWidth={2} aria-hidden="true" />
                     {texto}
+                    {ruta === "/invitaciones" && (
+                      <Indicador cantidad={pendientes} />
+                    )}
                   </NavLink>
                 </li>
               ))}

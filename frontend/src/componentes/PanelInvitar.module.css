@@ -1,0 +1,109 @@
+/* Panel "Jugadores recomendados" de la pantalla 12 y sus secciones. */
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  background: var(--superficie);
+}
+
+.encabezado,
+.seccion,
+.fila,
+.pie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 28px;
+  border-bottom: 1px solid var(--linea);
+}
+
+.encabezado {
+  min-height: 72px;
+}
+
+.titulo {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.seccion {
+  min-height: 56px;
+  background: var(--fondo);
+}
+
+.rotulo {
+  composes: rotulo from "./ProgresoOnboarding.module.css";
+}
+
+.dato {
+  color: var(--texto-secundario);
+  font-size: 15px;
+}
+
+.fila {
+  justify-content: flex-start;
+  min-height: 92px;
+}
+
+.candidato {
+  cursor: pointer;
+}
+
+.seleccionado {
+  background: var(--etq-azul);
+  box-shadow: inset 4px 0 0 var(--azul);
+}
+
+.casilla {
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  margin: 0;
+  accent-color: var(--azul);
+  cursor: pointer;
+}
+
+.casilla:disabled {
+  cursor: not-allowed;
+}
+
+.posicion {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--marino);
+  color: var(--lima);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.marca {
+  color: var(--azul);
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.nota {
+  padding: 20px 28px;
+  border-bottom: 1px solid var(--linea);
+  color: var(--texto-secundario);
+  font-size: 14px;
+}
+
+.error {
+  padding: 20px 28px 0;
+}
+
+.pie {
+  min-height: 96px;
+  border-bottom: none;
+  font-size: 16px;
+}
