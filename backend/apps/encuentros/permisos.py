@@ -14,3 +14,15 @@ class EsParticipante(BasePermission):
         if not servicios.es_participante(request.user, encuentro):
             raise NotFound(servicios.MENSAJE_ENCUENTRO_INEXISTENTE)
         return True
+
+
+class EsOrganizador(BasePermission):
+    """Solo el organizador del encuentro.
+
+    A cualquier otro, aunque participe, se le responde 404, como si el encuentro no existiera.
+    """
+
+    def has_object_permission(self, request, view, encuentro):
+        if not servicios.es_organizador(request.user, encuentro):
+            raise NotFound(servicios.MENSAJE_ENCUENTRO_INEXISTENTE)
+        return True

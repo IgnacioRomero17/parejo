@@ -56,3 +56,30 @@ class EncuentroSerializer(serializers.Serializer):
 
     def get_confirmados(self, encuentro):
         return servicios.cantidad_confirmados(encuentro)
+
+
+class FranjaRecomendadoSerializer(serializers.Serializer):
+    dia_semana = serializers.IntegerField(source="dia")
+    hora_inicio = serializers.TimeField(source="inicio", format="%H:%M")
+    hora_fin = serializers.TimeField(source="fin", format="%H:%M")
+
+
+class JugadorRecomendadoSerializer(serializers.Serializer):
+    """Lo que la pantalla 10 muestra de cada recomendado; el puntaje no se expone."""
+
+    id = serializers.IntegerField(source="usuario.id_usuario")
+    nombre = serializers.CharField(source="usuario.nombre")
+    apellido = serializers.CharField(source="usuario.apellido")
+    localidad = LocalidadSerializer(source="usuario.localidad")
+    nivel = serializers.DecimalField(
+        source="usuario.nivel_estimado", max_digits=2, decimal_places=1
+    )
+    franja = FranjaRecomendadoSerializer()
+
+
+class RecomendadosSerializer(serializers.Serializer):
+    """Respuesta de `GET encuentros/{id}/recomendados`, en el orden del motor."""
+
+    lugares_libres = serializers.IntegerField()
+    suficientes = serializers.BooleanField()
+    recomendados = JugadorRecomendadoSerializer(source="jugadores", many=True)

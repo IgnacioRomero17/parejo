@@ -5,10 +5,24 @@ import {
   formularioEncuentro,
   HORAS_INICIO,
   hoyEnCordoba,
+  textoJugadores,
+  textoLugaresACompletar,
+  textoLugaresLibres,
   validarEncuentro,
 } from "./encuentros.js";
 
 const MENSAJE_CAMPO_VACIO = "Completá este campo para poder guardar.";
+
+describe("textos con cantidades", () => {
+  it("usan singular con 1 y plural con el resto", () => {
+    expect(textoJugadores(1)).toBe("1 jugador");
+    expect(textoJugadores(3)).toBe("3 jugadores");
+    expect(textoLugaresLibres(1)).toBe("1 lugar libre");
+    expect(textoLugaresLibres(2)).toBe("2 lugares libres");
+    expect(textoLugaresACompletar(1)).toBe("el lugar libre");
+    expect(textoLugaresACompletar(3)).toBe("los 3 lugares libres");
+  });
+});
 
 describe("HORAS_INICIO", () => {
   it("va de 08:00 a 22:30 en pasos de 30 minutos", () => {

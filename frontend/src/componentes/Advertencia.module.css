@@ -1,0 +1,16 @@
+.advertencia {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 14px;
+  border-radius: var(--radio-control);
+  background: var(--etq-amarillo);
+  color: var(--etq-amarillo-texto);
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.icono {
+  flex-shrink: 0;
+  margin-top: 2px;
+}

@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from datetime import date, datetime, time, timedelta
 
 from django.db import transaction
@@ -8,6 +9,9 @@ from apps.comun.horarios import MENSAJE_HORA_INVALIDA, hora_valida, minutos
 from apps.encuentros.models import MINUTOS_FIN_MAXIMO, Encuentro, EstadoEncuentro, Participante
 from apps.usuarios import servicios as servicios_usuarios
 from apps.usuarios.models import Usuario
+from motor.filtros import franja_que_cubre
+from motor.recomendar import recomendar
+from motor.tipos import CandidatoEntrada, EncuentroEntrada, Franja
 
 MENSAJE_FIN_TARDE = "El encuentro tiene que terminar a las 23:30 como máximo."
 MENSAJE_EN_EL_PASADO = "Elegí una fecha y hora futuras."
@@ -89,3 +93,92 @@ def es_participante(usuario: Usuario, encuentro: Encuentro) -> bool:
 def cantidad_confirmados(encuentro: Encuentro) -> int:
     """Devuelve cuántos participantes confirmados tiene el encuentro (de 1 a 4)."""
     return encuentro.participantes.count()
+
+
+def es_organizador(usuario: Usuario, encuentro: Encuentro) -> bool:
+    """Indica si el usuario organiza el encuentro."""
+    return encuentro.organizador_id == usuario.pk
+
+
+@dataclass(frozen=True)
+class JugadorRecomendado:
+    """Un jugador recomendado y la franja suya que cubre el encuentro."""
+
+    usuario: Usuario
+    franja: Franja
+
+
+@dataclass(frozen=True)
+class JugadoresRecomendados:
+    """Resultado de la recomendación para mostrar en la pantalla 10."""
+
+    lugares_libres: int
+    suficientes: bool
+    jugadores: tuple[JugadorRecomendado, ...]
+
+
+def ids_excluidos(encuentro: Encuentro) -> frozenset[int]:
+    """Ids que no se pueden recomendar: organizador, participantes e invitados (en cualquier
+    estado, porque un jugador no puede ser invitado dos veces al mismo encuentro)."""
+    participantes = encuentro.participantes.values_list("usuario_id", flat=True)
+    invitados = encuentro.invitaciones.values_list("usuario_invitado_id", flat=True)
+    return frozenset({encuentro.organizador_id, *participantes, *invitados})
+
+
+def _encuentro_entrada(encuentro: Encuentro) -> EncuentroEntrada:
+    niveles = encuentro.participantes.values_list("usuario__nivel_estimado", flat=True)
+    return EncuentroEntrada(
+        fecha=encuentro.fecha,
+        hora_inicio=encuentro.hora_inicio,
+        duracion_minutos=encuentro.duracion_minutos,
+        lat=float(encuentro.localidad.latitud),
+        lon=float(encuentro.localidad.longitud),
+        tipo=encuentro.tipo_encuentro,
+        niveles_confirmados=tuple(float(nivel) for nivel in niveles.order_by("usuario_id")),
+        ids_excluidos=ids_excluidos(encuentro),
+    )
+
+
+def _candidato_entrada(usuario: Usuario) -> CandidatoEntrada:
+    localidad = usuario.localidad
+    # Sin preferencia, la relación inversa lanza una excepción que también es AttributeError.
+    preferencia = getattr(usuario, "preferencia", None)
+    return CandidatoEntrada(
+        id=usuario.pk,
+        activo=usuario.is_active,
+        disponible=usuario.disponible_para_invitaciones,
+        nivel=None if usuario.nivel_estimado is None else float(usuario.nivel_estimado),
+        lat=None if localidad is None else float(localidad.latitud),
+        lon=None if localidad is None else float(localidad.longitud),
+        tipo_preferido=None if preferencia is None else preferencia.tipo_encuentro,
+        franjas=tuple(
+            Franja(dia=franja.dia_semana, inicio=franja.hora_inicio, fin=franja.hora_fin)
+            for franja in usuario.disponibilidades.all()
+        ),
+    )
+
+
+def recomendar_jugadores(encuentro: Encuentro) -> JugadoresRecomendados:
+    """Recomienda jugadores compatibles con el encuentro (HU-007).
+
+    Arma las entradas del motor desde la base (nivel de referencia: los participantes
+    confirmados, organizador incluido; excluidos: organizador, participantes e invitados) y
+    llama a `motor.recomendar` con `Encuentro.lugares_libres()`. Devuelve los recomendados
+    en el orden del motor, cada uno con la franja que cubre el encuentro, los lugares libres
+    y si alcanzan. El ranking no se guarda: se recalcula en cada consulta.
+    """
+    entrada = _encuentro_entrada(encuentro)
+    lugares_libres = encuentro.lugares_libres()
+    usuarios = {usuario.pk: usuario for usuario in servicios_usuarios.candidatos_para_recomendar()}
+    candidatos = {id_usuario: _candidato_entrada(u) for id_usuario, u in usuarios.items()}
+    resultado = recomendar(entrada, tuple(candidatos.values()), lugares_libres)
+    jugadores = tuple(
+        JugadorRecomendado(
+            usuario=usuarios[recomendacion.id],
+            franja=franja_que_cubre(candidatos[recomendacion.id].franjas, entrada),
+        )
+        for recomendacion in resultado.recomendados
+    )
+    return JugadoresRecomendados(
+        lugares_libres=lugares_libres, suficientes=resultado.suficientes, jugadores=jugadores
+    )

@@ -9,3 +9,9 @@ export function crearEncuentro(condiciones) {
 export function obtenerEncuentro(id) {
   return pedir("GET", `encuentros/${id}`);
 }
+
+// Devuelve { lugares_libres, suficientes, recomendados }, en el orden del motor. Cada
+// recomendado: { id, nombre, apellido, localidad, nivel, franja }.
+export function obtenerRecomendados(id) {
+  return pedir("GET", `encuentros/${id}/recomendados`);
+}

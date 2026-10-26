@@ -26,6 +26,19 @@ export function etiquetaTipoEncuentro(tipo) {
   return TIPOS_ENCUENTRO.find((opcion) => opcion.valor === tipo)?.etiqueta;
 }
 
+export function textoJugadores(cantidad) {
+  return cantidad === 1 ? "1 jugador" : `${cantidad} jugadores`;
+}
+
+export function textoLugaresLibres(cantidad) {
+  return cantidad === 1 ? "1 lugar libre" : `${cantidad} lugares libres`;
+}
+
+// Pantalla 11: "completar el lugar libre" / "completar los 3 lugares libres".
+export function textoLugaresACompletar(cantidad) {
+  return cantidad === 1 ? "el lugar libre" : `los ${cantidad} lugares libres`;
+}
+
 // Fecha de hoy en Córdoba como "AAAA-MM-DD", el formato de <input type="date">.
 export function hoyEnCordoba(ahora = new Date()) {
   return new Intl.DateTimeFormat("en-CA", {

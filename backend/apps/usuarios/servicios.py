@@ -261,6 +261,21 @@ def actualizar_perfil(
     return usuario
 
 
+def candidatos_para_recomendar() -> QuerySet[Usuario]:
+    """Devuelve los jugadores que el motor evalúa para recomendar (HU-007).
+
+    Prefiltra por cuenta activa y disponible para invitaciones solo por eficiencia: el motor
+    aplica igual sus 7 filtros. Trae la localidad, la preferencia y las franjas en pocas
+    consultas, ordenados por id.
+    """
+    return (
+        Usuario.objects.filter(is_active=True, disponible_para_invitaciones=True)
+        .select_related("localidad", "preferencia")
+        .prefetch_related("disponibilidades")
+        .order_by("id_usuario")
+    )
+
+
 def paso_onboarding_pendiente(usuario: Usuario) -> str | None:
     """Devuelve el paso de onboarding que le falta al usuario, o None si no le falta ninguno.
 

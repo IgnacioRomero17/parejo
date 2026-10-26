@@ -1,3 +1,5 @@
+import { DIAS_SEMANA } from "./disponibilidad.js";
+
 const FORMATO_NIVEL = new Intl.NumberFormat("es-AR", {
   minimumFractionDigits: 1,
   maximumFractionDigits: 1,
@@ -32,4 +34,15 @@ export function formatearFechaCompacta(fecha) {
   );
   const dia = sinPunto(partes.weekday);
   return `${dia.charAt(0).toUpperCase()}${dia.slice(1)} ${partes.day} ${sinPunto(partes.month)} ${partes.year}`;
+}
+
+// Día de la semana de la API (1 = lunes … 7 = domingo) abreviado: "sáb", "mié".
+export function formatearDiaAbreviado(diaSemana) {
+  const dia = DIAS_SEMANA.find((opcion) => opcion.valor === String(diaSemana));
+  return dia.etiqueta.slice(0, 3).toLowerCase();
+}
+
+// Franja { dia_semana, hora_inicio, hora_fin } de la API: "sáb 17:00–21:00".
+export function formatearFranja(franja) {
+  return `${formatearDiaAbreviado(franja.dia_semana)} ${franja.hora_inicio}–${franja.hora_fin}`;
 }

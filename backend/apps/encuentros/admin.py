@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from apps.encuentros.models import Encuentro, Participante
+from apps.encuentros.models import Encuentro, Invitacion, Participante
 
 
 class ParticipanteEnLinea(admin.TabularInline):
@@ -9,10 +9,16 @@ class ParticipanteEnLinea(admin.TabularInline):
     raw_id_fields = ["usuario"]
 
 
+class InvitacionEnLinea(admin.TabularInline):
+    model = Invitacion
+    extra = 0
+    raw_id_fields = ["usuario_invitado"]
+
+
 @admin.register(Encuentro)
 class EncuentroAdmin(admin.ModelAdmin):
     list_display = ["id_encuentro", "fecha", "hora_inicio", "localidad", "estado", "organizador"]
     list_filter = ["estado"]
     ordering = ["fecha", "hora_inicio"]
     raw_id_fields = ["organizador"]
-    inlines = [ParticipanteEnLinea]
+    inlines = [ParticipanteEnLinea, InvitacionEnLinea]

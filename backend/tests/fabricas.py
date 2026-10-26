@@ -3,7 +3,13 @@ from decimal import Decimal
 
 from django.utils import timezone
 
-from apps.encuentros.models import Encuentro, EstadoEncuentro, Participante
+from apps.encuentros.models import (
+    Encuentro,
+    EstadoEncuentro,
+    EstadoInvitacion,
+    Invitacion,
+    Participante,
+)
 from apps.localidades.models import Localidad
 from apps.usuarios.models import (
     DiaSemana,
@@ -71,6 +77,19 @@ def crear_usuario_con_onboarding(**campos) -> Usuario:
     return usuario
 
 
+def crear_jugador_disponible(localidad: Localidad, email: str, **campos) -> Usuario:
+    """Jugador recomendable: onboarding hecho, disponible y con franja de sábado 17:00–21:00.
+
+    Recibe la localidad (el nombre es único: se crea una sola vez por test) y un correo propio.
+    """
+    datos = {"localidad": localidad, "email": email, "disponible_para_invitaciones": True}
+    datos.update(campos)
+    usuario = crear_usuario_con_perfil(**datos)
+    crear_preferencia(usuario, tipo_encuentro=TipoEncuentro.COMPETITIVO)
+    crear_franja(usuario)
+    return usuario
+
+
 def proximo_sabado() -> date:
     """El próximo sábado posterior a hoy (en la zona horaria del sistema)."""
     hoy = timezone.localdate()
@@ -92,3 +111,12 @@ def crear_encuentro(organizador: Usuario, **campos) -> Encuentro:
     encuentro = Encuentro.objects.create(organizador=organizador, **datos)
     Participante.objects.create(encuentro=encuentro, usuario=organizador)
     return encuentro
+
+
+def crear_invitacion(encuentro: Encuentro, usuario: Usuario, **campos) -> Invitacion:
+    """Invitación pendiente; con otro estado, completa la fecha de respuesta."""
+    datos = {"estado": EstadoInvitacion.PENDIENTE}
+    datos.update(campos)
+    if datos["estado"] != EstadoInvitacion.PENDIENTE:
+        datos.setdefault("fecha_respuesta", timezone.now())
+    return Invitacion.objects.create(encuentro=encuentro, usuario_invitado=usuario, **datos)

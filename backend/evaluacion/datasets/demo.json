@@ -1,0 +1,239 @@
+{
+  "descripcion": "Dataset de demostración de parejo. Jugadores inventados, con perfil completo, preferencias y franjas. Incluye a los 7 jugadores del caso de ejemplo de la regla del motor (Tomás Ríos y sus 6 recomendados). Se carga con `python manage.py cargar_datos` y se puede editar después desde el admin.",
+  "contrasena": "parejo2026",
+  "nota_contrasena": "Contraseña común de todos los jugadores, solo para la demostración.",
+  "jugadores": [
+    {
+      "nombre": "Tomás", "apellido": "Ríos", "email": "tomas.rios@demo.parejo.example",
+      "edad": 34, "genero": "MASCULINO", "frecuencia_juego": "2_3_SEMANA",
+      "nivel_estimado": "4.5", "localidad": "Río Ceballos",
+      "tipo_encuentro": "COMPETITIVO", "lado_preferido": "DRIVE", "disponible": true,
+      "franjas": [
+        {"dia_semana": 3, "hora_inicio": "19:00", "hora_fin": "22:00"},
+        {"dia_semana": 6, "hora_inicio": "17:00", "hora_fin": "21:00"}
+      ]
+    },
+    {
+      "nombre": "Valentina", "apellido": "Sosa", "email": "valentina.sosa@demo.parejo.example",
+      "edad": 29, "genero": "FEMENINO", "frecuencia_juego": "2_3_SEMANA",
+      "nivel_estimado": "4.5", "localidad": "Río Ceballos",
+      "tipo_encuentro": "COMPETITIVO", "lado_preferido": "REVES", "disponible": true,
+      "franjas": [
+        {"dia_semana": 4, "hora_inicio": "18:00", "hora_fin": "21:00"},
+        {"dia_semana": 6, "hora_inicio": "17:00", "hora_fin": "21:00"}
+      ]
+    },
+    {
+      "nombre": "Joaquín", "apellido": "Medina", "email": "joaquin.medina@demo.parejo.example",
+      "edad": 31, "genero": "MASCULINO", "frecuencia_juego": "1_SEMANA",
+      "nivel_estimado": "4.5", "localidad": "Unquillo",
+      "tipo_encuentro": "COMPETITIVO", "lado_preferido": "DRIVE", "disponible": true,
+      "franjas": [
+        {"dia_semana": 6, "hora_inicio": "16:00", "hora_fin": "20:00"}
+      ]
+    },
+    {
+      "nombre": "Camila", "apellido": "Paz", "email": "camila.paz@demo.parejo.example",
+      "edad": 27, "genero": "FEMENINO", "frecuencia_juego": "2_3_SEMANA",
+      "nivel_estimado": "5.0", "localidad": "Mendiolaza",
+      "tipo_encuentro": "COMPETITIVO", "lado_preferido": "REVES", "disponible": true,
+      "franjas": [
+        {"dia_semana": 2, "hora_inicio": "19:00", "hora_fin": "22:00"},
+        {"dia_semana": 6, "hora_inicio": "18:00", "hora_fin": "22:00"}
+      ]
+    },
+    {
+      "nombre": "Federico", "apellido": "Luna", "email": "federico.luna@demo.parejo.example",
+      "edad": 38, "genero": "MASCULINO", "frecuencia_juego": "1_SEMANA",
+      "nivel_estimado": "5.0", "localidad": "Villa Allende",
+      "tipo_encuentro": "INDIFERENTE", "lado_preferido": "DRIVE", "disponible": true,
+      "franjas": [
+        {"dia_semana": 6, "hora_inicio": "15:00", "hora_fin": "20:00"}
+      ]
+    },
+    {
+      "nombre": "Bruno", "apellido": "Castro", "email": "bruno.castro@demo.parejo.example",
+      "edad": 24, "genero": "MASCULINO", "frecuencia_juego": "4_MAS_SEMANA",
+      "nivel_estimado": "4.0", "localidad": "Salsipuedes",
+      "tipo_encuentro": "RECREATIVO", "lado_preferido": "REVES", "disponible": true,
+      "franjas": [
+        {"dia_semana": 6, "hora_inicio": "18:00", "hora_fin": "20:00"},
+        {"dia_semana": 7, "hora_inicio": "09:00", "hora_fin": "12:00"}
+      ]
+    },
+    {
+      "nombre": "Agustina", "apellido": "Rey", "email": "agustina.rey@demo.parejo.example",
+      "edad": 33, "genero": "FEMENINO", "frecuencia_juego": "2_3_SEMANA",
+      "nivel_estimado": "5.0", "localidad": "La Calera",
+      "tipo_encuentro": "COMPETITIVO", "lado_preferido": "INDIFERENTE", "disponible": true,
+      "franjas": [
+        {"dia_semana": 6, "hora_inicio": "17:30", "hora_fin": "21:00"}
+      ]
+    },
+    {
+      "nombre": "Lucía", "apellido": "Benítez", "email": "lucia.benitez@demo.parejo.example",
+      "edad": 26, "genero": "FEMENINO", "frecuencia_juego": "1_SEMANA",
+      "nivel_estimado": "3.0", "localidad": "Río Ceballos",
+      "tipo_encuentro": "RECREATIVO", "lado_preferido": "DRIVE", "disponible": true,
+      "franjas": [
+        {"dia_semana": 6, "hora_inicio": "17:00", "hora_fin": "21:00"},
+        {"dia_semana": 7, "hora_inicio": "10:00", "hora_fin": "13:00"}
+      ]
+    },
+    {
+      "nombre": "Martín", "apellido": "Ferreyra", "email": "martin.ferreyra@demo.parejo.example",
+      "edad": 45, "genero": "MASCULINO", "frecuencia_juego": "MENOS_1_SEMANA",
+      "nivel_estimado": "3.5", "localidad": "Unquillo",
+      "tipo_encuentro": "RECREATIVO", "lado_preferido": "REVES", "disponible": true,
+      "franjas": [
+        {"dia_semana": 6, "hora_inicio": "09:00", "hora_fin": "12:00"},
+        {"dia_semana": 7, "hora_inicio": "09:00", "hora_fin": "13:00"}
+      ]
+    },
+    {
+      "nombre": "Sofía", "apellido": "Molina", "email": "sofia.molina@demo.parejo.example",
+      "edad": 22, "genero": "FEMENINO", "frecuencia_juego": "2_3_SEMANA",
+      "nivel_estimado": "6.0", "localidad": "Villa Allende",
+      "tipo_encuentro": "COMPETITIVO", "lado_preferido": "DRIVE", "disponible": true,
+      "franjas": [
+        {"dia_semana": 5, "hora_inicio": "19:00", "hora_fin": "23:00"},
+        {"dia_semana": 6, "hora_inicio": "18:00", "hora_fin": "22:00"}
+      ]
+    },
+    {
+      "nombre": "Nicolás", "apellido": "Herrera", "email": "nicolas.herrera@demo.parejo.example",
+      "edad": 36, "genero": "MASCULINO", "frecuencia_juego": "1_SEMANA",
+      "nivel_estimado": "4.5", "localidad": "Jesús María",
+      "tipo_encuentro": "COMPETITIVO", "lado_preferido": "REVES", "disponible": true,
+      "franjas": [
+        {"dia_semana": 5, "hora_inicio": "20:00", "hora_fin": "23:00"},
+        {"dia_semana": 7, "hora_inicio": "17:00", "hora_fin": "21:00"}
+      ]
+    },
+    {
+      "nombre": "Paula", "apellido": "Giménez", "email": "paula.gimenez@demo.parejo.example",
+      "edad": 41, "genero": "FEMENINO", "frecuencia_juego": "1_SEMANA",
+      "nivel_estimado": "4.0", "localidad": "Saldán",
+      "tipo_encuentro": "RECREATIVO", "lado_preferido": "REVES", "disponible": false,
+      "franjas": [
+        {"dia_semana": 6, "hora_inicio": "17:00", "hora_fin": "21:00"}
+      ]
+    },
+    {
+      "nombre": "Diego", "apellido": "Romero", "email": "diego.romero@demo.parejo.example",
+      "edad": 30, "genero": "MASCULINO", "frecuencia_juego": "2_3_SEMANA",
+      "nivel_estimado": "5.5", "localidad": "Córdoba – Cerro de las Rosas",
+      "tipo_encuentro": "COMPETITIVO", "lado_preferido": "DRIVE", "disponible": true,
+      "franjas": [
+        {"dia_semana": 3, "hora_inicio": "20:00", "hora_fin": "23:00"},
+        {"dia_semana": 6, "hora_inicio": "18:00", "hora_fin": "21:00"}
+      ]
+    },
+    {
+      "nombre": "Florencia", "apellido": "Acosta", "email": "florencia.acosta@demo.parejo.example",
+      "edad": 28, "genero": "FEMENINO", "frecuencia_juego": "2_3_SEMANA",
+      "nivel_estimado": "4.0", "localidad": "Córdoba – Nueva Córdoba",
+      "tipo_encuentro": "COMPETITIVO", "lado_preferido": "REVES", "disponible": true,
+      "franjas": [
+        {"dia_semana": 1, "hora_inicio": "19:00", "hora_fin": "22:00"},
+        {"dia_semana": 6, "hora_inicio": "10:00", "hora_fin": "13:00"}
+      ]
+    },
+    {
+      "nombre": "Matías", "apellido": "Quiroga", "email": "matias.quiroga@demo.parejo.example",
+      "edad": 35, "genero": "MASCULINO", "frecuencia_juego": "1_SEMANA",
+      "nivel_estimado": "3.5", "localidad": "Córdoba – Centro",
+      "tipo_encuentro": "RECREATIVO", "lado_preferido": "DRIVE", "disponible": true,
+      "franjas": [
+        {"dia_semana": 4, "hora_inicio": "20:00", "hora_fin": "23:00"},
+        {"dia_semana": 7, "hora_inicio": "18:00", "hora_fin": "21:00"}
+      ]
+    },
+    {
+      "nombre": "Carolina", "apellido": "Vega", "email": "carolina.vega@demo.parejo.example",
+      "edad": 32, "genero": "FEMENINO", "frecuencia_juego": "MENOS_1_SEMANA",
+      "nivel_estimado": "2.5", "localidad": "Colonia Caroya",
+      "tipo_encuentro": "RECREATIVO", "lado_preferido": "INDIFERENTE", "disponible": true,
+      "franjas": [
+        {"dia_semana": 7, "hora_inicio": "10:00", "hora_fin": "12:00"}
+      ]
+    },
+    {
+      "nombre": "Gonzalo", "apellido": "Peralta", "email": "gonzalo.peralta@demo.parejo.example",
+      "edad": 39, "genero": "MASCULINO", "frecuencia_juego": "2_3_SEMANA",
+      "nivel_estimado": "5.0", "localidad": "Córdoba – Alta Córdoba",
+      "tipo_encuentro": "COMPETITIVO", "lado_preferido": "REVES", "disponible": true,
+      "franjas": [
+        {"dia_semana": 2, "hora_inicio": "20:00", "hora_fin": "23:00"},
+        {"dia_semana": 6, "hora_inicio": "19:00", "hora_fin": "22:00"}
+      ]
+    },
+    {
+      "nombre": "Micaela", "apellido": "Torres", "email": "micaela.torres@demo.parejo.example",
+      "edad": 25, "genero": "FEMENINO", "frecuencia_juego": "4_MAS_SEMANA",
+      "nivel_estimado": "6.5", "localidad": "Villa Carlos Paz",
+      "tipo_encuentro": "COMPETITIVO", "lado_preferido": "DRIVE", "disponible": true,
+      "franjas": [
+        {"dia_semana": 6, "hora_inicio": "08:00", "hora_fin": "12:00"},
+        {"dia_semana": 7, "hora_inicio": "08:00", "hora_fin": "12:00"}
+      ]
+    },
+    {
+      "nombre": "Alex", "apellido": "Navarro", "email": "alex.navarro@demo.parejo.example",
+      "edad": 29, "genero": "NO_DECLARA", "frecuencia_juego": "1_SEMANA",
+      "nivel_estimado": "4.5", "localidad": "Malagueño",
+      "tipo_encuentro": "INDIFERENTE", "lado_preferido": "INDIFERENTE", "disponible": true,
+      "franjas": [
+        {"dia_semana": 2, "hora_inicio": "18:00", "hora_fin": "21:00"},
+        {"dia_semana": 4, "hora_inicio": "18:00", "hora_fin": "21:00"}
+      ]
+    },
+    {
+      "nombre": "Julián", "apellido": "Ortiz", "email": "julian.ortiz@demo.parejo.example",
+      "edad": 50, "genero": "MASCULINO", "frecuencia_juego": "1_SEMANA",
+      "nivel_estimado": "3.0", "localidad": "Saldán",
+      "tipo_encuentro": "RECREATIVO", "lado_preferido": "DRIVE", "disponible": true,
+      "franjas": [
+        {"dia_semana": 3, "hora_inicio": "09:00", "hora_fin": "12:00"}
+      ]
+    },
+    {
+      "nombre": "Renata", "apellido": "Domínguez", "email": "renata.dominguez@demo.parejo.example",
+      "edad": 23, "genero": "FEMENINO", "frecuencia_juego": "2_3_SEMANA",
+      "nivel_estimado": "5.5", "localidad": "Córdoba – Argüello",
+      "tipo_encuentro": "COMPETITIVO", "lado_preferido": "REVES", "disponible": true,
+      "franjas": [
+        {"dia_semana": 5, "hora_inicio": "19:00", "hora_fin": "23:00"},
+        {"dia_semana": 6, "hora_inicio": "09:00", "hora_fin": "12:00"}
+      ]
+    },
+    {
+      "nombre": "Sam", "apellido": "Aguirre", "email": "sam.aguirre@demo.parejo.example",
+      "edad": 37, "genero": "NO_DECLARA", "frecuencia_juego": "2_3_SEMANA",
+      "nivel_estimado": "4.0", "localidad": "Jesús María",
+      "tipo_encuentro": "RECREATIVO", "lado_preferido": "DRIVE", "disponible": true,
+      "franjas": [
+        {"dia_semana": 1, "hora_inicio": "18:00", "hora_fin": "21:00"},
+        {"dia_semana": 7, "hora_inicio": "17:00", "hora_fin": "20:00"}
+      ]
+    },
+    {
+      "nombre": "Ignacio", "apellido": "Cabrera", "email": "ignacio.cabrera@demo.parejo.example",
+      "edad": 44, "genero": "MASCULINO", "frecuencia_juego": "MENOS_1_SEMANA",
+      "nivel_estimado": "2.0", "localidad": "Mendiolaza",
+      "tipo_encuentro": "RECREATIVO", "lado_preferido": "INDIFERENTE", "disponible": true,
+      "franjas": [
+        {"dia_semana": 6, "hora_inicio": "10:00", "hora_fin": "12:00"}
+      ]
+    },
+    {
+      "nombre": "Valeria", "apellido": "Ponce", "email": "valeria.ponce@demo.parejo.example",
+      "edad": 31, "genero": "FEMENINO", "frecuencia_juego": "1_SEMANA",
+      "nivel_estimado": "5.0", "localidad": "Unquillo",
+      "tipo_encuentro": "COMPETITIVO", "lado_preferido": "DRIVE", "disponible": false,
+      "franjas": [
+        {"dia_semana": 6, "hora_inicio": "17:00", "hora_fin": "21:00"}
+      ]
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+.tarjeta {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 64px 28px;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  background: var(--superficie);
+  text-align: center;
+}
+
+.icono {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: var(--etq-amarillo);
+  color: var(--etq-amarillo-texto);
+}
+
+.titulo {
+  max-width: 760px;
+}
+
+.texto {
+  max-width: 560px;
+  margin-bottom: 8px;
+  color: var(--texto-secundario);
+  font-size: 16px;
+}

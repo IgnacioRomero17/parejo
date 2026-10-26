@@ -4,8 +4,12 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from apps.encuentros import servicios
-from apps.encuentros.permisos import EsParticipante
-from apps.encuentros.serializers import CrearEncuentroSerializer, EncuentroSerializer
+from apps.encuentros.permisos import EsOrganizador, EsParticipante
+from apps.encuentros.serializers import (
+    CrearEncuentroSerializer,
+    EncuentroSerializer,
+    RecomendadosSerializer,
+)
 from apps.usuarios.permisos import OnboardingCompleto
 
 
@@ -27,3 +31,13 @@ class EncuentroVista(APIView):
         encuentro = servicios.obtener_encuentro(id_encuentro)
         self.check_object_permissions(request, encuentro)
         return Response(EncuentroSerializer(encuentro).data)
+
+
+class RecomendadosVista(APIView):
+    permission_classes = [IsAuthenticated, EsOrganizador]
+
+    def get(self, request, id_encuentro):
+        encuentro = servicios.obtener_encuentro(id_encuentro)
+        self.check_object_permissions(request, encuentro)
+        recomendados = servicios.recomendar_jugadores(encuentro)
+        return Response(RecomendadosSerializer(recomendados).data)
