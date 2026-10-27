@@ -107,6 +107,10 @@ function renderizar() {
         <Routes>
           <Route path="/encuentros/:id" element={<SeguimientoEncuentro />} />
           <Route path="/inicio" element={<h1>Inicio</h1>} />
+          <Route
+            path="/encuentros/:id/propuesta"
+            element={<h1>Propuesta</h1>}
+          />
         </Routes>
       </MemoryRouter>
     </ContextoSesion.Provider>,
@@ -411,13 +415,25 @@ describe("SeguimientoEncuentro · encuentro completo (HU-008)", () => {
     ]);
   });
 
-  it("el botón para formar parejas queda deshabilitado hasta HU-009", async () => {
+  it("HU-009 P1: con 4 confirmados, formar parejas lleva a la pantalla 15", async () => {
     renderizar();
     await screen.findByText("4 de 4 jugadores confirmados");
 
+    const formar = screen.getByRole("link", {
+      name: "Formar parejas equilibradas",
+    });
+    expect(formar.getAttribute("href")).toBe("/encuentros/15/formando");
+  });
+
+  it("con la propuesta ya generada lleva a la propuesta", async () => {
+    obtenerEncuentro.mockResolvedValue({
+      ...COMPLETO,
+      estado: "PROPUESTA_GENERADA",
+    });
+    renderizar();
+
     expect(
-      screen.getByRole("button", { name: "Formar parejas equilibradas" })
-        .disabled,
-    ).toBe(true);
+      await screen.findByRole("heading", { level: 1, name: "Propuesta" }),
+    ).toBeTruthy();
   });
 });

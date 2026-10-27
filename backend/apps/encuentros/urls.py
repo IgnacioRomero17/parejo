@@ -4,6 +4,7 @@ from apps.encuentros.vistas import (
     AceptarInvitacionVista,
     EncuentrosVista,
     EncuentroVista,
+    FormarParejasVista,
     InvitacionesEncuentroVista,
     InvitacionesVista,
     RechazarInvitacionVista,
@@ -22,6 +23,11 @@ urlpatterns = [
         "encuentros/<int:id_encuentro>/invitaciones",
         InvitacionesEncuentroVista.as_view(),
         name="encuentro-invitaciones",
+    ),
+    path(
+        "encuentros/<int:id_encuentro>/formar-parejas",
+        FormarParejasVista.as_view(),
+        name="formar-parejas",
     ),
     path("invitaciones", InvitacionesVista.as_view(), name="invitaciones"),
     path(

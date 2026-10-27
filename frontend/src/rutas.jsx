@@ -5,6 +5,7 @@ import RutaPublica from "./componentes/RutaPublica.jsx";
 import BandejaInvitaciones from "./paginas/BandejaInvitaciones.jsx";
 import Bienvenida from "./paginas/Bienvenida.jsx";
 import CrearEncuentro from "./paginas/CrearEncuentro.jsx";
+import FormandoParejas from "./paginas/FormandoParejas.jsx";
 import Ingreso from "./paginas/Ingreso.jsx";
 import JugadoresRecomendados from "./paginas/JugadoresRecomendados.jsx";
 import OnboardingDisponibilidad from "./paginas/OnboardingDisponibilidad.jsx";
@@ -48,6 +49,10 @@ function Rutas() {
             element={<JugadoresRecomendados />}
           />
           <Route path="/encuentros/:id" element={<SeguimientoEncuentro />} />
+          <Route
+            path="/encuentros/:id/formando"
+            element={<FormandoParejas />}
+          />
           <Route path="/invitaciones" element={<BandejaInvitaciones />} />
           <Route path="/perfil" element={<Perfil />} />
         </Route>

@@ -1,10 +1,19 @@
 from datetime import time
+from decimal import Decimal
 
 import pytest
 from django.db import IntegrityError
 from django.utils import timezone
 
-from apps.encuentros.models import EstadoInvitacion, Invitacion, Participante
+from apps.encuentros.models import (
+    Combinacion,
+    EstadoInvitacion,
+    Invitacion,
+    Pareja,
+    ParejaIntegrante,
+    Participante,
+    PropuestaEncuentro,
+)
 from tests.fabricas import (
     crear_encuentro,
     crear_invitacion,
@@ -91,3 +100,64 @@ def test_hu008_la_base_exige_fecha_de_respuesta_solo_si_no_esta_pendiente(
             estado=estado,
             fecha_respuesta=timezone.now() if con_respuesta else None,
         )
+
+
+def test_hu009_esta_completo_con_cuatro_confirmados(organizador):
+    encuentro = crear_encuentro(organizador)
+    for numero in range(3):
+        assert not encuentro.esta_completo()
+        Participante.objects.create(
+            encuentro=encuentro, usuario=crear_usuario(email=f"jugador{numero}@example.com")
+        )
+
+    assert encuentro.esta_completo()
+
+
+@pytest.mark.parametrize("puntaje", [Decimal("-0.0001"), Decimal("1.0001")])
+def test_hu009_la_base_rechaza_un_puntaje_fuera_de_0_a_1(organizador, puntaje):
+    encuentro = crear_encuentro(organizador)
+
+    with pytest.raises(IntegrityError, match="combinacion_puntaje_valido"):
+        Combinacion.objects.create(encuentro=encuentro, puntaje_equilibrio=puntaje)
+
+
+def test_hu009_la_base_rechaza_un_numero_de_pareja_invalido(organizador):
+    combinacion = Combinacion.objects.create(
+        encuentro=crear_encuentro(organizador), puntaje_equilibrio=Decimal("1")
+    )
+
+    with pytest.raises(IntegrityError, match="pareja_numero_valido"):
+        Pareja.objects.create(combinacion=combinacion, numero=3)
+
+
+def test_hu009_la_base_rechaza_dos_parejas_con_el_mismo_numero(organizador):
+    combinacion = Combinacion.objects.create(
+        encuentro=crear_encuentro(organizador), puntaje_equilibrio=Decimal("1")
+    )
+    Pareja.objects.create(combinacion=combinacion, numero=1)
+
+    with pytest.raises(IntegrityError, match="pareja_numero_unico"):
+        Pareja.objects.create(combinacion=combinacion, numero=1)
+
+
+def test_hu009_la_base_rechaza_un_integrante_repetido_en_la_pareja(organizador):
+    encuentro = crear_encuentro(organizador)
+    combinacion = Combinacion.objects.create(encuentro=encuentro, puntaje_equilibrio=Decimal("1"))
+    pareja = Pareja.objects.create(combinacion=combinacion, numero=1)
+    participante = encuentro.participantes.get()
+    ParejaIntegrante.objects.create(pareja=pareja, participante=participante)
+
+    with pytest.raises(IntegrityError, match="pareja_integrante_pkey"):
+        ParejaIntegrante.objects.create(pareja=pareja, participante=participante)
+
+
+def test_hu011_la_base_rechaza_una_segunda_propuesta_para_el_encuentro(organizador):
+    encuentro = crear_encuentro(organizador)
+    primera, segunda = (
+        Combinacion.objects.create(encuentro=encuentro, puntaje_equilibrio=Decimal("1"))
+        for _ in range(2)
+    )
+    PropuestaEncuentro.objects.create(encuentro=encuentro, combinacion=primera)
+
+    with pytest.raises(IntegrityError, match="id_encuentro"):
+        PropuestaEncuentro.objects.create(encuentro=encuentro, combinacion=segunda)

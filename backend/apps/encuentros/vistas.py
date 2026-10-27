@@ -13,6 +13,7 @@ from apps.encuentros.serializers import (
     InvitacionEnviadaSerializer,
     InvitacionRecibidaSerializer,
     InvitarSerializer,
+    PropuestaSerializer,
     RecomendadosSerializer,
 )
 from apps.usuarios.permisos import OnboardingCompleto
@@ -61,6 +62,16 @@ class InvitacionesEncuentroVista(APIView):
             InvitacionEnviadaSerializer(invitaciones, many=True).data,
             status=status.HTTP_201_CREATED,
         )
+
+
+class FormarParejasVista(APIView):
+    permission_classes = [IsAuthenticated, EsOrganizador]
+
+    def post(self, request, id_encuentro):
+        encuentro = servicios.obtener_encuentro(id_encuentro)
+        self.check_object_permissions(request, encuentro)
+        propuesta = servicios.formar_parejas(encuentro)
+        return Response(PropuestaSerializer(propuesta).data, status=status.HTTP_201_CREATED)
 
 
 class InvitacionesVista(APIView):

@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import date, datetime, time, timedelta
+from decimal import Decimal
 
 from django.db import transaction
 from django.db.models import Count, Prefetch, Q, QuerySet
@@ -9,18 +10,29 @@ from apps.comun.errores import ErrorNegocio
 from apps.comun.horarios import MENSAJE_HORA_INVALIDA, hora_valida, minutos
 from apps.encuentros.models import (
     MINUTOS_FIN_MAXIMO,
+    Combinacion,
     Encuentro,
     EstadoEncuentro,
     EstadoInvitacion,
     Invitacion,
+    Pareja,
+    ParejaIntegrante,
     Participante,
+    PropuestaEncuentro,
 )
 from apps.usuarios import servicios as servicios_usuarios
 from apps.usuarios.models import Usuario
+from motor.equilibrio import elegir_mejor, evaluar_combinaciones
 from motor.filtros import franja_que_cubre
 from motor.parametros import PARAMETROS
 from motor.recomendar import recomendar
-from motor.tipos import CandidatoEntrada, EncuentroEntrada, Franja
+from motor.tipos import (
+    CandidatoEntrada,
+    CombinacionResultado,
+    EncuentroEntrada,
+    Franja,
+    JugadorEntrada,
+)
 
 MENSAJE_FIN_TARDE = "El encuentro tiene que terminar a las 23:30 como máximo."
 MENSAJE_EN_EL_PASADO = "Elegí una fecha y hora futuras."
@@ -36,6 +48,8 @@ MENSAJE_JUGADOR_NO_DISPONIBLE = (
     "Alguno de los jugadores ya no está disponible para este encuentro. Actualizá la lista."
 )
 MENSAJE_INVITACION_RESPONDIDA = "Ya respondiste esta invitación."
+MENSAJE_YA_TIENE_PROPUESTA = "Este encuentro ya tiene una propuesta."
+MENSAJE_SIN_CUATRO_CONFIRMADOS = "El encuentro todavía no tiene 4 jugadores confirmados."
 ID_MAXIMO = 2_147_483_647  # máximo de las columnas integer de id_encuentro e id_invitacion
 
 
@@ -408,3 +422,173 @@ def invitacion_recibida(invitacion: Invitacion) -> Invitacion:
 def cantidad_invitaciones_pendientes(usuario: Usuario) -> int:
     """Cuenta las invitaciones pendientes del usuario que muestra la bandeja (HU-008)."""
     return _invitaciones_vigentes(usuario).filter(estado=EstadoInvitacion.PENDIENTE).count()
+
+
+@dataclass(frozen=True)
+class ParejaDetalle:
+    """Una pareja de la propuesta: su número, el promedio recalculado y sus 2 integrantes."""
+
+    numero: int
+    promedio: float
+    integrantes: tuple[Usuario, ...]
+
+
+@dataclass(frozen=True)
+class CombinacionDetalle:
+    """Una combinación evaluada: el puntaje guardado y los equilibrios recalculados."""
+
+    numero: int
+    puntaje_equilibrio: Decimal
+    equilibrio_nivel: float
+    equilibrio_lado: float
+    parejas: tuple[ParejaDetalle, ...]
+
+
+@dataclass(frozen=True)
+class DetallePropuesta:
+    """La propuesta del encuentro: las 3 combinaciones y cuál se eligió."""
+
+    encuentro: Encuentro
+    combinacion_elegida: int
+    puntaje_equilibrio: Decimal
+    combinaciones: tuple[CombinacionDetalle, ...]
+
+
+def _jugador_entrada(usuario: Usuario) -> JugadorEntrada:
+    # Sin preferencia, la relación inversa lanza una excepción que también es AttributeError.
+    preferencia = getattr(usuario, "preferencia", None)
+    return JugadorEntrada(
+        id=usuario.pk,
+        nivel=None if usuario.nivel_estimado is None else float(usuario.nivel_estimado),
+        lado=None if preferencia is None else preferencia.lado_preferido,
+    )
+
+
+def _verificar_listo_para_parejas(encuentro: Encuentro) -> None:
+    if encuentro.estado == EstadoEncuentro.PROPUESTA_GENERADA:
+        raise ErrorNegocio(MENSAJE_YA_TIENE_PROPUESTA, estado=409)
+    if encuentro.estado != EstadoEncuentro.COMPLETO or not encuentro.esta_completo():
+        raise ErrorNegocio(MENSAJE_SIN_CUATRO_CONFIRMADOS, estado=409)
+
+
+def _guardar_combinaciones(
+    encuentro: Encuentro,
+    resultados: tuple[CombinacionResultado, ...],
+    participantes: dict[int, Participante],
+) -> list[Combinacion]:
+    # Una por una y en el orden del motor: la tabla no tiene número, se deduce del orden por id.
+    combinaciones = []
+    for resultado in resultados:
+        combinacion = Combinacion.objects.create(
+            encuentro=encuentro, puntaje_equilibrio=resultado.puntaje
+        )
+        for numero, ids_usuarios in ((1, resultado.pareja1), (2, resultado.pareja2)):
+            pareja = Pareja.objects.create(combinacion=combinacion, numero=numero)
+            ParejaIntegrante.objects.bulk_create(
+                ParejaIntegrante(pareja=pareja, participante=participantes[id_usuario])
+                for id_usuario in ids_usuarios
+            )
+        combinaciones.append(combinacion)
+    return combinaciones
+
+
+def formar_parejas(encuentro: Encuentro) -> DetallePropuesta:
+    """Evalúa las combinaciones, forma las parejas y genera la propuesta (HU-009 a HU-011).
+
+    Con el encuentro bloqueado, verifica que no haya comenzado, que esté COMPLETO y que tenga 4
+    confirmados; así, de dos pedidos simultáneos solo uno genera la propuesta. Llama al motor
+    con los 4 confirmados (id de usuario, nivel y lado actuales), guarda las 3 combinaciones en
+    el orden 1, 2, 3 con su puntaje, sus parejas e integrantes, y la propuesta que apunta a la
+    elegida; pasa el encuentro a PROPUESTA_GENERADA. Todo en una transacción. Devuelve el
+    detalle de la propuesta. Lanza ErrorNegocio 409 si el encuentro ya comenzó, ya tiene
+    propuesta o no tiene 4 confirmados.
+    """
+    with transaction.atomic():
+        encuentro = _bloquear_encuentro(encuentro.pk)
+        _verificar_no_comenzo(encuentro)
+        _verificar_listo_para_parejas(encuentro)
+        participantes = {
+            participante.usuario_id: participante
+            for participante in encuentro.participantes.select_related("usuario__preferencia")
+        }
+        resultados = evaluar_combinaciones(
+            tuple(_jugador_entrada(participante.usuario) for participante in participantes.values())
+        )
+        elegida = elegir_mejor(resultados)
+        combinaciones = _guardar_combinaciones(encuentro, resultados, participantes)
+        PropuestaEncuentro.objects.create(
+            encuentro=encuentro, combinacion=combinaciones[elegida.numero - 1]
+        )
+        encuentro.estado = EstadoEncuentro.PROPUESTA_GENERADA
+        encuentro.save(update_fields=["estado"])
+    return detalle_propuesta(encuentro)
+
+
+def _combinaciones_guardadas(encuentro: Encuentro) -> list[Combinacion]:
+    integrantes = ParejaIntegrante.objects.select_related(
+        "participante__usuario__localidad", "participante__usuario__preferencia"
+    ).order_by("participante__usuario_id")
+    parejas = Pareja.objects.order_by("numero").prefetch_related(
+        Prefetch("integrantes", queryset=integrantes)
+    )
+    return list(
+        encuentro.combinaciones.order_by("id_combinacion").prefetch_related(
+            Prefetch("parejas", queryset=parejas)
+        )
+    )
+
+
+def _combinacion_detalle(
+    numero: int, combinacion: Combinacion, resultado: CombinacionResultado
+) -> CombinacionDetalle:
+    promedios = (resultado.promedio1, resultado.promedio2)
+    return CombinacionDetalle(
+        numero=numero,
+        puntaje_equilibrio=combinacion.puntaje_equilibrio,
+        equilibrio_nivel=resultado.eq_nivel,
+        equilibrio_lado=resultado.eq_lado,
+        parejas=tuple(
+            ParejaDetalle(
+                numero=pareja.numero,
+                promedio=promedios[pareja.numero - 1],
+                integrantes=tuple(i.participante.usuario for i in pareja.integrantes.all()),
+            )
+            for pareja in combinacion.parejas.all()
+        ),
+    )
+
+
+def detalle_propuesta(encuentro: Encuentro) -> DetallePropuesta:
+    """Arma la propuesta generada del encuentro para mostrarla (HU-011).
+
+    Las combinaciones van en el orden en que se guardaron (1, 2, 3) con sus parejas e
+    integrantes. El puntaje de cada una es el guardado; los promedios y los equilibrios de
+    nivel y de lado se recalculan con el motor a partir del nivel y el lado actuales de cada
+    jugador (limitación aceptada: si alguien cambia su nivel, pueden no coincidir con el
+    puntaje). Devuelve también el número y el puntaje de la combinación elegida.
+    """
+    propuesta = PropuestaEncuentro.objects.get(encuentro=encuentro)
+    combinaciones = _combinaciones_guardadas(encuentro)
+    usuarios = {
+        integrante.participante.usuario
+        for pareja in combinaciones[0].parejas.all()
+        for integrante in pareja.integrantes.all()
+    }
+    resultados = evaluar_combinaciones(tuple(_jugador_entrada(usuario) for usuario in usuarios))
+    detalles = tuple(
+        _combinacion_detalle(numero, combinacion, resultado)
+        for numero, (combinacion, resultado) in enumerate(
+            zip(combinaciones, resultados, strict=True), start=1
+        )
+    )
+    elegida = next(
+        detalle
+        for detalle, combinacion in zip(detalles, combinaciones, strict=True)
+        if combinacion.pk == propuesta.combinacion_id
+    )
+    return DetallePropuesta(
+        encuentro=encuentro,
+        combinacion_elegida=elegida.numero,
+        puntaje_equilibrio=elegida.puntaje_equilibrio,
+        combinaciones=detalles,
+    )

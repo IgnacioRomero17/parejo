@@ -17,6 +17,12 @@ export function enviarInvitaciones(id, usuarios) {
   return pedir("POST", `encuentros/${id}/invitaciones`, { usuarios });
 }
 
+// Evalúa las 3 combinaciones, forma las parejas y genera la propuesta. Devuelve la propuesta:
+// { encuentro, combinacion_elegida, puntaje_equilibrio, combinaciones }.
+export function formarParejas(id) {
+  return pedir("POST", `encuentros/${id}/formar-parejas`);
+}
+
 // Devuelve { lugares_libres, suficientes, recomendados }, en el orden del motor. Cada
 // recomendado: { id, nombre, apellido, localidad, nivel, franja }.
 export function obtenerRecomendados(id) {

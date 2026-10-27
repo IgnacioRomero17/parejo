@@ -90,6 +90,10 @@ class Encuentro(models.Model):
         pendientes = self.invitaciones.filter(estado=EstadoInvitacion.PENDIENTE).count()
         return PARAMETROS.lugares_por_encuentro - self.participantes.count() - pendientes
 
+    def esta_completo(self) -> bool:
+        """Indica si tiene los 4 participantes confirmados."""
+        return self.participantes.count() == PARAMETROS.lugares_por_encuentro
+
 
 class Invitacion(models.Model):
     id_invitacion = models.AutoField(primary_key=True)
@@ -169,3 +173,108 @@ class Participante(models.Model):
 
     def __str__(self):
         return f"{self.usuario} en el encuentro {self.encuentro_id}"
+
+
+class Combinacion(models.Model):
+    """Una de las 3 combinaciones evaluadas. No tiene número: el número (1, 2, 3) es su orden
+    por `id_combinacion` dentro del encuentro."""
+
+    id_combinacion = models.AutoField(primary_key=True)
+    encuentro = models.ForeignKey(
+        Encuentro,
+        on_delete=models.CASCADE,
+        db_column="id_encuentro",
+        related_name="combinaciones",
+    )
+    puntaje_equilibrio = models.DecimalField(max_digits=5, decimal_places=4)
+    fecha_evaluacion = models.DateTimeField(default=timezone.now, db_default=Now())
+
+    class Meta:
+        db_table = "combinacion"
+        verbose_name = "combinación"
+        verbose_name_plural = "combinaciones"
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(puntaje_equilibrio__gte=0, puntaje_equilibrio__lte=1),
+                name="combinacion_puntaje_valido",
+            ),
+        ]
+
+    def __str__(self):
+        return f"Combinación {self.id_combinacion} del encuentro {self.encuentro_id}"
+
+
+class Pareja(models.Model):
+    id_pareja = models.AutoField(primary_key=True)
+    combinacion = models.ForeignKey(
+        Combinacion,
+        on_delete=models.CASCADE,
+        db_column="id_combinacion",
+        related_name="parejas",
+    )
+    numero = models.SmallIntegerField()
+
+    class Meta:
+        db_table = "pareja"
+        constraints = [
+            models.CheckConstraint(
+                condition=models.Q(numero__in=(1, 2)),
+                name="pareja_numero_valido",
+            ),
+            models.UniqueConstraint(
+                fields=["combinacion", "numero"],
+                name="pareja_numero_unico",
+            ),
+        ]
+
+    def __str__(self):
+        return f"Pareja {self.numero} de la combinación {self.combinacion_id}"
+
+
+class ParejaIntegrante(models.Model):
+    pk = models.CompositePrimaryKey("pareja", "participante")
+    pareja = models.ForeignKey(
+        Pareja,
+        on_delete=models.CASCADE,
+        db_column="id_pareja",
+        related_name="integrantes",
+    )
+    participante = models.ForeignKey(
+        Participante,
+        on_delete=models.PROTECT,
+        db_column="id_participante",
+        related_name="parejas",
+    )
+
+    class Meta:
+        db_table = "pareja_integrante"
+
+    def __str__(self):
+        return f"Participante {self.participante_id} en la pareja {self.pareja_id}"
+
+
+class PropuestaEncuentro(models.Model):
+    """Apunta a la combinación elegida; el puntaje se lee de esa combinación."""
+
+    id_propuesta = models.AutoField(primary_key=True)
+    encuentro = models.OneToOneField(
+        Encuentro,
+        on_delete=models.CASCADE,
+        db_column="id_encuentro",
+        related_name="propuesta",
+    )
+    combinacion = models.OneToOneField(
+        Combinacion,
+        on_delete=models.PROTECT,
+        db_column="id_combinacion",
+        related_name="propuesta",
+    )
+    fecha_generacion = models.DateTimeField(default=timezone.now, db_default=Now())
+
+    class Meta:
+        db_table = "propuesta_encuentro"
+        verbose_name = "propuesta de encuentro"
+        verbose_name_plural = "propuestas de encuentro"
+
+    def __str__(self):
+        return f"Propuesta del encuentro {self.encuentro_id}"

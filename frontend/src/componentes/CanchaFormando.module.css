@@ -1,0 +1,78 @@
+.cancha {
+  display: block;
+  width: 100%;
+  max-width: 440px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.piso {
+  fill: var(--azul);
+}
+
+.linea {
+  fill: none;
+  stroke: var(--texto-sobre-oscuro);
+  stroke-opacity: 0.5;
+  stroke-width: 1.5;
+}
+
+.red {
+  fill: none;
+  stroke: var(--superficie);
+  stroke-width: 3;
+  stroke-dasharray: 4 5;
+}
+
+.organizador {
+  fill: var(--superficie);
+}
+
+.libre {
+  fill: var(--etq-azul);
+  fill-opacity: 0.6;
+}
+
+.iniciales,
+.incognita {
+  font-family: var(--fuente-texto);
+  font-size: 15px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+}
+
+.iniciales {
+  fill: var(--texto);
+}
+
+.incognita {
+  fill: var(--etq-azul-texto);
+}
+
+.centro {
+  fill: var(--marino);
+}
+
+.giro {
+  fill: none;
+  stroke: var(--lima);
+  stroke-width: 3;
+  stroke-linecap: round;
+  stroke-dasharray: 46 23;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: girar 1s linear infinite;
+}
+
+@keyframes girar {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .giro {
+    animation: none;
+  }
+}

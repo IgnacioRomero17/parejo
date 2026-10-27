@@ -182,3 +182,30 @@ class BandejaSerializer(serializers.Serializer):
 
     pendientes = InvitacionRecibidaSerializer(many=True)
     respondidas = InvitacionRecibidaSerializer(many=True)
+
+
+class ParejaSerializer(serializers.Serializer):
+    numero = serializers.IntegerField()
+    promedio = serializers.FloatField()
+    integrantes = ParticipanteSerializer(many=True)
+
+
+class CombinacionSerializer(serializers.Serializer):
+    """Una combinación evaluada: el puntaje es el guardado; promedios y equilibrios, los
+    recalculados con el nivel y el lado actuales."""
+
+    numero = serializers.IntegerField()
+    puntaje_equilibrio = serializers.DecimalField(max_digits=5, decimal_places=4)
+    equilibrio_nivel = serializers.FloatField()
+    equilibrio_lado = serializers.FloatField()
+    parejas = ParejaSerializer(many=True)
+
+
+class PropuestaSerializer(serializers.Serializer):
+    """Respuesta de `POST encuentros/{id}/formar-parejas`: el encuentro, las 3 combinaciones y
+    el número y el puntaje guardado de la elegida."""
+
+    encuentro = EncuentroSerializer()
+    combinacion_elegida = serializers.IntegerField()
+    puntaje_equilibrio = serializers.DecimalField(max_digits=5, decimal_places=4)
+    combinaciones = CombinacionSerializer(many=True)

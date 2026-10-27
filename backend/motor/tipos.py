@@ -5,6 +5,8 @@ from decimal import Decimal
 RECREATIVO = "RECREATIVO"
 COMPETITIVO = "COMPETITIVO"
 INDIFERENTE = "INDIFERENTE"
+DRIVE = "DRIVE"
+REVES = "REVES"
 
 
 @dataclass(frozen=True)
@@ -68,3 +70,27 @@ class ResultadoRecomendacion:
 
     recomendados: tuple[Recomendacion, ...]
     suficientes: bool
+
+
+@dataclass(frozen=True)
+class JugadorEntrada:
+    """Participante confirmado para la etapa 2. `lado` es DRIVE, REVES, INDIFERENTE o None."""
+
+    id: int
+    nivel: float
+    lado: str | None
+
+
+@dataclass(frozen=True)
+class CombinacionResultado:
+    """Una de las 3 combinaciones: cada pareja con sus 2 ids en orden, sus promedios, los
+    equilibrios de nivel y de lado y el puntaje redondeado. La Pareja 1 contiene al menor id."""
+
+    numero: int
+    pareja1: tuple[int, int]
+    pareja2: tuple[int, int]
+    promedio1: float
+    promedio2: float
+    eq_nivel: float
+    eq_lado: float
+    puntaje: Decimal

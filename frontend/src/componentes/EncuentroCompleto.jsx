@@ -14,8 +14,8 @@ import Boton from "./Boton.jsx";
 import estilos from "./EncuentroCompleto.module.css";
 import Etiqueta from "./Etiqueta.jsx";
 
-// Pantalla 14: los 4 confirmados, las condiciones y las invitaciones enviadas. El botón para
-// formar parejas queda deshabilitado hasta implementar HU-009.
+// Pantalla 14: los 4 confirmados, las condiciones y las invitaciones enviadas. El botón lleva
+// a la pantalla 15, que es la que dispara la formación de parejas.
 function EncuentroCompleto({ encuentro, idUsuario }) {
   const idInvitaciones = useId();
   const idFormar = useId();
@@ -84,7 +84,9 @@ function EncuentroCompleto({ encuentro, idUsuario }) {
                 armás las parejas.
               </p>
             </div>
-            <Boton deshabilitado>Formar parejas equilibradas</Boton>
+            <Boton a={`/encuentros/${encuentro.id}/formando`}>
+              Formar parejas equilibradas
+            </Boton>
           </section>
         </div>
         <aside

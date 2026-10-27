@@ -29,6 +29,13 @@ export const ESTADOS_INVITACION = {
   RECHAZADA: { etiqueta: "Rechazada", color: "rojo" },
 };
 
+// Pasos de la pantalla 15, en el orden en que se animan.
+export const PASOS_FORMACION = [
+  "Evaluando las 3 combinaciones posibles",
+  "Formando parejas equilibradas",
+  "Generando la propuesta de encuentro",
+];
+
 export function etiquetaTipoEncuentro(tipo) {
   return TIPOS_ENCUENTRO.find((opcion) => opcion.valor === tipo)?.etiqueta;
 }

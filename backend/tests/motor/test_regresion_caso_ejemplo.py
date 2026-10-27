@@ -8,14 +8,18 @@ Encuentro: sábado 3/10/2026, 18:00, 90 min, Río Ceballos, COMPETITIVO. Confirm
 from datetime import date, time
 from decimal import Decimal
 
+from motor.equilibrio import elegir_mejor, evaluar_combinaciones
 from motor.recomendar import recomendar
 from motor.tipos import (
     COMPETITIVO,
+    DRIVE,
     INDIFERENTE,
     RECREATIVO,
+    REVES,
     CandidatoEntrada,
     EncuentroEntrada,
     Franja,
+    JugadorEntrada,
 )
 
 RIO_CEBALLOS = (-31.1653, -64.3253)
@@ -73,3 +77,34 @@ def test_regresion_caso_ejemplo_orden_distancias_y_puntajes():
     obtenido = [(r.id, round(r.distancia_km, 3), r.puntaje) for r in resultado.recomendados]
     assert obtenido == ESPERADO
     assert resultado.suficientes
+
+
+# Etapa 2 con Tomás (1), Valentina (2), Camila (4) y Federico (5).
+CONFIRMADOS = (
+    JugadorEntrada(id=5, nivel=5.0, lado=DRIVE),  # Federico
+    JugadorEntrada(id=2, nivel=4.5, lado=REVES),  # Valentina
+    JugadorEntrada(id=4, nivel=5.0, lado=REVES),  # Camila
+    JugadorEntrada(id=1, nivel=4.5, lado=DRIVE),  # Tomás
+)
+
+# numero, pareja 1, pareja 2, promedios, puntaje
+ESPERADO_ETAPA2 = [
+    (1, (1, 2), (4, 5), (4.50, 5.00), Decimal("0.8000")),
+    (2, (1, 4), (2, 5), (4.75, 4.75), Decimal("1.0000")),
+    (3, (1, 5), (2, 4), (4.75, 4.75), Decimal("0.8000")),  # ambas parejas repiten lado
+]
+
+
+def test_regresion_caso_ejemplo_etapa2_elige_la_combinacion_2():
+    # Desordenados para que el orden de las combinaciones lo decida el motor.
+    combinaciones = evaluar_combinaciones(CONFIRMADOS)
+
+    obtenido = [
+        (c.numero, c.pareja1, c.pareja2, (c.promedio1, c.promedio2), c.puntaje)
+        for c in combinaciones
+    ]
+    assert obtenido == ESPERADO_ETAPA2
+    elegida = elegir_mejor(combinaciones)
+    assert (elegida.numero, elegida.puntaje) == (2, Decimal("1.0000"))
+    # Tomás + Camila vs Valentina + Federico.
+    assert (elegida.pareja1, elegida.pareja2) == ((1, 4), (2, 5))

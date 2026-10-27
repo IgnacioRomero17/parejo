@@ -120,6 +120,9 @@ function SeguimientoEncuentro() {
   function contenido() {
     const { encuentro } = carga.datos;
     if (!encuentro.invitaciones) return <Navigate to="/inicio" replace />;
+    if (encuentro.estado === "PROPUESTA_GENERADA") {
+      return <Navigate to={`/encuentros/${id}/propuesta`} replace />;
+    }
     if (encuentro.estado === "BUSCANDO_PARTICIPANTES") {
       return seleccionarEInvitar();
     }

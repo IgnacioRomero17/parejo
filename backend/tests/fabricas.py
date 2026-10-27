@@ -113,6 +113,14 @@ def crear_encuentro(organizador: Usuario, **campos) -> Encuentro:
     return encuentro
 
 
+def crear_encuentro_completo(organizador: Usuario, *jugadores: Usuario, **campos) -> Encuentro:
+    """Encuentro COMPLETO: el organizador y los jugadores recibidos como confirmados."""
+    encuentro = crear_encuentro(organizador, estado=EstadoEncuentro.COMPLETO, **campos)
+    for jugador in jugadores:
+        Participante.objects.create(encuentro=encuentro, usuario=jugador)
+    return encuentro
+
+
 def crear_invitacion(encuentro: Encuentro, usuario: Usuario, **campos) -> Invitacion:
     """Invitación pendiente; con otro estado, completa la fecha de respuesta."""
     datos = {"estado": EstadoInvitacion.PENDIENTE}
