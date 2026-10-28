@@ -21,7 +21,8 @@ Imagen: `16-propuesta.png` (con "Ver combinaciones evaluadas" desplegado) · Rut
 | Equilibrio lado | 0 a 1, dos decimales |
 | Puntaje | puntaje guardado, dos decimales |
 
-  La elegida va resaltada con la etiqueta "Seleccionada". La nota debajo de la combinación 3 que aparece en la imagen no se implementa.
+  La elegida va resaltada con la etiqueta "Seleccionada". 
+  - Cada combinación no elegida lleva una nota debajo de las parejas que explica por qué no se eligió, comparándola con la elegida: por diferencia de nivel, por lados repetidos, por ambas cosas o por desempate. La nota se arma con los datos de cada propuesta; la de la imagen corresponde al caso de ejemplo. Si después de formar las parejas cambió el nivel o el lado de algún jugador, la nota lo indica.
 
 ## Datos
 - Puntajes: los guardados en las combinaciones.

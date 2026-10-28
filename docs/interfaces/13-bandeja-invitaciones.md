@@ -25,5 +25,5 @@ Tarjetas de invitaciones aceptadas o rechazadas de encuentros que todavía no pa
 
 ## Estados
 - Sin pendientes: "No tenés invitaciones pendientes."
-- Sin ninguna invitación: "Todavía no recibiste invitaciones. Para recibirlas, activá «Disponible para recibir invitaciones» en tu perfil."
+- Sin ninguna invitación: estado vacío con el mismo patrón que el panel 08. Ícono de sobre en círculo azul y título "Todavía no recibiste invitaciones". Si el usuario no está disponible: "Para recibirlas, activá «Disponible para recibir invitaciones» en tu perfil." y botón "Ir a mi perfil" → /perfil. Si está disponible: "Estás disponible para recibir invitaciones. Cuando te inviten a un encuentro, van a aparecer acá.", sin botón.
 - Una invitación pendiente siempre tiene su lugar reservado (los lugares libres descuentan las pendientes), así que aceptar nunca supera los 4 participantes. El backend igual lo verifica.

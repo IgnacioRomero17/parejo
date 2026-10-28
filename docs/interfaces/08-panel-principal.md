@@ -28,6 +28,7 @@ Una tarjeta por encuentro **cuya fecha y hora todavía no pasaron**, ordenadas p
 
 ## Estado vacío (no dibujado)
 Sin encuentros activos: en lugar de las tarjetas, un recuadro con "Todavía no tenés encuentros" y el botón "Crear tu primer encuentro" → `/encuentros/nuevo`.
+Texto debajo del título: "Creá un encuentro o aceptá una invitación para verlo acá." Ícono de calendario en círculo azul.
 
 ## Notas
 - Para "el organizador / la organizadora" se usa el género del organizador; con "Prefiero no decirlo", "Esperando que se inicie la formación automática de parejas."
