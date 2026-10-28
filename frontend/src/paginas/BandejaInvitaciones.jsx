@@ -4,10 +4,12 @@ import {
   obtenerInvitaciones,
   rechazarInvitacion,
 } from "../api/invitaciones.js";
+import { obtenerPerfil } from "../api/perfil.js";
 import Aviso from "../componentes/Aviso.jsx";
 import BarraSuperior from "../componentes/BarraSuperior.jsx";
 import ErrorFormulario from "../componentes/ErrorFormulario.jsx";
 import EstadoCarga from "../componentes/EstadoCarga.jsx";
+import SinInvitaciones from "../componentes/SinInvitaciones.jsx";
 import TarjetaInvitacionPendiente from "../componentes/TarjetaInvitacionPendiente.jsx";
 import TarjetaInvitacionRespondida from "../componentes/TarjetaInvitacionRespondida.jsx";
 import { useCargarDatos } from "../hooks/useCargarDatos.js";
@@ -65,6 +67,22 @@ function Respondidas({ invitaciones }) {
   );
 }
 
+// El texto del estado vacío depende de la disponibilidad, que trae el perfil (no la sesión):
+// se pide solo cuando no hay ninguna invitación.
+function SinNingunaInvitacion() {
+  const perfil = useCargarDatos(obtenerPerfil);
+  if (!perfil.datos) {
+    return (
+      <EstadoCarga error={perfil.error} onReintentar={perfil.reintentar} />
+    );
+  }
+  return (
+    <SinInvitaciones
+      disponible={perfil.datos.disponibilidad.disponible_para_invitaciones}
+    />
+  );
+}
+
 // Pantalla 13: invitaciones recibidas de encuentros que todavía no comenzaron.
 function BandejaInvitaciones() {
   useTituloPagina("Invitaciones");
@@ -94,12 +112,7 @@ function BandejaInvitaciones() {
   function contenido() {
     const { pendientes, respondidas } = carga.datos;
     if (pendientes.length === 0 && respondidas.length === 0) {
-      return (
-        <p className={estilos.texto}>
-          Todavía no recibiste invitaciones. Para recibirlas, activá «Disponible
-          para recibir invitaciones» en tu perfil.
-        </p>
-      );
+      return <SinNingunaInvitacion />;
     }
     return (
       <>

@@ -13,6 +13,7 @@ import {
   obtenerInvitaciones,
   rechazarInvitacion,
 } from "../api/invitaciones.js";
+import { obtenerPerfil } from "../api/perfil.js";
 import { ContextoSesion } from "../contexto/contextoSesion.js";
 import BandejaInvitaciones from "./BandejaInvitaciones.jsx";
 
@@ -21,6 +22,13 @@ vi.mock("../api/invitaciones.js", () => ({
   obtenerInvitaciones: vi.fn(),
   rechazarInvitacion: vi.fn(),
 }));
+
+vi.mock("../api/perfil.js", () => ({ obtenerPerfil: vi.fn() }));
+
+// Solo la parte del perfil que usa la bandeja.
+function perfil(disponible) {
+  return { disponibilidad: { disponible_para_invitaciones: disponible } };
+}
 
 function invitacion({
   id = 1,
@@ -84,6 +92,7 @@ describe("BandejaInvitaciones (HU-008)", () => {
     obtenerInvitaciones.mockReset().mockResolvedValue(bandeja([invitacion()]));
     aceptarInvitacion.mockReset().mockResolvedValue({});
     rechazarInvitacion.mockReset().mockResolvedValue({});
+    obtenerPerfil.mockReset();
   });
 
   it("C2: muestra la información del encuentro y las opciones aceptar y rechazar", async () => {
@@ -254,15 +263,48 @@ describe("BandejaInvitaciones (HU-008)", () => {
     expect(within(respondidas).queryByText("Parejas formadas.")).toBeNull();
   });
 
-  it("sin ninguna invitación explica cómo recibirlas", async () => {
+  it("sin ninguna invitación y sin estar disponible, explica cómo recibirlas", async () => {
     obtenerInvitaciones.mockResolvedValue(bandeja());
+    obtenerPerfil.mockResolvedValue(perfil(false));
+    renderizar();
+
+    expect(
+      await screen.findByRole("heading", {
+        name: "Todavía no recibiste invitaciones",
+      }),
+    ).toBeTruthy();
+    expect(
+      screen.getByText(
+        "Para recibirlas, activá «Disponible para recibir invitaciones» en tu perfil.",
+      ),
+    ).toBeTruthy();
+    const enlace = screen.getByRole("link", { name: "Ir a mi perfil" });
+    expect(enlace.getAttribute("href")).toBe("/perfil");
+    expect(screen.queryByRole("heading", { name: /Pendientes/ })).toBeNull();
+  });
+
+  it("sin ninguna invitación y disponible, avisa que van a aparecer acá", async () => {
+    obtenerInvitaciones.mockResolvedValue(bandeja());
+    obtenerPerfil.mockResolvedValue(perfil(true));
     renderizar();
 
     expect(
       await screen.findByText(
-        "Todavía no recibiste invitaciones. Para recibirlas, activá «Disponible para recibir invitaciones» en tu perfil.",
+        "Estás disponible para recibir invitaciones. Cuando te inviten a un encuentro, van a aparecer acá.",
       ),
     ).toBeTruthy();
-    expect(screen.queryByRole("heading", { name: /Pendientes/ })).toBeNull();
+    expect(
+      screen.getByRole("heading", {
+        name: "Todavía no recibiste invitaciones",
+      }),
+    ).toBeTruthy();
+    expect(screen.queryByRole("link", { name: "Ir a mi perfil" })).toBeNull();
+  });
+
+  it("con invitaciones no pide el perfil", async () => {
+    renderizar();
+
+    await screen.findByRole("heading", { name: "Pendientes · 1" });
+    expect(obtenerPerfil).not.toHaveBeenCalled();
   });
 });
