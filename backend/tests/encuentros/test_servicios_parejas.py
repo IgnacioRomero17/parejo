@@ -267,6 +267,18 @@ def test_hu010_p1_ante_empate_total_elige_la_primera_combinacion():
     assert propuesta.combinacion == combinaciones_guardadas(encuentro)[0]
 
 
+def test_hu011_c3_asocia_los_cuatro_participantes_con_su_pareja(encuentro, jugadores):
+    tomas, valentina, camila, federico = jugadores
+
+    detalle = servicios.formar_parejas(encuentro)
+
+    elegida = detalle.combinaciones[detalle.combinacion_elegida - 1]
+    assert [(p.numero, [u.pk for u in p.integrantes]) for p in elegida.parejas] == [
+        (1, [tomas.pk, camila.pk]),
+        (2, [valentina.pk, federico.pk]),
+    ]
+
+
 def test_hu011_p1_la_propuesta_apunta_a_la_elegida_con_su_puntaje(encuentro):
     detalle = servicios.formar_parejas(encuentro)
 
