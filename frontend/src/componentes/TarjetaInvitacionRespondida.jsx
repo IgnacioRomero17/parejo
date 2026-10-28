@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import {
   ESTADOS_ENCUENTRO,
   ESTADOS_INVITACION,
@@ -9,13 +10,27 @@ import Avatar from "./Avatar.jsx";
 import Etiqueta from "./Etiqueta.jsx";
 import estilos from "./TarjetaInvitacion.module.css";
 
-// Qué se dice del encuentro de una invitación aceptada, según su estado actual.
-function textoEstado(encuentro, organizador) {
-  if (encuentro.estado === "COMPLETO") {
-    return textoEsperandoParejas(organizador.genero);
+// Qué se dice del encuentro de una invitación aceptada, según su estado actual; con propuesta,
+// el enlace para verla.
+function EstadoEncuentro({ encuentro, organizador }) {
+  if (encuentro.estado === "PROPUESTA_GENERADA") {
+    return (
+      <Link
+        to={`/encuentros/${encuentro.id}/propuesta`}
+        className={estilos.enlace}
+      >
+        Ver propuesta
+      </Link>
+    );
   }
-  if (encuentro.estado === "PROPUESTA_GENERADA") return "Parejas formadas.";
-  return `${encuentro.confirmados} de ${LUGARES_POR_ENCUENTRO} confirmados.`;
+  if (encuentro.estado === "COMPLETO") {
+    return <p>{textoEsperandoParejas(organizador.genero)}</p>;
+  }
+  return (
+    <p>
+      {encuentro.confirmados} de {LUGARES_POR_ENCUENTRO} confirmados.
+    </p>
+  );
 }
 
 // Invitación aceptada o rechazada de la pantalla 13.
@@ -49,7 +64,7 @@ function TarjetaInvitacionRespondida({ invitacion }) {
             <Etiqueta color={estadoEncuentro.color}>
               {estadoEncuentro.etiqueta}
             </Etiqueta>
-            <p>{textoEstado(encuentro, organizador)}</p>
+            <EstadoEncuentro encuentro={encuentro} organizador={organizador} />
           </>
         ) : (
           <p>Rechazaste esta invitación.</p>

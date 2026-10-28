@@ -3,8 +3,11 @@ import {
   formatearDiaAbreviado,
   formatearEnvio,
   formatearFechaCompacta,
+  formatearFechaLarga,
+  formatearFechaTitulo,
   formatearFranja,
   formatearNivel,
+  formatearPuntaje,
 } from "./formato.js";
 
 describe("formatearNivel", () => {
@@ -13,6 +16,39 @@ describe("formatearNivel", () => {
     expect(formatearNivel(4)).toBe("4,0");
     expect(formatearNivel(1)).toBe("1,0");
     expect(formatearNivel(7)).toBe("7,0");
+  });
+});
+
+describe("formatearPuntaje", () => {
+  it("usa coma decimal y siempre dos decimales", () => {
+    expect(formatearPuntaje(1)).toBe("1,00");
+    expect(formatearPuntaje(0.8)).toBe("0,80");
+    expect(formatearPuntaje(4.75)).toBe("4,75");
+    expect(formatearPuntaje(0)).toBe("0,00");
+  });
+
+  it("redondea los puntajes de cuatro decimales a dos", () => {
+    expect(formatearPuntaje(0.9125)).toBe("0,91");
+    expect(formatearPuntaje(0.6667)).toBe("0,67");
+  });
+});
+
+describe("formatearFechaTitulo", () => {
+  it("muestra el día de la semana con mayúscula, el día y el mes completos", () => {
+    expect(formatearFechaTitulo("2026-10-03")).toBe("Sábado 3 de octubre");
+    expect(formatearFechaTitulo("2026-10-08")).toBe("Jueves 8 de octubre");
+  });
+
+  it("no corre el día por la zona horaria", () => {
+    expect(formatearFechaTitulo("2026-01-01")).toBe("Jueves 1 de enero");
+  });
+});
+
+describe("formatearFechaLarga", () => {
+  it("suma el año a la fecha del título", () => {
+    expect(formatearFechaLarga("2026-10-03")).toBe(
+      "Sábado 3 de octubre de 2026",
+    );
   });
 });
 

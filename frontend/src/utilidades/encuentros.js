@@ -1,4 +1,8 @@
-import { HORAS_FRANJA, TIPOS_ENCUENTRO } from "./disponibilidad.js";
+import {
+  HORAS_FRANJA,
+  LADOS_PREFERIDOS,
+  TIPOS_ENCUENTRO,
+} from "./disponibilidad.js";
 import { segunGenero } from "./perfil.js";
 import { validarCamposRequeridos } from "./validaciones.js";
 
@@ -106,6 +110,15 @@ export function textoEsperandoParejas(genero) {
     "Esperando que el organizador forme las parejas.",
     "Esperando que se inicie la formación automática de parejas.",
   );
+}
+
+export function etiquetaLado(lado) {
+  return LADOS_PREFERIDOS.find((opcion) => opcion.valor === lado)?.etiqueta;
+}
+
+// Pareja de una combinación por los nombres de sus integrantes: "Tomás + Camila".
+export function nombresDePareja(pareja) {
+  return pareja.integrantes.map((jugador) => jugador.nombre).join(" + ");
 }
 
 // Pantalla 11: "completar el lugar libre" / "completar los 3 lugares libres".

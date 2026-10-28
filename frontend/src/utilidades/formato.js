@@ -13,29 +13,65 @@ const FORMATO_FECHA_COMPACTA = new Intl.DateTimeFormat("es-AR", {
   year: "numeric",
 });
 
+const FORMATO_FECHA_LARGA = new Intl.DateTimeFormat("es-AR", {
+  timeZone: "America/Argentina/Cordoba",
+  weekday: "long",
+  day: "numeric",
+  month: "long",
+  year: "numeric",
+});
+
+const FORMATO_PUNTAJE = new Intl.NumberFormat("es-AR", {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2,
+});
+
 // Niveles con coma decimal y siempre un decimal: "4,5", "4,0".
 export function formatearNivel(nivel) {
   return FORMATO_NIVEL.format(nivel);
+}
+
+// Puntajes, equilibrios y promedios de la propuesta con dos decimales: "1,00", "4,75".
+export function formatearPuntaje(valor) {
+  return FORMATO_PUNTAJE.format(valor);
 }
 
 function sinPunto(texto) {
   return texto.replace(".", "");
 }
 
-// Fecha "AAAA-MM-DD" de la API como en encabezados y listas: "Sáb 3 oct 2026".
-export function formatearFechaCompacta(fecha) {
+// Partes de una fecha "AAAA-MM-DD" de la API según `formato`, como objeto { weekday, day… }.
+function partesDeFecha(formato, fecha) {
   // Al mediodía de Córdoba: la medianoche UTC todavía es el día anterior en Córdoba.
   const instante = new Date(`${fecha}T12:00:00-03:00`);
-  const partes = Object.fromEntries(
-    FORMATO_FECHA_COMPACTA.formatToParts(instante).map((parte) => [
-      parte.type,
-      parte.value,
-    ]),
+  return Object.fromEntries(
+    formato.formatToParts(instante).map((parte) => [parte.type, parte.value]),
   );
+}
+
+function conMayuscula(texto) {
+  return `${texto.charAt(0).toUpperCase()}${texto.slice(1)}`;
+}
+
+// Fecha "AAAA-MM-DD" de la API como en títulos: "Sábado 3 de octubre".
+export function formatearFechaTitulo(fecha) {
+  const partes = partesDeFecha(FORMATO_FECHA_LARGA, fecha);
+  return `${conMayuscula(partes.weekday)} ${partes.day} de ${partes.month}`;
+}
+
+// Fecha "AAAA-MM-DD" de la API completa, con el año: "Sábado 3 de octubre de 2026".
+export function formatearFechaLarga(fecha) {
+  const partes = partesDeFecha(FORMATO_FECHA_LARGA, fecha);
+  return `${formatearFechaTitulo(fecha)} de ${partes.year}`;
+}
+
+// Fecha "AAAA-MM-DD" de la API como en encabezados y listas: "Sáb 3 oct 2026".
+export function formatearFechaCompacta(fecha) {
+  const partes = partesDeFecha(FORMATO_FECHA_COMPACTA, fecha);
   const dia = sinPunto(partes.weekday);
   // Siempre tres letras: Intl abrevia septiembre como "sept".
   const mes = sinPunto(partes.month).slice(0, 3);
-  return `${dia.charAt(0).toUpperCase()}${dia.slice(1)} ${partes.day} ${mes} ${partes.year}`;
+  return `${conMayuscula(dia)} ${partes.day} ${mes} ${partes.year}`;
 }
 
 const FORMATO_HORA = new Intl.DateTimeFormat("es-AR", {

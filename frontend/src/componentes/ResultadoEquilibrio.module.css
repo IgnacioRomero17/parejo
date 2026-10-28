@@ -1,0 +1,36 @@
+.tarjeta {
+  composes: tarjeta from "./Tarjeta.module.css";
+}
+
+/* La grilla va en un bloque interno: si `.tarjeta` cambiara `display`, ganaría o no la
+   regla de Tarjeta.module.css según el orden en que se carguen las hojas. */
+.contenido {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 3fr);
+  align-items: center;
+  gap: 40px;
+}
+
+.resultado {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-right: 40px;
+  border-right: 1px solid var(--linea);
+}
+
+.rotulo {
+  composes: rotulo from "./ProgresoOnboarding.module.css";
+}
+
+.puntaje {
+  font-family: var(--fuente-titulos);
+  font-size: 44px;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.texto {
+  color: var(--texto-secundario);
+  font-size: 15px;
+}

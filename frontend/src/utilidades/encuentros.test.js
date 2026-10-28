@@ -2,11 +2,13 @@ import { describe, expect, it } from "vitest";
 import {
   avisoInvitacionesEnviadas,
   encuentroDeFormulario,
+  etiquetaLado,
   fechaMaximaEncuentro,
   formularioEncuentro,
   HORAS_INICIO,
   hoyEnCordoba,
   listarNombres,
+  nombresDePareja,
   rolOrganizador,
   textoEsperandoParejas,
   textoInvitacionesEnviadas,
@@ -38,6 +40,24 @@ describe("textos con cantidades", () => {
     expect(textoSeleccionados(1)).toBe("1 seleccionado");
     expect(textoPendientes(1)).toBe("1 pendiente");
     expect(textoPendientes(2)).toBe("2 pendientes");
+  });
+});
+
+describe("textos de la propuesta (HU-012)", () => {
+  it("nombra el lado preferido como en el glosario", () => {
+    expect(etiquetaLado("DRIVE")).toBe("Drive");
+    expect(etiquetaLado("REVES")).toBe("Revés");
+    expect(etiquetaLado("INDIFERENTE")).toBe("Indiferente");
+  });
+
+  it("nombra una pareja por los nombres de sus integrantes", () => {
+    const pareja = {
+      integrantes: [
+        { nombre: "Tomás", apellido: "Ríos" },
+        { nombre: "Camila", apellido: "Paz" },
+      ],
+    };
+    expect(nombresDePareja(pareja)).toBe("Tomás + Camila");
   });
 });
 

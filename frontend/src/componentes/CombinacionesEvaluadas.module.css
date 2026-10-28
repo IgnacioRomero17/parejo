@@ -1,0 +1,87 @@
+.seccion {
+  overflow: hidden;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  background: var(--superficie);
+}
+
+.resumen {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 20px 28px;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+
+.resumen::-webkit-details-marker {
+  display: none;
+}
+
+.flecha {
+  flex-shrink: 0;
+  transition: transform 0.15s;
+}
+
+.seccion[open] .flecha {
+  transform: rotate(180deg);
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+
+.tabla th {
+  padding: 12px 28px;
+  border-top: 1px solid var(--linea);
+  border-bottom: 1px solid var(--linea);
+  background: var(--fondo);
+  color: var(--texto-secundario);
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.tabla td {
+  padding: 18px 28px;
+  vertical-align: middle;
+}
+
+.tabla tbody tr + tr td {
+  border-top: 1px solid var(--linea);
+}
+
+.nota {
+  display: block;
+  max-width: 480px;
+  margin-top: 4px;
+  color: var(--texto-secundario);
+  font-size: 13px;
+}
+
+.elegida td {
+  background: var(--etq-azul);
+}
+
+.elegida td:first-child {
+  box-shadow: inset 4px 0 0 var(--azul);
+}
+
+.puntaje {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.puntaje strong {
+  font-family: var(--fuente-titulos);
+  font-size: 18px;
+}

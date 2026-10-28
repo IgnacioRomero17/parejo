@@ -74,6 +74,16 @@ class FormarParejasVista(APIView):
         return Response(PropuestaSerializer(propuesta).data, status=status.HTTP_201_CREATED)
 
 
+class PropuestaVista(APIView):
+    permission_classes = [IsAuthenticated, EsParticipante]
+
+    def get(self, request, id_encuentro):
+        encuentro = servicios.obtener_encuentro(id_encuentro)
+        self.check_object_permissions(request, encuentro)
+        propuesta = servicios.obtener_propuesta(encuentro)
+        return Response(PropuestaSerializer(propuesta).data)
+
+
 class InvitacionesVista(APIView):
     permission_classes = [IsAuthenticated, OnboardingCompleto]
 

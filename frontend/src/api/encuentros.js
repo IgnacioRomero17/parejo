@@ -23,6 +23,12 @@ export function formarParejas(id) {
   return pedir("POST", `encuentros/${id}/formar-parejas`);
 }
 
+// Devuelve la propuesta ya generada, con el mismo formato que formarParejas. Responde 409 si
+// el encuentro todavía no tiene propuesta.
+export function obtenerPropuesta(id) {
+  return pedir("GET", `encuentros/${id}/propuesta`);
+}
+
 // Devuelve { lugares_libres, suficientes, recomendados }, en el orden del motor. Cada
 // recomendado: { id, nombre, apellido, localidad, nivel, franja }.
 export function obtenerRecomendados(id) {

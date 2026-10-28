@@ -50,6 +50,7 @@ MENSAJE_JUGADOR_NO_DISPONIBLE = (
 MENSAJE_INVITACION_RESPONDIDA = "Ya respondiste esta invitación."
 MENSAJE_YA_TIENE_PROPUESTA = "Este encuentro ya tiene una propuesta."
 MENSAJE_SIN_CUATRO_CONFIRMADOS = "El encuentro todavía no tiene 4 jugadores confirmados."
+MENSAJE_SIN_PROPUESTA = "Este encuentro todavía no tiene una propuesta."
 ID_MAXIMO = 2_147_483_647  # máximo de las columnas integer de id_encuentro e id_invitacion
 
 
@@ -556,6 +557,18 @@ def _combinacion_detalle(
             for pareja in combinacion.parejas.all()
         ),
     )
+
+
+def obtener_propuesta(encuentro: Encuentro) -> DetallePropuesta:
+    """Devuelve la propuesta del encuentro para la pantalla 16 (HU-012).
+
+    Recibe el encuentro, ya verificado como del participante que la consulta. Devuelve el
+    detalle de `detalle_propuesta`. Lanza ErrorNegocio 409 si el encuentro todavía no tiene
+    propuesta.
+    """
+    if encuentro.estado != EstadoEncuentro.PROPUESTA_GENERADA:
+        raise ErrorNegocio(MENSAJE_SIN_PROPUESTA, estado=409)
+    return detalle_propuesta(encuentro)
 
 
 def detalle_propuesta(encuentro: Encuentro) -> DetallePropuesta:

@@ -231,6 +231,29 @@ describe("BandejaInvitaciones (HU-008)", () => {
     ]);
   });
 
+  it("HU-012: una aceptada con propuesta generada enlaza a la propuesta", async () => {
+    obtenerInvitaciones.mockResolvedValue(
+      bandeja(
+        [],
+        [
+          invitacion({
+            id: 1,
+            estado: "ACEPTADA",
+            estadoEncuentro: "PROPUESTA_GENERADA",
+            confirmados: 4,
+          }),
+        ],
+      ),
+    );
+    renderizar();
+
+    const enlace = await screen.findByRole("link", { name: "Ver propuesta" });
+    expect(enlace.getAttribute("href")).toBe("/encuentros/21/propuesta");
+    const respondidas = seccion("Respondidas");
+    expect(within(respondidas).getByText("Propuesta generada")).toBeTruthy();
+    expect(within(respondidas).queryByText("Parejas formadas.")).toBeNull();
+  });
+
   it("sin ninguna invitación explica cómo recibirlas", async () => {
     obtenerInvitaciones.mockResolvedValue(bandeja());
     renderizar();

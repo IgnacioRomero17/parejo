@@ -1,0 +1,38 @@
+.pagina {
+  composes: pagina from "./Perfil.module.css";
+}
+
+.encabezado {
+  composes: encabezado from "./Perfil.module.css";
+  align-items: flex-end;
+}
+
+.titulo {
+  composes: titulo from "./Perfil.module.css";
+}
+
+.texto {
+  composes: texto from "./Perfil.module.css";
+  font-size: 16px;
+}
+
+.datos {
+  display: grid;
+  grid-template-columns: repeat(4, auto) minmax(0, 1fr);
+  gap: 16px 64px;
+  margin: 0;
+  padding: 24px 28px;
+  border: 1px solid var(--linea);
+  border-radius: var(--radio-tarjeta);
+  background: var(--superficie);
+}
+
+.rotulo {
+  composes: rotulo from "../componentes/ProgresoOnboarding.module.css";
+}
+
+.valor {
+  margin: 4px 0 0;
+  font-size: 17px;
+  font-weight: 600;
+}

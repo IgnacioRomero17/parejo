@@ -12,6 +12,7 @@ import OnboardingDisponibilidad from "./paginas/OnboardingDisponibilidad.jsx";
 import OnboardingPerfil from "./paginas/OnboardingPerfil.jsx";
 import PanelPrincipal from "./paginas/PanelPrincipal.jsx";
 import Perfil from "./paginas/Perfil.jsx";
+import Propuesta from "./paginas/Propuesta.jsx";
 import RecuperacionCorreo from "./paginas/RecuperacionCorreo.jsx";
 import RecuperacionEnviado from "./paginas/RecuperacionEnviado.jsx";
 import RecuperacionNueva from "./paginas/RecuperacionNueva.jsx";
@@ -53,6 +54,7 @@ function Rutas() {
             path="/encuentros/:id/formando"
             element={<FormandoParejas />}
           />
+          <Route path="/encuentros/:id/propuesta" element={<Propuesta />} />
           <Route path="/invitaciones" element={<BandejaInvitaciones />} />
           <Route path="/perfil" element={<Perfil />} />
         </Route>

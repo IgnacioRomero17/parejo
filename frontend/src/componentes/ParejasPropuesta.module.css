@@ -1,0 +1,16 @@
+.bloque {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 24px;
+  padding: 28px;
+  border-radius: var(--radio-tarjeta);
+  background: var(--azul);
+}
+
+.vs {
+  color: var(--superficie);
+  font-family: var(--fuente-titulos);
+  font-size: 18px;
+  font-weight: 700;
+}

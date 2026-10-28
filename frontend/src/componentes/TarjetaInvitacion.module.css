@@ -72,3 +72,12 @@
   background: var(--fondo);
   font-size: 15px;
 }
+
+.enlace {
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.enlace:hover {
+  text-decoration: underline;
+}

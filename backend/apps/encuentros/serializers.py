@@ -202,8 +202,8 @@ class CombinacionSerializer(serializers.Serializer):
 
 
 class PropuestaSerializer(serializers.Serializer):
-    """Respuesta de `POST encuentros/{id}/formar-parejas`: el encuentro, las 3 combinaciones y
-    el número y el puntaje guardado de la elegida."""
+    """Respuesta de `POST encuentros/{id}/formar-parejas` y `GET encuentros/{id}/propuesta`: el
+    encuentro, las 3 combinaciones y el número y el puntaje guardado de la elegida."""
 
     encuentro = EncuentroSerializer()
     combinacion_elegida = serializers.IntegerField()

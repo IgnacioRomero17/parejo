@@ -6,8 +6,16 @@
   width: 44px;
   height: 44px;
   border-radius: 50%;
-  background: var(--etq-azul);
-  color: var(--etq-azul-texto);
   font-size: 15px;
   font-weight: 700;
+}
+
+.azul {
+  background: var(--etq-azul);
+  color: var(--etq-azul-texto);
+}
+
+.verde {
+  background: var(--etq-verde);
+  color: var(--etq-verde-texto);
 }

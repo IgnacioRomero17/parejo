@@ -1,0 +1,66 @@
+.pareja {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 24px 24px 16px;
+  border-top: 8px solid;
+  border-radius: var(--radio-tarjeta);
+  background: var(--superficie);
+}
+
+.primera {
+  border-top-color: var(--marino);
+}
+
+.segunda {
+  border-top-color: var(--etq-verde-texto);
+}
+
+.cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--linea);
+}
+
+.titulo {
+  font-family: var(--fuente-titulos);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.integrante {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+}
+
+.integrante + .integrante {
+  border-top: 1px solid var(--linea);
+}
+
+.identidad {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.nombre {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.detalle {
+  color: var(--texto-secundario);
+  font-size: 13.5px;
+}
+
+.nivel {
+  color: var(--texto-secundario);
+  font-size: 15px;
+  white-space: nowrap;
+}

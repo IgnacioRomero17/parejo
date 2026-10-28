@@ -34,6 +34,7 @@ pytestmark = pytest.mark.django_db
 MENSAJE_YA_COMENZO = "Este encuentro ya comenzó."
 MENSAJE_YA_TIENE_PROPUESTA = "Este encuentro ya tiene una propuesta."
 MENSAJE_SIN_CUATRO = "El encuentro todavía no tiene 4 jugadores confirmados."
+MENSAJE_SIN_PROPUESTA = "Este encuentro todavía no tiene una propuesta."
 
 
 def jugador(localidad, nombre, nivel, lado):
@@ -277,6 +278,22 @@ def test_hu011_c3_asocia_los_cuatro_participantes_con_su_pareja(encuentro, jugad
         (1, [tomas.pk, camila.pk]),
         (2, [valentina.pk, federico.pk]),
     ]
+
+
+def test_hu012_obtener_propuesta_devuelve_la_guardada(encuentro):
+    generada = servicios.formar_parejas(encuentro)
+    encuentro.refresh_from_db()
+
+    assert servicios.obtener_propuesta(encuentro) == generada
+
+
+@pytest.mark.parametrize("completo", [False, True])
+def test_hu012_sin_propuesta_generada_responde_409(jugadores, completo):
+    encuentro = crear_encuentro_completo(*jugadores) if completo else crear_encuentro(jugadores[0])
+
+    error = error_de(servicios.obtener_propuesta, encuentro)
+
+    assert (error.mensaje, error.estado) == (MENSAJE_SIN_PROPUESTA, 409)
 
 
 def test_hu011_p1_la_propuesta_apunta_a_la_elegida_con_su_puntaje(encuentro):
