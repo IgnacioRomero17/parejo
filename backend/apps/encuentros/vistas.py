@@ -9,6 +9,7 @@ from apps.encuentros.serializers import (
     BandejaSerializer,
     CrearEncuentroSerializer,
     DetalleEncuentroSerializer,
+    EncuentroActivoSerializer,
     EncuentroSerializer,
     InvitacionEnviadaSerializer,
     InvitacionRecibidaSerializer,
@@ -21,6 +22,13 @@ from apps.usuarios.permisos import OnboardingCompleto
 
 class EncuentrosVista(APIView):
     permission_classes = [IsAuthenticated, OnboardingCompleto]
+
+    def get(self, request):
+        encuentros = servicios.encuentros_activos(request.user)
+        serializer = EncuentroActivoSerializer(
+            encuentros, many=True, context={"usuario": request.user}
+        )
+        return Response(serializer.data)
 
     def post(self, request):
         serializer = CrearEncuentroSerializer(data=request.data)

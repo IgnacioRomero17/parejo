@@ -27,6 +27,9 @@ export const ESTADOS_ENCUENTRO = {
   PROPUESTA_GENERADA: { etiqueta: "Propuesta generada", color: "lima" },
 };
 
+// Estados en los que el encuentro ya tiene sus 4 confirmados (casilleros en lima).
+export const ESTADOS_COMPLETOS = ["COMPLETO", "PROPUESTA_GENERADA"];
+
 export const ESTADOS_INVITACION = {
   PENDIENTE: { etiqueta: "Pendiente", color: "amarillo" },
   ACEPTADA: { etiqueta: "Aceptada", color: "verde" },
@@ -102,7 +105,7 @@ export function rolOrganizador(genero) {
   );
 }
 
-// Encuentro completo, visto por quien aceptó la invitación (pantallas 08 y 13).
+// Encuentro completo, visto en la bandeja por quien aceptó la invitación (pantalla 13).
 export function textoEsperandoParejas(genero) {
   return segunGenero(
     genero,
@@ -110,6 +113,22 @@ export function textoEsperandoParejas(genero) {
     "Esperando que el organizador forme las parejas.",
     "Esperando que se inicie la formación automática de parejas.",
   );
+}
+
+// Encuentro completo, visto en el panel por quien aceptó la invitación (pantalla 08).
+export function textoEsperandoFormacion(genero) {
+  return segunGenero(
+    genero,
+    "Esperando que la organizadora inicie la formación automática de parejas.",
+    "Esperando que el organizador inicie la formación automática de parejas.",
+    "Esperando que se inicie la formación automática de parejas.",
+  );
+}
+
+export function textoInvitacionesPendientes(cantidad) {
+  return cantidad === 1
+    ? "1 invitación pendiente"
+    : `${cantidad} invitaciones pendientes`;
 }
 
 export function etiquetaLado(lado) {

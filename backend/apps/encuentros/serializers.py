@@ -184,6 +184,21 @@ class BandejaSerializer(serializers.Serializer):
     respondidas = InvitacionRecibidaSerializer(many=True)
 
 
+class EncuentroActivoSerializer(EncuentroInvitacionSerializer):
+    """Un encuentro de `GET encuentros` (pantalla 08). Recibe en el contexto el `usuario` que
+    consulta: `invitaciones_pendientes` (contadas en la consulta) va solo si lo organiza."""
+
+    organizador = OrganizadorSerializer()
+
+    def to_representation(self, encuentro):
+        datos = super().to_representation(encuentro)
+        organizas = servicios.es_organizador(self.context["usuario"], encuentro)
+        datos["organizas"] = organizas
+        if organizas:
+            datos["invitaciones_pendientes"] = encuentro.invitaciones_pendientes
+        return datos
+
+
 class ParejaSerializer(serializers.Serializer):
     numero = serializers.IntegerField()
     promedio = serializers.FloatField()

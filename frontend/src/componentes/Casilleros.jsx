@@ -8,8 +8,8 @@ const NUMEROS_DE_LUGAR = Array.from(
 
 // Cuatro casilleros de lugares con "N de 4 · faltan M": confirmados en azul (lima si el
 // encuentro está completo) y libres con borde punteado. Los cuadros son decorativos: el texto
-// dice lo mismo.
-function Casilleros({ confirmados, completo = false }) {
+// dice lo mismo. El panel principal no muestra "faltan M" (`conFaltan` en falso).
+function Casilleros({ confirmados, completo = false, conFaltan = true }) {
   const faltan = LUGARES_POR_ENCUENTRO - confirmados;
   const claseConfirmado = completo ? estilos.completo : estilos.confirmado;
 
@@ -26,7 +26,9 @@ function Casilleros({ confirmados, completo = false }) {
       <span className={estilos.cantidad}>
         {confirmados} de {LUGARES_POR_ENCUENTRO}
       </span>
-      {faltan > 0 && <span className={estilos.faltan}>· faltan {faltan}</span>}
+      {conFaltan && faltan > 0 && (
+        <span className={estilos.faltan}>· faltan {faltan}</span>
+      )}
     </div>
   );
 }

@@ -6,6 +6,13 @@ export function crearEncuentro(condiciones) {
   return pedir("POST", "encuentros", condiciones);
 }
 
+// Devuelve los encuentros activos del usuario, por fecha y hora ascendentes. Cada uno trae
+// `confirmados`, `organizador` ({ id, nombre, apellido, genero }), `organizas` y, solo si lo
+// organiza, `invitaciones_pendientes`.
+export function obtenerEncuentrosActivos() {
+  return pedir("GET", "encuentros");
+}
+
 // Devuelve el encuentro con `lugares_libres`, `participantes` y, solo para el organizador,
 // `invitaciones` (en orden de envío).
 export function obtenerEncuentro(id) {

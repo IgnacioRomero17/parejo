@@ -1,0 +1,55 @@
+.tarjeta {
+  composes: tarjeta from "./Tarjeta.module.css";
+}
+
+.contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.etiquetas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.cabecera {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--linea);
+}
+
+.titulo {
+  font-family: var(--fuente-titulos);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.datos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 24px;
+}
+
+.dato {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--texto-secundario);
+  font-size: 15px;
+}
+
+.pie {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.estado {
+  flex: 1;
+  color: var(--texto-secundario);
+  font-size: 15px;
+}

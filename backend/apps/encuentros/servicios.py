@@ -375,13 +375,42 @@ def detalle_encuentro(encuentro: Encuentro, usuario: Usuario) -> DetalleEncuentr
     )
 
 
+def _no_comenzo(prefijo: str = "") -> Q:
+    # Condición de consulta equivalente a `not ya_comenzo(encuentro)`; `prefijo` lleva hasta el
+    # encuentro desde otro modelo (por ejemplo, "encuentro__").
+    ahora = timezone.localtime()
+    return Q(**{f"{prefijo}fecha__gt": ahora.date()}) | Q(
+        **{f"{prefijo}fecha": ahora.date(), f"{prefijo}hora_inicio__gt": ahora.time()}
+    )
+
+
+def encuentros_activos(usuario: Usuario) -> tuple[Encuentro, ...]:
+    """Devuelve los encuentros activos del usuario para el panel principal (HU-012).
+
+    Son los que organiza y aquellos a los que aceptó una invitación (en ambos casos es
+    participante confirmado) cuya fecha y hora todavía no pasaron, ordenados por fecha y hora
+    ascendentes. Cada uno trae su localidad, el organizador, `confirmados` e
+    `invitaciones_pendientes` contados en la consulta.
+    """
+    # Por subconsulta y no con `participantes__usuario`: ese filtro reusaría la unión y el
+    # conteo de confirmados daría siempre 1.
+    propios = Participante.objects.filter(usuario=usuario).values("encuentro_id")
+    pendientes = Q(invitaciones__estado=EstadoInvitacion.PENDIENTE)
+    encuentros = (
+        Encuentro.objects.filter(_no_comenzo(), pk__in=propios)
+        .select_related("localidad", "organizador")
+        .annotate(
+            confirmados=Count("participantes", distinct=True),
+            invitaciones_pendientes=Count("invitaciones", filter=pendientes, distinct=True),
+        )
+        .order_by("fecha", "hora_inicio", "id_encuentro")
+    )
+    return tuple(encuentros)
+
+
 def _invitaciones_vigentes(usuario: Usuario) -> QuerySet[Invitacion]:
     # Las invitaciones de un encuentro que ya comenzó no se muestran ni se cuentan.
-    ahora = timezone.localtime()
-    no_comenzo = Q(encuentro__fecha__gt=ahora.date()) | Q(
-        encuentro__fecha=ahora.date(), encuentro__hora_inicio__gt=ahora.time()
-    )
-    return Invitacion.objects.filter(no_comenzo, usuario_invitado=usuario)
+    return Invitacion.objects.filter(_no_comenzo("encuentro__"), usuario_invitado=usuario)
 
 
 @dataclass(frozen=True)

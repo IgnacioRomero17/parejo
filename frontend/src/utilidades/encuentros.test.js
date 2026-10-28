@@ -10,8 +10,10 @@ import {
   listarNombres,
   nombresDePareja,
   rolOrganizador,
+  textoEsperandoFormacion,
   textoEsperandoParejas,
   textoInvitacionesEnviadas,
+  textoInvitacionesPendientes,
   textoJugadores,
   textoLimiteSeleccion,
   textoLugaresACompletar,
@@ -40,6 +42,8 @@ describe("textos con cantidades", () => {
     expect(textoSeleccionados(1)).toBe("1 seleccionado");
     expect(textoPendientes(1)).toBe("1 pendiente");
     expect(textoPendientes(2)).toBe("2 pendientes");
+    expect(textoInvitacionesPendientes(1)).toBe("1 invitación pendiente");
+    expect(textoInvitacionesPendientes(3)).toBe("3 invitaciones pendientes");
   });
 });
 
@@ -58,6 +62,23 @@ describe("textos de la propuesta (HU-012)", () => {
       ],
     };
     expect(nombresDePareja(pareja)).toBe("Tomás + Camila");
+  });
+
+  it.each([
+    [
+      "FEMENINO",
+      "Esperando que la organizadora inicie la formación automática de parejas.",
+    ],
+    [
+      "MASCULINO",
+      "Esperando que el organizador inicie la formación automática de parejas.",
+    ],
+    [
+      "NO_DECLARA",
+      "Esperando que se inicie la formación automática de parejas.",
+    ],
+  ])("en el panel, con organizador %s dice «%s»", (genero, texto) => {
+    expect(textoEsperandoFormacion(genero)).toBe(texto);
   });
 });
 

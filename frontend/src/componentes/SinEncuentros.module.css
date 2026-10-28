@@ -1,0 +1,20 @@
+.tarjeta {
+  composes: tarjeta from "./SinCompatibles.module.css";
+  padding: 48px 28px;
+}
+
+.icono {
+  composes: icono from "./SinCompatibles.module.css";
+  background: var(--etq-azul);
+  color: var(--etq-azul-texto);
+}
+
+.titulo {
+  font-family: var(--fuente-titulos);
+  font-size: 22px;
+  font-weight: 700;
+}
+
+.texto {
+  composes: texto from "./SinCompatibles.module.css";
+}

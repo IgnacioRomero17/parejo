@@ -1,5 +1,6 @@
 import { CalendarDays, Clock, MapPin, Timer, Trophy } from "lucide-react";
 import {
+  ESTADOS_COMPLETOS,
   ESTADOS_ENCUENTRO,
   etiquetaTipoEncuentro,
 } from "../utilidades/encuentros.js";
@@ -7,8 +8,6 @@ import { formatearFechaCompacta } from "../utilidades/formato.js";
 import Casilleros from "./Casilleros.jsx";
 import estilos from "./EncabezadoEncuentro.module.css";
 import Etiqueta from "./Etiqueta.jsx";
-
-const ESTADOS_COMPLETOS = ["COMPLETO", "PROPUESTA_GENERADA"];
 
 // Barra con las condiciones del encuentro (pantallas 10, 12 y 14) y sus lugares confirmados.
 function EncabezadoEncuentro({ encuentro }) {

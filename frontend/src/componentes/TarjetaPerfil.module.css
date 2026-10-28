@@ -1,0 +1,40 @@
+.tarjeta {
+  composes: tarjeta from "./Tarjeta.module.css";
+  gap: 16px;
+}
+
+.datos {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;
+}
+
+.fila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.rotulo {
+  color: var(--texto-secundario);
+  font-size: 15px;
+}
+
+.valor {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.enlace {
+  align-self: flex-start;
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.enlace:hover {
+  text-decoration: underline;
+}
