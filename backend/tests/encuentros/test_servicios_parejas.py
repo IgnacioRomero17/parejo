@@ -251,6 +251,22 @@ def test_hu010_c2_c3_dos_parejas_de_dos_con_cada_participante_una_sola_vez(encue
     )
 
 
+def test_hu010_p1_ante_empate_total_elige_la_primera_combinacion():
+    rio_ceballos = crear_localidad()
+    iguales = [
+        jugador(rio_ceballos, nombre, "4.5", LadoPreferido.INDIFERENTE)
+        for nombre in ("Ana", "Bruno", "Carla", "Dario")
+    ]
+    encuentro = crear_encuentro_completo(*iguales)
+
+    detalle = servicios.formar_parejas(encuentro)
+
+    assert [c.puntaje_equilibrio for c in detalle.combinaciones] == [Decimal("1.0000")] * 3
+    assert detalle.combinacion_elegida == 1
+    propuesta = PropuestaEncuentro.objects.get(encuentro=encuentro)
+    assert propuesta.combinacion == combinaciones_guardadas(encuentro)[0]
+
+
 def test_hu011_p1_la_propuesta_apunta_a_la_elegida_con_su_puntaje(encuentro):
     detalle = servicios.formar_parejas(encuentro)
 
