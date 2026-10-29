@@ -11,10 +11,13 @@ from evaluacion.generador import (
     FECHA_BASE,
     SEMILLA,
     generar_escenarios,
+    generar_grupos_aleatorios,
     generar_jugadores,
+    grupos_de_recomendados,
 )
 from evaluacion.localidades import LOCALIDADES
-from motor.tipos import COMPETITIVO, DRIVE, INDIFERENTE, RECREATIVO, REVES
+from motor.recomendar import recomendar
+from motor.tipos import COMPETITIVO, DRIVE, INDIFERENTE, RECREATIVO, REVES, JugadorEntrada
 
 JUGADORES = generar_jugadores()
 CANDIDATOS = [jugador.candidato for jugador in JUGADORES]
@@ -53,6 +56,7 @@ def test_generador_no_usa_el_random_global():
     random.seed(1)
     generar_jugadores()
     generar_escenarios(JUGADORES)
+    generar_grupos_aleatorios(JUGADORES)
 
     assert random.random() == antes
 
@@ -160,3 +164,42 @@ def test_generador_escenarios_dentro_de_los_rangos():
         assert encuentro.duracion_minutos in (60, 90, 120)
         assert (encuentro.lat, encuentro.lon) in coordenadas
         assert encuentro.tipo in (RECREATIVO, COMPETITIVO, INDIFERENTE)
+
+
+def test_generador_grupos_de_recomendados_con_el_organizador_y_los_3_primeros():
+    grupos = grupos_de_recomendados(JUGADORES, ESCENARIOS)
+    resultados = [
+        recomendar(escenario.encuentro, tuple(CANDIDATOS), escenario.lugares_libres)
+        for escenario in ESCENARIOS
+    ]
+    suficientes = [
+        (escenario, resultado)
+        for escenario, resultado in zip(ESCENARIOS, resultados, strict=True)
+        if resultado.suficientes
+    ]
+
+    assert len(grupos) == len(suficientes) > 0
+    for grupo, (escenario, resultado) in zip(grupos, suficientes, strict=True):
+        primeros = tuple(r.id for r in resultado.recomendados[:3])
+        assert tuple(jugador.id for jugador in grupo) == (escenario.organizador_id, *primeros)
+
+
+def test_generador_grupos_aleatorios_de_4_jugadores_distintos():
+    por_id = {jugador.candidato.id: jugador for jugador in JUGADORES}
+    grupos = generar_grupos_aleatorios(JUGADORES)
+
+    assert len(grupos) == 150
+    for grupo in grupos:
+        assert len({jugador.id for jugador in grupo}) == 4
+        for jugador in grupo:
+            sintetico = por_id[jugador.id]
+            assert jugador == JugadorEntrada(
+                id=jugador.id, nivel=sintetico.candidato.nivel, lado=sintetico.lado
+            )
+
+
+def test_generador_misma_semilla_mismos_grupos_aleatorios():
+    grupos = generar_grupos_aleatorios(JUGADORES)
+
+    assert generar_grupos_aleatorios(JUGADORES, SEMILLA) == grupos
+    assert generar_grupos_aleatorios(JUGADORES, SEMILLA + 1) != grupos

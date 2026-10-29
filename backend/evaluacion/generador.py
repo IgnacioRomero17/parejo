@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from datetime import date, time, timedelta
 
 from evaluacion.localidades import LOCALIDADES, Localidad
+from motor.parametros import PARAMETROS, Parametros
+from motor.recomendar import recomendar
 from motor.tipos import (
     COMPETITIVO,
     DRIVE,
@@ -15,11 +17,13 @@ from motor.tipos import (
     CandidatoEntrada,
     EncuentroEntrada,
     Franja,
+    JugadorEntrada,
 )
 
 SEMILLA = 2026
 CANTIDAD_JUGADORES = 200
 CANTIDAD_ESCENARIOS = 150
+CANTIDAD_GRUPOS_ALEATORIOS = 150
 
 NIVEL_MEDIA = 4.0
 NIVEL_DESVIO = 1.2
@@ -175,3 +179,49 @@ def generar_escenarios(
     """
     generador = random.Random(semilla)
     return tuple(_escenario(generador, numero, jugadores) for numero in range(1, cantidad + 1))
+
+
+Grupo = tuple[JugadorEntrada, ...]
+
+
+def jugador_entrada(jugador: JugadorSintetico) -> JugadorEntrada:
+    """Entrada de la etapa 2 del motor (id, nivel y lado) para un jugador sintético."""
+    return JugadorEntrada(id=jugador.candidato.id, nivel=jugador.candidato.nivel, lado=jugador.lado)
+
+
+def grupos_de_recomendados(
+    jugadores: tuple[JugadorSintetico, ...],
+    escenarios: tuple[EscenarioAleatorio, ...],
+    p: Parametros = PARAMETROS,
+) -> tuple[Grupo, ...]:
+    """Grupos de 4 para la etapa 2: el organizador y los 3 primeros recomendados por el motor.
+
+    Solo entran los escenarios con candidatos suficientes (al menos 3 recomendados para los 3
+    lugares libres), en su orden. Los candidatos son todos `jugadores`.
+    """
+    por_id = {jugador.candidato.id: jugador for jugador in jugadores}
+    candidatos = tuple(jugador.candidato for jugador in jugadores)
+    grupos = []
+    for escenario in escenarios:
+        resultado = recomendar(escenario.encuentro, candidatos, escenario.lugares_libres, p)
+        if resultado.suficientes:
+            primeros = resultado.recomendados[: escenario.lugares_libres]
+            ids = (escenario.organizador_id, *(r.id for r in primeros))
+            grupos.append(tuple(jugador_entrada(por_id[identificador]) for identificador in ids))
+    return tuple(grupos)
+
+
+def generar_grupos_aleatorios(
+    jugadores: tuple[JugadorSintetico, ...],
+    semilla: int = SEMILLA,
+    cantidad: int = CANTIDAD_GRUPOS_ALEATORIOS,
+) -> tuple[Grupo, ...]:
+    """Grupos de 4 jugadores distintos elegidos al azar entre `jugadores`.
+
+    Usa su propio `random.Random(semilla)`: misma semilla, mismos grupos.
+    """
+    generador = random.Random(semilla)
+    return tuple(
+        tuple(jugador_entrada(jugador) for jugador in generador.sample(jugadores, 4))
+        for _ in range(cantidad)
+    )
