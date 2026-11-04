@@ -35,6 +35,9 @@ cargar_archivo_env(BASE_DIR / ".env")
 SECRET_KEY = variable_obligatoria("DJANGO_SECRET_KEY")
 DEBUG = os.environ.get("DJANGO_DEBUG", "False").lower() == "true"
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "localhost,127.0.0.1").split(",")
+CSRF_TRUSTED_ORIGINS = [
+    origen for origen in os.environ.get("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",") if origen
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -87,6 +90,9 @@ DATABASES = {
         "PASSWORD": variable_obligatoria("DB_PASSWORD"),
         "HOST": os.environ.get("DB_HOST", "localhost"),
         "PORT": os.environ.get("DB_PORT", "5432"),
+        # "prefer" es el valor por defecto de libpq; en producción se exige SSL aunque falte la
+        # variable, para no conectarse sin cifrar por un olvido.
+        "OPTIONS": {"sslmode": os.environ.get("DB_SSLMODE", "prefer" if DEBUG else "require")},
     }
 }
 
@@ -104,6 +110,8 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+DIR_FRONTEND_COMPILADO = BASE_DIR.parent / "frontend" / "dist"
 
 BACKEND_CORREO = os.environ.get("EMAIL_BACKEND", "django.core.mail.backends.console.EmailBackend")
 CORREO_POR_DEFECTO = {"BACKEND": BACKEND_CORREO}
@@ -115,6 +123,9 @@ if BACKEND_CORREO == "django.core.mail.backends.smtp.EmailBackend":
         "username": os.environ.get("EMAIL_HOST_USER", ""),
         "password": os.environ.get("EMAIL_HOST_PASSWORD", ""),
         "use_tls": os.environ.get("EMAIL_USE_TLS", "True").lower() == "true",
+        # Menor que los 30 s de Gunicorn: si el servidor de correo no responde, falla el pedido
+        # y no se mata al worker.
+        "timeout": 10,
     }
 MAILERS = {"default": CORREO_POR_DEFECTO}
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "parejo <no-responder@localhost>")
@@ -132,3 +143,32 @@ REST_FRAMEWORK = {
     "COERCE_DECIMAL_TO_STRING": False,
     "EXCEPTION_HANDLER": "apps.comun.errores.manejar_excepcion",
 }
+
+if not DEBUG:
+    MIDDLEWARE.insert(1, "whitenoise.middleware.WhiteNoiseMiddleware")
+    STATICFILES_DIRS = [DIR_FRONTEND_COMPILADO]
+    # Sin la variante Manifest: Vite ya pone un hash en los nombres de sus archivos.
+    STORAGES = {
+        "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+        "staticfiles": {"BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"},
+    }
+    WHITENOISE_IMMUTABLE_FILE_TEST = r"^/static/assets/"
+
+    # Render termina el HTTPS en su proxy; sin esto, cada pedido parece HTTP y redirige sin fin.
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    # CSRF_COOKIE_HTTPONLY sigue apagado porque api/cliente.js lee esa cookie.
+    CSRF_COOKIE_SECURE = True
+    # Valor bajo a propósito: el navegador recuerda HSTS y es difícil de revertir.
+    SECURE_HSTS_SECONDS = 3600
+
+    # Con DEBUG apagado Django no muestra los errores en consola. Solo ERROR: en WARNING se
+    # registrarían las rutas de /recuperar/{uid}/{token}, que llevan tokens. El nivel va en el
+    # handler porque el del logger raíz no filtra lo que llega de django.request.
+    LOGGING = {
+        "version": 1,
+        "disable_existing_loggers": False,
+        "handlers": {"consola": {"class": "logging.StreamHandler", "level": "ERROR"}},
+        "root": {"handlers": ["consola"]},
+    }

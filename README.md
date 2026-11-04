@@ -3,6 +3,10 @@
 Aplicación web que organiza encuentros de pádel amateur: registra nivel, disponibilidad y preferencias de los jugadores, recomienda participantes compatibles y arma parejas equilibradas (2 vs 2).
 Es el prototipo del Trabajo Final de Grado de Ingeniería de Software, la pieza central es el motor de recomendación y balanceo.
 
+## Versión publicada
+
+La aplicación se publica gratis en Render (un único servidor con Django, que sirve la API y el frontend compilado), con la base de datos PostgreSQL en Neon y el correo de recuperación por SMTP con Brevo. Los pasos para publicarla están en [DEPLOY.md](DEPLOY.md).
+
 ## Arquitectura
 
 ```mermaid
@@ -89,6 +93,11 @@ Pegar la clave generada en `DJANGO_SECRET_KEY` y completar la contraseña de Pos
 | `EMAIL_BACKEND` | no | sin definir, los correos se muestran en la consola; con el backend SMTP se envían de verdad |
 | `EMAIL_HOST`, `EMAIL_PORT`, `EMAIL_HOST_USER`, `EMAIL_HOST_PASSWORD`, `EMAIL_USE_TLS` | solo con SMTP | servidor y credenciales de correo (`EMAIL_HOST` es obligatoria en ese caso) |
 | `DEFAULT_FROM_EMAIL` | no | remitente de los correos |
+| `DJANGO_ALLOWED_HOSTS` | solo publicada | dominios permitidos (por defecto `localhost,127.0.0.1`) |
+| `DJANGO_CSRF_TRUSTED_ORIGINS` | solo publicada | orígenes confiables para CSRF, con `https://` |
+| `DB_SSLMODE` | no | modo SSL de la conexión (por defecto `prefer` con `DJANGO_DEBUG=True` y `require` si no) |
+
+Sin `DJANGO_DEBUG=True` se activa la configuración de producción (HTTPS obligatorio, cookies seguras y WhiteNoise), que no sirve para trabajar en local.
 
 **5. Base, localidades, datos de demostración y superusuario**
 
