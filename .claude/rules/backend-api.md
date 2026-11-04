@@ -94,4 +94,4 @@ Cualquier otra acción sobre un estado que no corresponde responde 409.
 - Valores sensibles y de entorno (`SECRET_KEY`, base de datos, SMTP, `DEBUG`) desde variables de entorno con `os.environ`, con valores por defecto solo para desarrollo. Sin librerías extra para esto.
 - `LANGUAGE_CODE = "es-ar"`, `TIME_ZONE = "America/Argentina/Cordoba"`, `USE_TZ = True`.
 - Desarrollo: `EMAIL_BACKEND` de consola. Producción: SMTP.
-- Dependencias permitidas: `Django>=5.2`, `djangorestframework`, `psycopg[binary]`. Las de testing, en su regla.
+- Dependencias permitidas: `Django>=5.2`, `djangorestframework`, `psycopg[binary]`. Las de testing, en su regla. En producción, gunicorn (servidor de aplicación) y whitenoise (archivos estáticos y frontend compilado)
