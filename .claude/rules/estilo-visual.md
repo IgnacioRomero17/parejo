@@ -50,7 +50,7 @@ Todos los colores, radios y sombras salen de estas variables. Ningún color escr
 
 ## Tipografía
 - **Inter** (400, 500, 600, 700) para todo el texto; **Space Grotesk** (500, 700) solo para títulos y números destacados. Cargadas con `@fontsource`.
-- Escala: (valores de escritorio; en celular pueden ajustarse dentro de la media query):
+- Escala (valores de escritorio; en celular pueden ajustarse dentro de la media query):
 
 | Uso | Fuente | Tamaño / peso |
 |---|---|---|
@@ -77,7 +77,7 @@ Los valores son los de escritorio; en celular pueden ajustarse dentro de la medi
 | `Aviso` | arriba a la derecha (top 84px, right 40px), fondo marino, texto blanco 14px/600, ícono de check lima, radio 10px, `--sombra-aviso`; se oculta a los 4 segundos. |
 | `Avatar` | círculo 44px (38px en listas), iniciales 15px/700, fondo `--etq-azul` y texto #2A44B8 Excepción: en la propuesta (pantalla 16), los avatares de la Pareja 2 usan --etq-verde y --etq-verde-texto para distinguir las dos parejas. |
 | `Casilleros` | 4 cuadrados de 22px, radio 5px: confirmado azul (o lima si el encuentro está completo), libre con borde punteado. Siempre acompañados del texto "N de 4". |
-| `BarraSuperior` | alto 64px, fondo marino; logo a la izquierda; enlaces 15px/600 `--texto-sobre-oscuro`, activo en blanco con línea lima de 3px abajo; indicador de pendientes: círculo lima 19px con número marino. |
+| `BarraSuperior` | alto 64px, fondo marino; logo a la izquierda; enlaces 15px/600 `--texto-sobre-oscuro`, activo en blanco con línea lima de 3px abajo; indicador de pendientes: círculo lima 19px con número marino. En celular: franja superior de 56px solo con el logo y los 4 enlaces en una barra fija al pie (56px más la zona segura del iPhone), con la línea lima arriba del enlace activo.|
 | `PanelAcceso` | pantallas 06a–06e: panel izquierdo marino de 520px (logo, ilustración de cancha, título 40px, texto) y formulario centrado de 420–460px a la derecha sobre `--fondo`. |
 | `SelectorNivel` | ver `docs/interfaces/07a-onboarding-perfil.md`: barra de 4px, puntos enteros de 30px con número, medios puntos de 8px; avance en azul; valor elegido en medio punto: círculo lima de 26px con borde marino; en entero: círculo azul de 38px con halo lima; etiqueta flotante marina con texto lima. |
 
