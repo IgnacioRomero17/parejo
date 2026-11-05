@@ -23,13 +23,13 @@ Límites del plan gratis de Render:
 
 ## 2. Crear la base en Neon
 
-1. Crear un proyecto nuevo. Como región, elegir **AWS US East 1 (N. Virginia)**, para que quede cerca del servidor de Render.
+1. Crear un proyecto nuevo. Como región, elegir **AWS US East 2 (Ohio)**. Lo importante es que la base y el servidor de Render estén en la misma región; si elegís otra, usá la misma en los dos.
 2. Abrir **Connect** y **desactivar "Connection pooling"**. El host correcto es el directo: **no** tiene `-pooler` en el nombre. Las migraciones no deben pasar por el pooler.
 3. Anotar estos datos para los pasos siguientes:
 
 | Dato de Neon | Variable | Ejemplo |
 |---|---|---|
-| Host | `DB_HOST` | `ep-ejemplo-123456.us-east-1.aws.neon.tech` |
+| Host | `DB_HOST` | `ep-ejemplo-123456.us-east-2.aws.neon.tech` |
 | Database | `DB_NAME` | `neondb` |
 | Role | `DB_USER` | `neondb_owner` |
 | Password | `DB_PASSWORD` | la que muestra Neon |
@@ -38,11 +38,11 @@ No hace falta crear tablas: las crea el paso de construcción en Render.
 
 ## 3. Preparar el correo en Brevo
 
-1. En **Senders, Domains & Dedicated IPs → Senders**, agregar tu correo como remitente y confirmarlo con el código de 6 dígitos que te llega.
+1. En **Senders, Domains & Dedicated IPs → Senders**, agregar el correo remitente y confirmarlo con el código de 6 dígitos que te llega. Se recomienda un Gmail creado solo para la app, no tu correo personal.
 2. En **SMTP & API → SMTP**, generar una **clave SMTP** y anotarla junto con el **usuario (login)** que aparece en esa pantalla. La clave SMTP no es la contraseña de tu cuenta ni una clave de API.
 3. Si la cuenta es nueva, puede que Brevo tenga que aprobarla antes de permitir envíos.
 
-**A tener en cuenta:** sin dominio propio, Brevo puede reemplazar el remitente visible y el correo puede caer en spam. Para una demostración alcanza, pero conviene avisarlo a quien lo vaya a probar.
+**A tener en cuenta:** sin dominio propio, Brevo puede reemplazar el remitente visible y el correo puede caer en spam. Para una demostración alcanza, pero conviene avisarlo a quien lo vaya a probar. Además, la clave SMTP vence tras 90 días sin envíos (ver "Problemas frecuentes").
 
 ## 4. Crear el servicio en Render
 
@@ -53,7 +53,7 @@ No hace falta crear tablas: las crea el paso de construcción en Render.
 | Name | el nombre define la dirección: `https://<nombre>.onrender.com` |
 | Language | Python |
 | Branch | la rama que vas a publicar |
-| Region | Virginia (US East) |
+| Region | Ohio (US East), la misma región que la base de Neon |
 | Root Directory | **vacío** (si se completa, no quedan disponibles `backend/` y `frontend/` a la vez) |
 | Build Command | `bash build.sh` |
 | Start Command | `gunicorn --chdir backend config.wsgi:application --bind 0.0.0.0:$PORT` |
@@ -63,7 +63,7 @@ No lo crees todavía: primero cargá las variables del paso siguiente, en la mis
 
 ## 5. Cargar las variables de entorno
 
-En **Environment Variables**:
+En **Environment Variables** se pueden cargar de a una o pegar todas juntas con **Add from .env**, en formato `VARIABLE=valor`, una por línea. Armá ese texto con los valores de esta tabla, no con el `.env` de tu PC, que es de desarrollo.
 
 | Variable | Valor |
 |---|---|
@@ -106,12 +106,18 @@ El plan gratis no tiene consola, así que estos comandos se corren **desde tu PC
 cd backend
 .\.venv\Scripts\Activate.ps1
 
-$env:DB_HOST = "ep-ejemplo-123456.us-east-1.aws.neon.tech"
+$env:DB_HOST = "ep-ejemplo-123456.us-east-2.aws.neon.tech"
 $env:DB_PORT = "5432"
 $env:DB_NAME = "neondb"
 $env:DB_USER = "neondb_owner"
-$env:DB_PASSWORD = "la-contraseña-de-neon"
+$env:DB_PASSWORD = Read-Host "Contraseña de Neon"
 $env:DB_SSLMODE = "require"
+```
+
+La contraseña se pide con `Read-Host` para que no quede en el historial de PowerShell. Pegala con **clic derecho** y confirmá con Enter; se va a ver en pantalla mientras la pegás. Para comprobar que se cargó sin mostrarla, mirá su largo, que tiene que coincidir con el de la contraseña de Neon:
+
+```powershell
+$env:DB_PASSWORD.Length
 ```
 
 Antes de cargar nada, comprobá que estás conectado a Neon:
@@ -173,5 +179,6 @@ Gmail SMTP (`smtp.gmail.com`) solo atiende por puertos que el plan gratis de Ren
 | La construcción falla con `Falta la variable de entorno` | falta una variable obligatoria | cargar la que indica el mensaje |
 | La construcción falla al migrar | datos de Neon incorrectos | revisar las variables `DB_*` y que el host sea el directo |
 | Error al pedir la recuperación de contraseña | datos SMTP incorrectos o cuenta de Brevo sin aprobar | revisar `EMAIL_*`, el puerto `2525` y los logs de Render |
+| No llegan los correos | la clave SMTP de Brevo venció (90 días sin envíos) | generar una clave nueva en Brevo y reemplazar `EMAIL_HOST_PASSWORD` en Render |
 | La localidad no aparece o `cargar_datos` pide cargarlas | faltan las localidades | correr `loaddata localidades` (paso 6) |
 | Tarda mucho la primera visita | el servicio estaba dormido | es normal en el plan gratis |

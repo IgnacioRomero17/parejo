@@ -5,6 +5,8 @@ Es el prototipo del Trabajo Final de Grado de Ingeniería de Software, la pieza 
 
 ## Versión publicada
 
+**Demo en línea:** https://parejo.onrender.com (plan gratuito: la primera carga puede tardar unos 50 segundos).
+
 La aplicación se publica gratis en Render (un único servidor con Django, que sirve la API y el frontend compilado), con la base de datos PostgreSQL en Neon y el correo de recuperación por SMTP con Brevo. Los pasos para publicarla están en [DEPLOY.md](DEPLOY.md).
 
 ## Arquitectura
