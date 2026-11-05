@@ -23,3 +23,10 @@
   color: var(--texto);
   font-weight: 700;
 }
+
+/* Un correo largo se corta en lugar de salirse del formulario. */
+@media (max-width: 640px) {
+  .texto strong {
+    overflow-wrap: anywhere;
+  }
+}

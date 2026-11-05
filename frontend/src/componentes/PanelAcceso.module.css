@@ -77,3 +77,39 @@
   width: 100%;
   max-width: 460px;
 }
+
+/* Panel compacto arriba y formulario debajo; sin la cancha, el formulario entra en la primera vista. */
+@media (max-width: 640px) {
+  .contenedor {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto 1fr;
+  }
+
+  .panel {
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .presentacion {
+    gap: 8px;
+  }
+
+  .cancha {
+    display: none;
+  }
+
+  .titulo {
+    font-size: 26px;
+  }
+
+  .texto {
+    max-width: none;
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  .principal {
+    align-items: start;
+    padding: 24px 16px 32px;
+  }
+}

@@ -10,3 +10,11 @@
   font-weight: 700;
   text-decoration: none;
 }
+
+@media (max-width: 640px) {
+  .volver {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}

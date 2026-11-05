@@ -128,3 +128,57 @@
   font-size: 14px;
   line-height: 1.5;
 }
+
+@media (max-width: 640px) {
+  .encabezado,
+  .contenido {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .encabezado {
+    padding-top: 12px;
+    padding-bottom: 12px;
+  }
+
+  .ingresar {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+
+  .contenido {
+    gap: 40px;
+    padding-top: 24px;
+    padding-bottom: 32px;
+  }
+
+  .portada,
+  .pasos {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .titulo {
+    font-size: 36px;
+  }
+
+  .texto {
+    font-size: 16px;
+  }
+
+  .acciones {
+    flex-wrap: wrap;
+    align-self: stretch;
+    gap: 12px;
+  }
+
+  .acciones > * {
+    flex: 1 1 auto;
+  }
+
+  /* Apilada, un resplandor grande se pintaría sobre los botones y las tarjetas vecinas. */
+  .ilustracion {
+    max-width: 200px;
+    box-shadow: 0 0 32px 4px color-mix(in srgb, var(--azul) 45%, transparent);
+  }
+}
