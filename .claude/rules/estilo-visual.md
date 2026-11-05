@@ -50,7 +50,7 @@ Todos los colores, radios y sombras salen de estas variables. Ningún color escr
 
 ## Tipografía
 - **Inter** (400, 500, 600, 700) para todo el texto; **Space Grotesk** (500, 700) solo para títulos y números destacados. Cargadas con `@fontsource`.
-- Escala:
+- Escala: (valores de escritorio; en celular pueden ajustarse dentro de la media query):
 
 | Uso | Fuente | Tamaño / peso |
 |---|---|---|
@@ -64,6 +64,8 @@ Todos los colores, radios y sombras salen de estas variables. Ningún color escr
 | Números destacados ("2 de 4", "1,00") | Space Grotesk | 21–44px / 700 |
 
 ## Componentes (en `src/componentes/`)
+Los valores son los de escritorio; en celular pueden ajustarse dentro de la media query.
+
 | Componente | Especificación |
 |---|---|
 | `Boton` | alto 44px, padding 0 20px, radio 10px, 15px/700. Variantes: **primario** (fondo azul, texto blanco), **secundario** (fondo blanco, borde `--borde-campo`), **deshabilitado** (fondo #E5E9F0, texto `--texto-secundario`). Ícono opcional a la izquierda, 16px, separación 8px. |
@@ -86,7 +88,8 @@ Todos los colores, radios y sombras salen de estas variables. Ningún color escr
 `lucide-react`, trazo 2, 16–18px en botones y datos, 14px en mensajes de error. Los mismos que en las imágenes (calendario, reloj, temporizador, pin, trofeo, sobre, check, alerta, info, más, candado, salir).
 
 ## Diseño de página
-- **Solo escritorio** en el prototipo: ancho de contenido 1280px centrado, márgenes laterales 40px, pensado para pantallas de 1280px o más. La versión para celulares no se implementa (trabajo futuro).
-- **Preparado para adaptarse después:** maquetar con CSS Grid y Flexbox, columnas en fracciones (`1fr`, `minmax`) y anchos máximos (`max-width`) en lugar de anchos fijos. Sin posiciones absolutas para ubicar bloques de contenido. Así, adaptarlo a celulares sería solo agregar reglas de CSS.
+- **Escritorio:** ancho de contenido 1280px centrado, márgenes laterales 40px, pensado para pantallas de 1280px o más.
+- **Celulares (360 a 430px):** adaptación con `@media (max-width: 640px)` al final del `.module.css` de cada componente, sin tocar las reglas base, para que escritorio no cambie. Sin scroll horizontal en 360px, zonas táctiles de al menos 44px de alto y campos con letra de al menos 16px.
+- **Maquetación flexible:** CSS Grid y Flexbox, columnas en fracciones (`1fr`, `minmax`) y anchos máximos (`max-width`) en lugar de anchos fijos. Sin posiciones absolutas para ubicar bloques de contenido.
 - Espaciado en múltiplos de 4px. Separación entre tarjetas 14–24px.
 - Fondo de página `--fondo`; tarjetas blancas encima.

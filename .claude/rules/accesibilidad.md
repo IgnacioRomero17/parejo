@@ -32,6 +32,7 @@ Los elementos nativos ya funcionan con teclado y lectores de pantalla; el estilo
 ## Teclado y foco
 - Todo lo que se hace con el mouse se puede hacer con el teclado.
 - El foco siempre visible: contorno de 2px en `--azul`. Nunca `outline: none` sin reemplazo.
+- En celular, zonas táctiles de al menos 44px de alto.
 
 ## Contenido
 - Usar solo los colores de `estilo-visual.md`.

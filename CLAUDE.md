@@ -67,7 +67,7 @@ parejo/
 7. **Datos personales:** edad, género y localidad no se exponen más allá de lo que muestran las pantallas ni se escriben en logs.
 
 ## Fuera de alcance (no implementar)
-Baja o restauración de cuentas; bloqueo por intentos fallidos; historial de contraseñas; cancelar participaciones, revocar invitaciones o reemplazar jugadores; notificaciones fuera de la app; geocodificación o distancia por ruta; avisos de bajo equilibrio; guardar copias del nivel de los jugadores en la propuesta; versión para celulares.
+Baja o restauración de cuentas; bloqueo por intentos fallidos; historial de contraseñas; cancelar participaciones, revocar invitaciones o reemplazar jugadores; notificaciones fuera de la app; geocodificación o distancia por ruta; avisos de bajo equilibrio; guardar copias del nivel de los jugadores en la propuesta.
 
 ## Cómo trabajar
 - Una HU o unidad lógica por vez, con sus tests. El ciclo de trabajo, los commits y cuándo frenar a preguntar están en `git-y-flujo-de-trabajo.md`.
