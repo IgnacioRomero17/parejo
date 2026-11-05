@@ -81,3 +81,47 @@
 .enlace:hover {
   text-decoration: underline;
 }
+
+@media (max-width: 640px) {
+  /* Avatar (44 px) e identidad en la primera línea; la etiqueta, debajo. */
+  .cabecera {
+    flex-wrap: wrap;
+    gap: 8px 12px;
+  }
+
+  .identidad {
+    flex: 1 1 calc(100% - 56px);
+  }
+
+  /* Lugar y Lugares son los datos más largos: van a todo el ancho. */
+  .datos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .datos > :nth-child(5),
+  .datos > :nth-child(6) {
+    grid-column: 1 / -1;
+  }
+
+  .acciones {
+    gap: 12px;
+  }
+
+  .acciones > * {
+    flex: 1 1 auto;
+  }
+
+  .estado {
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    padding: 12px 16px;
+  }
+
+  .enlace {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}

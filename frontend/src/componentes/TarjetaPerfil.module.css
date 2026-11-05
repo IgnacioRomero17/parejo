@@ -38,3 +38,11 @@
 .enlace:hover {
   text-decoration: underline;
 }
+
+@media (max-width: 640px) {
+  .enlace {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}

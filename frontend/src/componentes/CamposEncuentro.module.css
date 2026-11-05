@@ -8,3 +8,11 @@
 .anchoCompleto {
   grid-column: 1 / -1;
 }
+
+/* Fecha y hora a todo el ancho: a media columna, el selector de fecha queda muy justo. */
+@media (max-width: 640px) {
+  .grilla {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 20px;
+  }
+}

@@ -74,3 +74,9 @@
   flex-shrink: 0;
   margin-top: 2px;
 }
+
+@media (max-width: 640px) {
+  .lugar {
+    padding: 8px 12px;
+  }
+}

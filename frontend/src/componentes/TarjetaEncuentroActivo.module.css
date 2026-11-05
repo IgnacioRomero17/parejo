@@ -53,3 +53,28 @@
   color: var(--texto-secundario);
   font-size: 15px;
 }
+
+@media (max-width: 640px) {
+  .dato {
+    align-items: flex-start;
+    overflow-wrap: anywhere;
+  }
+
+  .dato svg {
+    flex-shrink: 0;
+    margin-top: 4px;
+  }
+
+  .pie {
+    flex-wrap: wrap;
+    gap: 8px 12px;
+  }
+
+  .estado {
+    flex: 1 1 120px;
+  }
+
+  .pie > a {
+    flex: 1 1 100%;
+  }
+}

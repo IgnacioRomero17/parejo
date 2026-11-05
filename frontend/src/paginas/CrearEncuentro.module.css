@@ -32,3 +32,14 @@
   padding-top: 24px;
   border-top: 1px solid var(--linea);
 }
+
+@media (max-width: 640px) {
+  .columnas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .acciones {
+    flex-direction: column;
+    gap: 12px;
+  }
+}
