@@ -19,3 +19,19 @@
   color: var(--texto-secundario);
   font-size: 13.5px;
 }
+
+/* Avatar (44 px) y datos en la primera línea; la etiqueta, debajo. */
+@media (max-width: 640px) {
+  .encabezado {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
+  .datos {
+    flex: 1 1 calc(100% - 58px);
+  }
+
+  .email {
+    overflow-wrap: anywhere;
+  }
+}

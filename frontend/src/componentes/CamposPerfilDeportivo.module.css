@@ -10,3 +10,10 @@
   gap: 20px 16px;
   align-items: start;
 }
+
+/* A media columna, los textos de los desplegables se cortan. */
+@media (max-width: 640px) {
+  .grilla {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

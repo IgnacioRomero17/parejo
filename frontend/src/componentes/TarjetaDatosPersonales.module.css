@@ -39,3 +39,18 @@
   font-weight: 600;
   cursor: pointer;
 }
+
+@media (max-width: 640px) {
+  .fila {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .filaContrasena {
+    flex-wrap: wrap;
+    gap: 0 16px;
+  }
+
+  .enlace {
+    min-height: 44px;
+  }
+}

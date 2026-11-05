@@ -35,3 +35,10 @@
   border-radius: var(--radio-pildora);
   background: var(--azul);
 }
+
+@media (max-width: 640px) {
+  .cabecera {
+    flex-wrap: wrap;
+    gap: 4px 16px;
+  }
+}

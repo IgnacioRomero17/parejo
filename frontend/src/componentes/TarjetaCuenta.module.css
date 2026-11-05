@@ -14,3 +14,10 @@
   color: var(--texto-secundario);
   font-size: 13.5px;
 }
+
+@media (max-width: 640px) {
+  .fila {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

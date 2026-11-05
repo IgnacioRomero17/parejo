@@ -26,5 +26,7 @@
     top: 12px;
     right: 16px;
     left: 16px;
+    /* Pasa por encima de la barra: no tiene controles y no debe frenar los toques. */
+    pointer-events: none;
   }
 }
