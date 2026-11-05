@@ -21,3 +21,15 @@
   padding: 0;
   list-style: none;
 }
+
+@media (max-width: 640px) {
+  /* El alto de arriba se calculó con la barra de escritorio y aquí no hace falta. */
+  .pagina {
+    min-height: 0;
+  }
+
+  .grilla {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+}

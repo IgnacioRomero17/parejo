@@ -64,3 +64,20 @@
   color: var(--texto-secundario);
   font-size: 15px;
 }
+
+@media (max-width: 640px) {
+  .encabezado {
+    flex-wrap: wrap;
+    gap: 8px 16px;
+  }
+
+  .cantidad {
+    flex-wrap: wrap;
+    gap: 4px 12px;
+  }
+
+  .lugar {
+    min-height: 0;
+    padding: 12px;
+  }
+}

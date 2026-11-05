@@ -22,3 +22,23 @@
   gap: 8px;
   font-size: 15px;
 }
+
+@media (max-width: 640px) {
+  .barra {
+    padding: 16px;
+  }
+
+  .datos {
+    flex: 1 1 100%;
+  }
+
+  .dato {
+    align-items: flex-start;
+    overflow-wrap: anywhere;
+  }
+
+  .dato svg {
+    flex-shrink: 0;
+    margin-top: 3px;
+  }
+}

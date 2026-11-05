@@ -36,3 +36,21 @@
   font-size: 17px;
   font-weight: 600;
 }
+
+@media (max-width: 640px) {
+  .encabezado {
+    align-items: stretch;
+  }
+
+  /* Fecha y Lugar son los datos más largos: van a todo el ancho. */
+  .datos {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    padding: 16px;
+  }
+
+  .datos > :nth-child(1),
+  .datos > :nth-child(5) {
+    grid-column: 1 / -1;
+  }
+}

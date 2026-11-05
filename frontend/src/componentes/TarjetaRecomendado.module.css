@@ -60,3 +60,14 @@
   color: var(--texto-secundario);
   font-size: 14px;
 }
+
+@media (max-width: 640px) {
+  .tarjeta {
+    padding: 16px;
+  }
+
+  /* El nombre se lee completo, en varias líneas. */
+  .nombre {
+    white-space: normal;
+  }
+}

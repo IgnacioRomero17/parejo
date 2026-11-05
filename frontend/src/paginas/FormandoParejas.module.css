@@ -58,3 +58,25 @@
   font-size: 13px;
   text-align: center;
 }
+
+@media (max-width: 640px) {
+  .pagina {
+    padding: 20px 16px 32px;
+  }
+
+  .tarjeta {
+    gap: 20px;
+    padding: 24px 16px;
+  }
+
+  .acciones {
+    flex-wrap: wrap;
+    gap: 8px 20px;
+  }
+
+  .enlace {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+  }
+}

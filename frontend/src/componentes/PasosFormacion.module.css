@@ -118,3 +118,9 @@
     transition: none;
   }
 }
+
+@media (max-width: 640px) {
+  .numero {
+    flex-shrink: 0;
+  }
+}

@@ -64,3 +64,13 @@
   font-size: 15px;
   white-space: nowrap;
 }
+
+@media (max-width: 640px) {
+  .pareja {
+    padding: 16px 16px 8px;
+  }
+
+  .integrante {
+    gap: 12px;
+  }
+}

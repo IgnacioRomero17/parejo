@@ -34,3 +34,17 @@
   color: var(--texto-secundario);
   font-size: 15px;
 }
+
+@media (max-width: 640px) {
+  .contenido {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .resultado {
+    padding-right: 0;
+    padding-bottom: 16px;
+    border-right: 0;
+    border-bottom: 1px solid var(--linea);
+  }
+}
