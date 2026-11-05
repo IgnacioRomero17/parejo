@@ -248,6 +248,13 @@
     height: 44px;
   }
 
+  /* El toque lo recibe siempre la zona: si cae en el círculo, el navegador captura el dedo ahí,
+     la zona no puede liberarlo y deslizar deja de cambiar el nivel. */
+  .entero,
+  .medio {
+    pointer-events: none;
+  }
+
   .entero {
     width: 24px;
     height: 24px;
