@@ -78,7 +78,7 @@
   max-width: 460px;
 }
 
-/* Panel compacto arriba y formulario debajo; sin la cancha, el formulario entra en la primera vista. */
+/* Panel compacto arriba (logo y texto) y formulario debajo, que así entra en la primera vista. */
 @media (max-width: 640px) {
   .contenedor {
     grid-template-columns: minmax(0, 1fr);
@@ -98,8 +98,9 @@
     display: none;
   }
 
+  /* Es un <p>: el h1 de la pantalla es el del formulario, así que la jerarquía no cambia. */
   .titulo {
-    font-size: 26px;
+    display: none;
   }
 
   .texto {
