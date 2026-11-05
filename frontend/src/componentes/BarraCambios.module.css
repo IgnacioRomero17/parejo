@@ -34,8 +34,9 @@
 }
 
 @media (max-width: 640px) {
+  /* Apoyada encima de la barra de navegación inferior. */
   .barra {
-    bottom: 8px;
+    bottom: calc(var(--alto-navegacion) + env(safe-area-inset-bottom) + 8px);
     flex-direction: column;
     align-items: stretch;
     gap: 12px;

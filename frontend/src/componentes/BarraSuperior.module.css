@@ -78,27 +78,39 @@
   white-space: nowrap;
 }
 
-/* Dos filas: el logo arriba y los enlaces repartidos debajo, con el ícono sobre el texto. */
+/*
+ * Arriba queda una franja angosta con el logo. Los enlaces pasan a una barra fija al pie, con
+ * el ícono sobre el texto; la zona segura del iPhone (viewport-fit=cover en index.html) se
+ * suma como relleno para que no queden bajo la barra de inicio.
+ */
 @media (max-width: 640px) {
   .contenido {
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: center;
-    gap: 0;
-    height: auto;
-    min-height: 56px;
+    justify-content: flex-start;
+    height: 56px;
     padding: 0 16px;
   }
 
   .logo {
-    align-self: flex-start;
     align-items: center;
     min-height: 48px;
   }
 
   .enlaces {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 20;
     gap: 0;
-    height: 52px;
+    height: calc(var(--alto-navegacion) + env(safe-area-inset-bottom));
+    padding: 0 4px env(safe-area-inset-bottom);
+    background: var(--marino);
+  }
+
+  /* Reserva al final de la página el lugar de la barra, para que no tape el contenido. Solo
+     en las pantallas que la muestran (el onboarding usa la barra sin enlaces). */
+  :global(body):has(.enlaces) {
+    padding-bottom: calc(var(--alto-navegacion) + env(safe-area-inset-bottom));
   }
 
   .enlaces > li {
@@ -114,15 +126,18 @@
     white-space: nowrap;
   }
 
+  /* En la barra de abajo la línea lima va arriba, en el borde que toca el contenido. */
   .activo::after {
+    top: 0;
     right: 4px;
+    bottom: auto;
     left: 4px;
   }
 
   /* Sobre el ícono, para que no le quite ancho al texto. */
   .indicador {
     position: absolute;
-    top: 2px;
+    top: 4px;
     left: calc(50% + 6px);
   }
 }

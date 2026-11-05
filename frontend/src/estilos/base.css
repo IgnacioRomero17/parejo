@@ -57,6 +57,12 @@ ul {
 }
 
 @media (max-width: 640px) {
+  /* Alto de la barra de navegación inferior (sin la zona segura del iPhone). La usan
+     BarraSuperior y BarraCambios. */
+  :root {
+    --alto-navegacion: 56px;
+  }
+
   h1 {
     font-size: 26px;
   }
