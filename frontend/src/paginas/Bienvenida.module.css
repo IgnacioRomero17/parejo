@@ -176,9 +176,8 @@
     flex: 1 1 auto;
   }
 
-  /* Apilada, un resplandor grande se pintaría sobre los botones y las tarjetas vecinas. */
+  /* Decorativa (alt=""): en celular los pasos van directo después de los botones. */
   .ilustracion {
-    max-width: 200px;
-    box-shadow: 0 0 32px 4px color-mix(in srgb, var(--azul) 45%, transparent);
+    display: none;
   }
 }
