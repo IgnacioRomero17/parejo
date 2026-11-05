@@ -22,3 +22,15 @@
   color: var(--texto-secundario);
   font-size: 13.5px;
 }
+
+/* Avatar (44 px) y nombre en la primera línea; las etiquetas, debajo. */
+@media (max-width: 640px) {
+  .fila {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
+  .identidad {
+    flex: 1 1 calc(100% - 58px);
+  }
+}

@@ -20,3 +20,11 @@
   flex-shrink: 0;
   color: var(--lima);
 }
+
+@media (max-width: 640px) {
+  .aviso {
+    top: 12px;
+    right: 16px;
+    left: 16px;
+  }
+}

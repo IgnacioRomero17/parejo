@@ -54,3 +54,20 @@
   justify-content: flex-end;
   background: var(--azul);
 }
+
+/* Mismo dibujo de 26 px, con una zona táctil de 44 px. */
+@media (max-width: 640px) {
+  .fila {
+    gap: 16px;
+  }
+
+  .control {
+    position: relative;
+  }
+
+  .control::after {
+    position: absolute;
+    inset: -9px 0;
+    content: "";
+  }
+}

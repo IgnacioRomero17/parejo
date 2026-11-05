@@ -36,3 +36,10 @@
 .conError {
   border: 1.5px solid var(--error);
 }
+
+@media (max-width: 640px) {
+  .control {
+    min-width: 0;
+    height: 44px;
+  }
+}

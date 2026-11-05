@@ -55,3 +55,9 @@ ul {
   padding: 0;
   list-style: none;
 }
+
+@media (max-width: 640px) {
+  h1 {
+    font-size: 26px;
+  }
+}

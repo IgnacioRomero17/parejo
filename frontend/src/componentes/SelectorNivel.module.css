@@ -237,3 +237,54 @@
   font-size: 13px;
   line-height: 1.45;
 }
+
+/* Cada columna mide unos 23 px: los puntos se achican para que el elegido no pise a sus vecinos. */
+@media (max-width: 640px) {
+  .pista {
+    grid-template-rows: auto 44px;
+  }
+
+  .control {
+    height: 44px;
+  }
+
+  .entero {
+    width: 24px;
+    height: 24px;
+    font-size: 12px;
+  }
+
+  .entero.elegido {
+    width: 30px;
+    height: 30px;
+    box-shadow: 0 0 0 3px var(--lima);
+  }
+
+  .medio {
+    width: 6px;
+    height: 6px;
+  }
+
+  .medio.elegido {
+    width: 20px;
+    height: 20px;
+  }
+
+  .flotante {
+    padding: 3px 6px;
+  }
+
+  .descripciones {
+    grid-auto-flow: row;
+    padding: 16px;
+  }
+
+  .descripcion + .descripcion {
+    margin-top: 16px;
+    margin-left: 0;
+    padding-top: 16px;
+    padding-left: 0;
+    border-top: 1px solid var(--borde-campo);
+    border-left: 0;
+  }
+}

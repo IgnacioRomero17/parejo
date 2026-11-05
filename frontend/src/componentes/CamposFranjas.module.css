@@ -47,3 +47,53 @@
   font-weight: 600;
   cursor: pointer;
 }
+
+/* Fila 1: Día y Quitar. Fila 2: Desde, "a" y Hasta. */
+@media (max-width: 640px) {
+  .lista {
+    gap: 20px;
+  }
+
+  .fila {
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    gap: 12px 8px;
+  }
+
+  .fila + .fila {
+    padding-top: 20px;
+    border-top: 1px solid var(--linea);
+  }
+
+  .fila > :nth-child(1) {
+    grid-area: 1 / 1 / 2 / 3;
+  }
+
+  .fila > :nth-child(2) {
+    grid-area: 2 / 1;
+  }
+
+  .fila > :nth-child(3) {
+    grid-area: 2 / 2;
+  }
+
+  .fila > :nth-child(4) {
+    grid-area: 2 / 3;
+  }
+
+  .fila > :nth-child(5) {
+    grid-area: 1 / 3;
+    justify-self: end;
+  }
+
+  /* Todas las filas muestran rótulos: 21px de texto + 8px, como la primera en escritorio. */
+  .separador,
+  .quitar {
+    height: 44px;
+    margin-top: 29px;
+  }
+
+  .quitar {
+    min-width: 44px;
+    justify-content: flex-end;
+  }
+}

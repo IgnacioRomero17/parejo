@@ -77,3 +77,52 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
+
+/* Dos filas: el logo arriba y los enlaces repartidos debajo, con el ícono sobre el texto. */
+@media (max-width: 640px) {
+  .contenido {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+    gap: 0;
+    height: auto;
+    min-height: 56px;
+    padding: 0 16px;
+  }
+
+  .logo {
+    align-self: flex-start;
+    align-items: center;
+    min-height: 48px;
+  }
+
+  .enlaces {
+    gap: 0;
+    height: 52px;
+  }
+
+  .enlaces > li {
+    flex: 1 1 auto;
+  }
+
+  .enlace {
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    padding: 0 4px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .activo::after {
+    right: 4px;
+    left: 4px;
+  }
+
+  /* Sobre el ícono, para que no le quite ancho al texto. */
+  .indicador {
+    position: absolute;
+    top: 2px;
+    left: calc(50% + 6px);
+  }
+}

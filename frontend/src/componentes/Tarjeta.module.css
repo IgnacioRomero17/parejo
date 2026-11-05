@@ -26,3 +26,9 @@
   color: var(--texto-secundario);
   font-size: 13.5px;
 }
+
+@media (max-width: 640px) {
+  .tarjeta {
+    padding: 16px;
+  }
+}

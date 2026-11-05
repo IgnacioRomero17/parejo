@@ -64,3 +64,12 @@
   outline: 2px solid var(--azul);
   outline-offset: 2px;
 }
+
+/* Tres opciones de igual ancho, sin cortar el texto, en la tarjeta de 360 px. */
+@media (max-width: 640px) {
+  .opcion {
+    height: 44px;
+    padding: 0 2px;
+    font-size: 14px;
+  }
+}

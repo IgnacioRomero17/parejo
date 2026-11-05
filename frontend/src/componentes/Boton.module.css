@@ -42,3 +42,18 @@
 .anchoCompleto {
   width: 100%;
 }
+
+/* Los textos largos pasan a dos líneas en lugar de salirse del contenedor. */
+@media (max-width: 640px) {
+  .boton {
+    height: auto;
+    min-height: 44px;
+    padding: 8px 16px;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .boton svg {
+    flex-shrink: 0;
+  }
+}

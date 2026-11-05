@@ -41,3 +41,17 @@
   color: var(--texto);
   pointer-events: none;
 }
+
+/* En celular cada franja va apilada: sin la primera fila como encabezado, todas muestran su rótulo. */
+@media (max-width: 640px) {
+  .etiquetaOculta {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip-path: none;
+    font-size: 14px;
+    font-weight: 500;
+    white-space: normal;
+  }
+}
