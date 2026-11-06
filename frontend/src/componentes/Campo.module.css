@@ -43,18 +43,32 @@
     height: 44px;
   }
 
-  /* Safari de iOS le da a la fecha un ancho mínimo propio (sobresale de la tarjeta) y centra el
-     valor. Sin la apariencia nativa toma el alto, borde, radio y relleno de .control. */
+  /*
+   * Safari de iOS le da a la fecha un ancho mínimo propio (sobresale de la tarjeta) y centra el
+   * valor. Sin la apariencia nativa toma el alto, borde, radio y relleno de .control, pero el
+   * valor queda arriba: el alto de línea igual al alto interno (44 px menos los bordes; el
+   * relleno vertical es 0) lo centra sin depender de la fuente ni del armado interno de Safari.
+   * Se repite en el pseudo-elemento por si no lo hereda.
+   */
   .control[type="date"] {
+    --alto-interno: 42px;
+
     display: block;
     width: 100%;
     min-width: 0;
     -webkit-appearance: none;
     appearance: none;
+    line-height: var(--alto-interno);
+  }
+
+  /* Con error el borde es de 1,5 px. */
+  .conError[type="date"] {
+    --alto-interno: 41px;
   }
 
   .control[type="date"]::-webkit-date-and-time-value {
     margin: 0;
+    line-height: var(--alto-interno);
     text-align: left;
   }
 }
