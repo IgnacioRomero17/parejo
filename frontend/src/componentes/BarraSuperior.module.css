@@ -113,6 +113,25 @@
     padding-bottom: calc(var(--alto-navegacion) + env(safe-area-inset-bottom));
   }
 
+  /* Safari 26 pinta la zona de la hora con el fondo de html y body: marino, como la franja.
+     El fondo claro pasa a #root, que cubre la pantalla; debajo de la barra inferior queda el
+     relleno del body, tapado por la barra. */
+  :global(html):has(.barra),
+  :global(body):has(.barra) {
+    background: var(--marino);
+  }
+
+  :global(body):has(.barra) :global(#root) {
+    min-height: 100vh;
+    background: var(--fondo);
+  }
+
+  :global(body):has(.enlaces) :global(#root) {
+    min-height: calc(
+      100vh - var(--alto-navegacion) - env(safe-area-inset-bottom)
+    );
+  }
+
   .enlaces > li {
     flex: 1 1 auto;
   }

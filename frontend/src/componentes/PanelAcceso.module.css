@@ -109,8 +109,16 @@
     line-height: 1.5;
   }
 
+  /* Safari 26 pinta la zona de la hora con el fondo de html y body: marino, como el panel de
+     arriba. El fondo claro pasa al formulario, que llena el resto de la pantalla. */
+  :global(html):has(.contenedor),
+  :global(body):has(.contenedor) {
+    background: var(--marino);
+  }
+
   .principal {
     align-items: start;
+    background: var(--fondo);
     padding: 24px 16px 32px;
   }
 }

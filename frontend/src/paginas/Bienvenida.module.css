@@ -130,6 +130,12 @@
 }
 
 @media (max-width: 640px) {
+  /* Safari 26 pinta la zona de la hora con el fondo de html y body: marino, como la página. */
+  :global(html):has(.pagina),
+  :global(body):has(.pagina) {
+    background: var(--marino);
+  }
+
   .encabezado,
   .contenido {
     padding-right: 16px;
