@@ -42,4 +42,19 @@
     min-width: 0;
     height: 44px;
   }
+
+  /* Safari de iOS le da a la fecha un ancho mínimo propio (sobresale de la tarjeta) y centra el
+     valor. Sin la apariencia nativa toma el alto, borde, radio y relleno de .control. */
+  .control[type="date"] {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .control[type="date"]::-webkit-date-and-time-value {
+    margin: 0;
+    text-align: left;
+  }
 }
