@@ -29,6 +29,7 @@ backend/evaluacion/
   resultados/         # CSV + resumen.md generados
 ```
 Comando `python manage.py cargar_datos` (en `apps/comun/management/commands/`): carga `demo.json` en la base. Si ya hay datos, pide `--reemplazar`.
+Comando `python manage.py reiniciar_demo`: borra todos los encuentros (con invitaciones, participaciones y propuestas) y restaura los jugadores del dataset, incluida su contraseña. Muestra el host y pide confirmación; `--sin-confirmar` solo para tests.
 
 ## Dataset de demostración (`demo.json`)
 - Entre 15 y 30 jugadores con nombre y apellido inventados, perfil completo, preferencias y franjas, distribuidos en las localidades del catálogo.
