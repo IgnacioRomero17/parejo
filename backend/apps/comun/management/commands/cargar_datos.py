@@ -47,6 +47,45 @@ def _secciones(jugador: dict, ids_localidades: dict[str, int]) -> dict:
     return serializer.validated_data
 
 
+def leer_dataset() -> dict:
+    """Lee el dataset de demostración (`demo.json`)."""
+    return json.loads(RUTA_DATASET.read_text(encoding="utf-8"))
+
+
+def cargar_dataset(reemplazar: bool) -> tuple[int, int]:
+    """Carga los jugadores del dataset, identificados por su correo.
+
+    Con `reemplazar`, restaura los que ya existen a los datos del archivo (sin cambiar la
+    contraseña) y crea los que falten; los demás usuarios nunca se tocan. Devuelve la cantidad
+    de jugadores creados y de actualizados. Lanza CommandError si el dataset ya está cargado
+    y no se pidió reemplazar, si falta una localidad o si un jugador tiene datos inválidos.
+    """
+    dataset = leer_dataset()
+    ids_localidades = {
+        localidad.nombre: localidad.pk for localidad in servicios_localidades.listar_localidades()
+    }
+    jugadores = [
+        (jugador, _secciones(jugador, ids_localidades)) for jugador in dataset["jugadores"]
+    ]
+    correos = [servicios_usuarios.normalizar_correo(j["email"]) for j, _ in jugadores]
+    existentes = {u.email: u for u in Usuario.objects.filter(email__in=correos)}
+    if existentes and not reemplazar:
+        raise CommandError(
+            f"El dataset de demostración ya está cargado ({len(existentes)} jugadores). "
+            "Usá --reemplazar para restaurarlos; los demás usuarios no se tocan."
+        )
+    try:
+        with transaction.atomic():
+            for (jugador, secciones), correo in zip(jugadores, correos, strict=True):
+                usuario = existentes.get(correo) or servicios_usuarios.registrar_usuario(
+                    jugador["nombre"], jugador["apellido"], correo, dataset["contrasena"]
+                )
+                servicios_usuarios.actualizar_perfil(usuario, **secciones)
+    except ErrorNegocio as error:
+        raise CommandError(f"No se pudo cargar el dataset: {error.mensaje}") from error
+    return len(jugadores) - len(existentes), len(existentes)
+
+
 class Command(BaseCommand):
     help = (
         "Carga el dataset de demostración (evaluacion/datasets/demo.json). Los jugadores se "
@@ -62,34 +101,10 @@ class Command(BaseCommand):
         )
 
     def handle(self, *args, reemplazar=False, **opciones):
-        dataset = json.loads(RUTA_DATASET.read_text(encoding="utf-8"))
-        ids_localidades = {
-            localidad.nombre: localidad.pk
-            for localidad in servicios_localidades.listar_localidades()
-        }
-        jugadores = [
-            (jugador, _secciones(jugador, ids_localidades)) for jugador in dataset["jugadores"]
-        ]
-        correos = [servicios_usuarios.normalizar_correo(j["email"]) for j, _ in jugadores]
-        existentes = {u.email: u for u in Usuario.objects.filter(email__in=correos)}
-        if existentes and not reemplazar:
-            raise CommandError(
-                f"El dataset de demostración ya está cargado ({len(existentes)} jugadores). "
-                "Usá --reemplazar para restaurarlos; los demás usuarios no se tocan."
-            )
-        try:
-            with transaction.atomic():
-                for (jugador, secciones), correo in zip(jugadores, correos, strict=True):
-                    usuario = existentes.get(correo) or servicios_usuarios.registrar_usuario(
-                        jugador["nombre"], jugador["apellido"], correo, dataset["contrasena"]
-                    )
-                    servicios_usuarios.actualizar_perfil(usuario, **secciones)
-        except ErrorNegocio as error:
-            raise CommandError(f"No se pudo cargar el dataset: {error.mensaje}") from error
-        creados = len(jugadores) - len(existentes)
+        creados, actualizados = cargar_dataset(reemplazar)
         self.stdout.write(
             self.style.SUCCESS(
                 f"Dataset de demostración cargado: {creados} jugadores creados y "
-                f"{len(existentes)} actualizados."
+                f"{actualizados} actualizados."
             )
         )

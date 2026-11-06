@@ -160,6 +160,22 @@ def restablecer_contrasena(uid: str, token: str, contrasena: str) -> Usuario:
     return usuario
 
 
+def restaurar_contrasena(correos: list[str], contrasena: str) -> int:
+    """Vuelve a poner una misma contraseña en las cuentas de esos correos (demostración).
+
+    Recibe los correos (se normalizan) y la contraseña. Las cuentas con otros correos no se
+    tocan y los correos que no tienen cuenta se ignoran. Devuelve cuántas cuentas cambió.
+    """
+    usuarios = Usuario.objects.filter(email__in=[normalizar_correo(c) for c in correos])
+    cantidad = 0
+    with transaction.atomic():
+        for usuario in usuarios:
+            usuario.set_password(contrasena)
+            usuario.save(update_fields=["password"])
+            cantidad += 1
+    return cantidad
+
+
 def validar_franja(hora_inicio: time, hora_fin: time) -> None:
     """Verifica una franja de disponibilidad (HU-005).
 

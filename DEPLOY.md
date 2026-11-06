@@ -19,7 +19,7 @@ Límites del plan gratis de Render:
 | Se duerme tras 15 minutos sin visitas | la primera visita después de eso tarda bastante en responder |
 | 750 horas de instancia por mes | si se agotan, el servicio queda suspendido hasta el mes siguiente |
 | Sin consola ni tareas puntuales | los comandos de carga de datos se corren desde tu PC (paso 6) |
-| Puertos 25, 465 y 587 bloqueados | Gmail no funciona y por eso se usa Brevo por el puerto 2525 (ver paso 8) |
+| Puertos 25, 465 y 587 bloqueados | Gmail no funciona y por eso se usa Brevo por el puerto 2525 (ver paso 9) |
 
 ## 2. Crear la base en Neon
 
@@ -139,7 +139,7 @@ python manage.py createsuperuser
 
 Al terminar, **cerrá la terminal** para no seguir conectado a Neon por error.
 
-**Sobre los jugadores de demostración:** comparten la contraseña `parejo2026`, que está publicada en este repositorio, así que cualquiera puede entrar con esas cuentas y modificarlas. No guardes datos reales en ellas. Para devolverlas a los datos originales, repetí la conexión a Neon y corré `python manage.py cargar_datos --reemplazar`.
+**Sobre los jugadores de demostración:** comparten la contraseña `parejo2026`, que está publicada en este repositorio, así que cualquiera puede entrar con esas cuentas y modificarlas. No guardes datos reales en ellas. Para devolverlas a los datos originales, ver el paso 8.
 
 ## 7. Comprobar que funciona
 
@@ -153,7 +153,39 @@ En `https://<nombre>.onrender.com`:
 
 Por último, agregá la dirección publicada en la sección "Versión publicada" del `README.md`.
 
-## 8. Nota sobre Gmail
+## 8. Reiniciar la demo
+
+`reiniciar_demo` deja la demostración como recién cargada: borra **todos** los encuentros (con sus invitaciones, participaciones y propuestas, también los de cuentas que no son del dataset) y devuelve a los jugadores del dataset sus datos y la contraseña común. No toca localidades, superusuarios ni otras cuentas, ni la estructura de la base. Antes de borrar muestra el host de la base y cuántos encuentros, invitaciones y propuestas va a borrar, y pide escribir `si`. Si algo falla, no se borra nada.
+
+En tu PC, contra la base de desarrollo:
+
+```powershell
+cd backend
+.\.venv\Scripts\Activate.ps1
+python manage.py reiniciar_demo
+```
+
+Contra Neon, en una terminal nueva, cargá las mismas variables del paso 6 y comprobá el host antes de correrlo:
+
+```powershell
+cd backend
+.\.venv\Scripts\Activate.ps1
+
+$env:DB_HOST = "ep-ejemplo-123456.us-east-2.aws.neon.tech"
+$env:DB_PORT = "5432"
+$env:DB_NAME = "neondb"
+$env:DB_USER = "neondb_owner"
+$env:DB_PASSWORD = Read-Host "Contraseña de Neon"
+$env:DB_SSLMODE = "require"
+$env:DB_PASSWORD.Length
+
+python manage.py shell -c "from django.db import connection; print(connection.settings_dict['HOST'])"
+python manage.py reiniciar_demo
+```
+
+Confirmá solo si el host que muestra el comando es el de Neon. Al terminar, **cerrá la terminal**.
+
+## 9. Nota sobre Gmail
 
 Gmail SMTP (`smtp.gmail.com`) solo atiende por puertos que el plan gratis de Render bloquea, así que **ahí no funciona**. Solo sirve con una instancia paga de Render. En ese caso:
 
@@ -168,7 +200,7 @@ Gmail SMTP (`smtp.gmail.com`) solo atiende por puertos que el plan gratis de Ren
 | `EMAIL_HOST_PASSWORD` | la contraseña de aplicación |
 | `DEFAULT_FROM_EMAIL` | `parejo <tu-correo@gmail.com>` |
 
-## 9. Problemas frecuentes
+## 10. Problemas frecuentes
 
 | Qué se ve | Causa probable | Qué hacer |
 |---|---|---|

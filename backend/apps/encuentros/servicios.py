@@ -634,3 +634,37 @@ def detalle_propuesta(encuentro: Encuentro) -> DetallePropuesta:
         puntaje_equilibrio=elegida.puntaje_equilibrio,
         combinaciones=detalles,
     )
+
+
+@dataclass(frozen=True)
+class ConteoEncuentros:
+    encuentros: int
+    invitaciones: int
+    propuestas: int
+
+
+def contar_encuentros() -> ConteoEncuentros:
+    """Cuenta todos los encuentros, invitaciones y propuestas de la base (demostración)."""
+    return ConteoEncuentros(
+        encuentros=Encuentro.objects.count(),
+        invitaciones=Invitacion.objects.count(),
+        propuestas=PropuestaEncuentro.objects.count(),
+    )
+
+
+def borrar_todos_los_encuentros() -> ConteoEncuentros:
+    """Borra todos los encuentros con sus invitaciones, participantes y propuestas (demostración).
+
+    El orden es explícito porque dos relaciones son PROTECT y Django las frena aunque la fila
+    que protegen también caiga en la cascada: la propuesta protege a su combinación y cada
+    integrante de pareja protege a su participante. Por eso se borran primero las propuestas,
+    después las combinaciones (en cascada, sus parejas e integrantes) y al final los
+    encuentros (en cascada, invitaciones y participantes). Todo en una transacción. Devuelve
+    lo que había antes de borrar.
+    """
+    with transaction.atomic():
+        conteo = contar_encuentros()
+        PropuestaEncuentro.objects.all().delete()
+        Combinacion.objects.all().delete()
+        Encuentro.objects.all().delete()
+    return conteo
