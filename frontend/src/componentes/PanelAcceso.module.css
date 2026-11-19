@@ -78,35 +78,24 @@
   max-width: 460px;
 }
 
-/* Panel compacto arriba (logo y texto) y formulario debajo, que así entra en la primera vista. */
+/* Franja compacta arriba, solo con el logo, y formulario debajo, que así entra en la primera
+   vista. */
 @media (max-width: 640px) {
   .contenedor {
     grid-template-columns: minmax(0, 1fr);
     grid-template-rows: auto 1fr;
   }
 
+  /* El mismo relleno de 16px en los cuatro lados: el logo queda centrado en la franja y
+     alineado con el margen lateral del formulario. */
   .panel {
-    gap: 16px;
     padding: 16px;
   }
 
+  /* Ilustración, título y descripción se ocultan. Son <p>: el h1 de la pantalla es el del
+     formulario, así que la jerarquía no cambia. */
   .presentacion {
-    gap: 8px;
-  }
-
-  .cancha {
     display: none;
-  }
-
-  /* Es un <p>: el h1 de la pantalla es el del formulario, así que la jerarquía no cambia. */
-  .titulo {
-    display: none;
-  }
-
-  .texto {
-    max-width: none;
-    font-size: 15px;
-    line-height: 1.5;
   }
 
   /* Safari 26 pinta la zona de la hora con el fondo de html y body: marino, como el panel de
